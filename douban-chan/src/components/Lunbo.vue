@@ -1,9 +1,8 @@
 <template>
-    <div class="block">
-      <span class="demonstration">默认 Hover 指示器触发</span>
+    <div class="block" style="width:800px">
       <el-carousel height="500px">
         <el-carousel-item v-for="item in 4" :key="item">
-            <img src="../../assets/movie/2.jpg" alt="">
+            <img src="../assets/movie/2.jpg" alt="">
         </el-carousel-item>
       </el-carousel>
     </div>
