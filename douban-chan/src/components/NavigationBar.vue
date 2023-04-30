@@ -7,17 +7,17 @@
         <!-- 菜单 -->
         <div class="menu-wrapper">
           <el-menu
-            :default-active="activeIndex2"
+            :default-active="activeIndex"
             class="el-menu-demo"
             mode="horizontal"
             @select="handleSelect"
             text-color="#545c64"
             active-text-color="#ffd04b">
-            <el-menu-item index="0">首页</el-menu-item>
-            <el-menu-item index="1">电影</el-menu-item>
-            <el-menu-item index="2">图书</el-menu-item>
-            <el-menu-item index="3">话题</el-menu-item>
-            <el-menu-item index="4">小组</el-menu-item>
+            <el-menu-item index="home">首页</el-menu-item>
+            <el-menu-item index="filmHome">电影</el-menu-item>
+            <el-menu-item index="bookHome">图书</el-menu-item>
+            <el-menu-item index="topicHome">话题</el-menu-item>
+            <el-menu-item index="groupHome">小组</el-menu-item>
           </el-menu>
         </div>
         <!-- 搜索输入框 -->
@@ -51,15 +51,21 @@ const src = require('../img/logo.png')
 export default {
     data() {
         return {
-            activeIndex: "0",
-            activeIndex2: "0",
+            activeIndex: "home",
             state: '',//搜索用的key，传给后端
             selectedOption: '全部',
         };
     },
     methods: {
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+        handleSelect(index) {
+            //选中不同的菜单项时才更新
+            if (this.activeIndex != index) {
+                this.$router.push({
+                    name: index,
+                })
+            }
+            //更新当前菜单项
+            this.activeIndex = index
         },
         search() {
             console.log('Perform search with keyword:', this.state, 'in category:', this.selectedOption);
@@ -69,10 +75,6 @@ export default {
         },
         handleSelectChange(value, option) {
             this.selectedOption = option.label;
-        },
-        handleSelect(index) {
-            console.log('Selected index:', index);
-            this.activeIndex2 = index;
         },
     },
 }
