@@ -9,7 +9,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   //在此注册vuex模块
   modules:{
-    userAbout:userOptions,
+    userAbout: userOptions,
     
   }
 })
