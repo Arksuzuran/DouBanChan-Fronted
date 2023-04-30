@@ -1,14 +1,5 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">主页</router-link> |
-      <router-link to="/filmHome">电影</router-link> |
-      <router-link to="/bookHome">图书</router-link> |
-      <router-link to="/topicHome">话题</router-link> |
-      <router-link to="/groupHome">小组</router-link> |
-      
-      <router-link to="/userHome">个人主页</router-link>
-    </nav>
     <router-view/>
   </div>
 </template>
