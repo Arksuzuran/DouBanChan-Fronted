@@ -38,8 +38,8 @@
             ></el-input>
         </div>
         <!-- 登录/登出 -->
-        <div class="avatar-wrapper">
-          <el-avatar :size="40" @error="errorHandler">
+        <div class="avatar-wrapper" @click="login">
+          <el-avatar :size="40"  @error="errorHandler">
             <img src="../img/qq.jpg"/>
           </el-avatar>
         </div>
@@ -76,6 +76,9 @@ export default {
         handleSelectChange(value, option) {
             this.selectedOption = option.label;
         },
+        login() {
+            this.$router.push('/login')
+        }
     },
 }
 </script>
