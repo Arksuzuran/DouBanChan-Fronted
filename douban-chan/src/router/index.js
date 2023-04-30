@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/filmHome',
     name: 'filmHome',
-    component: FilmHomeView
+    component: () => import('../views/Video/VideoHome.vue')
   },
   //图书版块主页
   {
