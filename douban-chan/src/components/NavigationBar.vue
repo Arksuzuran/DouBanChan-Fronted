@@ -96,6 +96,8 @@ export default {
 }
 
 .menu-wrapper {
+    display: flex;
+    justify-content: space-between;
     flex: 1;
 }
 
@@ -105,5 +107,13 @@ export default {
 
 .avatar-wrapper {
     margin-left: auto;
+}
+.el-menu-demo {
+  display: flex;
+  width: 600px;
+}
+.el-menu-demo .el-menu-item {
+  flex: 1;
+  text-align: center;
 }
 </style>
