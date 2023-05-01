@@ -1,13 +1,21 @@
 <template>
-    <h1>这是电影版块主页</h1>
-  </template>
+  <h1>adsfadf</h1>
+</template>
   
-  <script>
+<script>
   export default {
-  
+    name: 'FilmHomeView',
+    data () {
+      return {
+
+      }
+    },
+    methods: {
+
+    }
   }
-  </script>
+</script>
   
-  <style>
+<style>
   
-  </style>
+</style>

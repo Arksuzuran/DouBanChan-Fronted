@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import BookHomeView from "../views/BookHomeView.vue";
-import FilmHomeView from "../views/FilmHomeView.vue";
 import TopicHomeView from "../views/TopicHomeView.vue";
 import GroupHomeView from "../views/GroupHomeView.vue";
 import UserHomeView from "../views/UserHomeView.vue";
@@ -13,7 +12,7 @@ import UserHomeHome from "../views/User/Home.vue";
 import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
-
+import VideoHome from "../views/Video/VideoHome.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -25,9 +24,9 @@ const routes = [
   },
   //电影版块主页
   {
-    path: "/filmHome",
-    name: "filmHome",
-    component: FilmHomeView,
+    path: '/videoHome',
+    name: 'videoHome',
+    component: VideoHome
   },
   //图书版块主页
   {

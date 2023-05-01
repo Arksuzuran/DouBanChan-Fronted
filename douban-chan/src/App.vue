@@ -2,7 +2,7 @@
   <div id="app">
     <nav>
       <router-link to="/">主页</router-link> |
-      <router-link to="/filmHome">电影</router-link> |
+      <router-link to="/videoHome">电影</router-link> |
       <router-link to="/bookHome">图书</router-link> |
       <router-link to="/topicHome">话题</router-link> |
       <router-link to="/groupHome">小组</router-link> |
@@ -11,6 +11,14 @@
     <router-view/>
   </div>
 </template>
+
+<script>
+import NavigationBar from '@/components/NavigationBar.vue';
+export default {
+  name: 'App',
+  components: { NavigationBar }
+}
+</script>
 
 <style>
 #app {
