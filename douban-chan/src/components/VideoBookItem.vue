@@ -1,27 +1,27 @@
 <template>
-    <div class="item">
-        <img :src="myObject.imageSrc" alt="">
-        
-        <div class="item-title">{{ myObject.title }}</div>
-        
-        <div class="score-container">
-            <el-rate
-            v-model="scoreInFive"
-            disabled
-            text-color="#ff9900"
-            score-template="{value}">
-            </el-rate>
-            <span class="score-num">{{ myObject.score }}</span>
+    <div class="item-container">
+        <div class="item">
+            <a @click="ToVideoDetail(myObject.id)">
+                <img :src="myObject.imageSrc" alt="">
+            </a>
+            <div>
+                <span class="item-title">{{ myObject.title }}</span>
+                <Rate :score="myObject.score"></Rate>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import Rate from './Rate.vue'
   export default {
     props:['myObject'],
-    computed: {
-        scoreInFive(){
-            return this.myObject.score * 1.0 / 2
+    components: {
+        Rate,
+    },
+    methods:{
+        ToVideoDetail(id){
+            this.$router.push({path: '/videoDetail'})
         }
     }
 }
@@ -29,22 +29,15 @@
 <style scoped>
     .item{
         width: 150px;
-        background-color: grey;    
+        height: 250px;
     }
     .item img{
         width: 100%;
+        height: 100%;
+        border-radius: 15px;
     }
     .item-title{
         font-size: 16px;
+        font-weight:bold;
     }
-    .score-container{
-        display: flex;
-        align-items: center;
-    }
-    .score-num {
-        font-size: 13px; /* 修改字体大小 */
-        color: orange; /* 修改字体颜色 */
-        margin-left: 10px; /* 添加一些左边距 */
-    }
-    
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="app">
+  <div id="app">
     <transition name="fade">
       <keep-alive>
         <router-view></router-view>
@@ -22,7 +22,6 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
 nav {
   padding: 30px;
 }
