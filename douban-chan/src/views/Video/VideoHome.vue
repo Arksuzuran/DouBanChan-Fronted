@@ -10,7 +10,11 @@
     </div></el-col>
   </el-row>
   
+  <!-- 推荐 -->
   <Recommend :items="items"></Recommend>
+
+
+
 </div>
 </template>
 
