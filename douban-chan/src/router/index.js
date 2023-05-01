@@ -1,10 +1,12 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import BookHomeView from "../views/BookHomeView.vue";
-import TopicHomeView from "../views/TopicHomeView.vue";
-import GroupHomeView from "../views/GroupHomeView.vue";
-import UserHomeView from "../views/UserHomeView.vue";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import BookHomeView from '../views/BookHomeView.vue'
+import TopicHomeView from '../views/TopicHomeView.vue'
+import GroupHomeView from '../views/GroupHomeView.vue'
+import UserHomeView from '../views/UserHomeView.vue'
+import LoginView from '../views/LoginView.vue'
+
 
 import UserHomeFavlist from "../views/User/Favlist.vue";
 import UserHomeGroup from "../views/User/Group.vue";
@@ -90,7 +92,12 @@ const routes = [
       },
     ],
   },
-  
+  //登录界面
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
+  },
   {
     path: "/about",
     name: "about",

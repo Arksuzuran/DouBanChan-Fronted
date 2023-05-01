@@ -1,19 +1,16 @@
 <template>
-  <div class="home">
-    <h1>这是网站主页</h1>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <navigation-bar></navigation-bar>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import NavigationBar from '../components/NavigationBar.vue';
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    NavigationBar,
   }
 }
 </script>
