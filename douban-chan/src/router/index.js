@@ -8,6 +8,7 @@ import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import VideoHomeView from "../views/VideoHomeView.vue";
 
+
 import UserHomeFavlist from "../views/User/Favlist.vue";
 import UserHomeGroup from "../views/User/Group.vue";
 import UserHomeHome from "../views/User/Home.vue";
