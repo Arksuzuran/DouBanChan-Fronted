@@ -1,13 +1,11 @@
 <template>
-    <h1>这是小组版块主页</h1>
-  </template>
+  <h1>这是小组版块主页</h1>
+</template>
   
-  <script>
-  export default {
+<script>
+export default {
+
+}
+</script>
   
-  }
-  </script>
-  
-  <style>
-  
-  </style>
+<style></style>

@@ -1,13 +1,11 @@
 <template>
     <div>
         <el-container>
-            <el-header>
-                <h2>
-                    我的帖子
-                    <el-button size="small" round>影评</el-button>
-                    <el-button size="small" round>话题</el-button>
-                    <el-button size="small" round>帖子</el-button>
-                </h2>
+            <el-header class="header-container">
+                <h2>我的帖子</h2>
+                <el-button size="small" round>影评</el-button>
+                <el-button size="small" round>话题</el-button>
+                <el-button size="small" round>帖子</el-button>
             </el-header>
             <el-main>
                 <div class="post-container">
@@ -69,19 +67,19 @@ export default {
 }
 </script>
   
-<style>
-h2 {
-    margin: 5px 5px 10px 5px;
-    text-align: left;
-    color: #333333;
-}
-.el-button {
-    margin-left: 5px;
-}
+<style scoped>
 .el-container {
     margin-top: 10px;
 }
-
+.header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+.el-button {
+    margin-top: 20px;
+}
 .post-container {
     width: 90%;
     margin: 0 auto;

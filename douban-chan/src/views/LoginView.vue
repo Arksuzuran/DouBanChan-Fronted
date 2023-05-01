@@ -13,10 +13,19 @@
             <div class="log-text">@ CR</div>
         </div>
         <div class="log-email">
-            <input type="text" placeholder="Email" :class="'log-input' + (account == '' ? ' log-input-empty' : '')"
-                v-model="account"><input type="password" placeholder="Password"
-                :class="'log-input' + (password == '' ? ' log-input-empty' : '')" v-model="password">
-            <a href="javascript:;" class="log-btn">Login</a>
+            <input 
+                type="text" 
+                placeholder="Email" 
+                :class="inputClass"
+                v-model="account"
+            >
+            <input 
+                type="password" 
+                placeholder="Password"
+                :class="inputClass" 
+                v-model="password"
+            >
+            <a href="javascript:;" class="log-btn" @click="login">Login</a>
         </div>
         <Loading v-if="isLoging" marginTop="-30%"></Loading>
     </div>
@@ -28,16 +37,25 @@ export default {
     name: 'Login',
     data() {
         return {
-            // isLoging: false,
+            isLoging: false,
             account: '',
             password: ''
+        }
+    },
+    computed:{
+        inputClass(){
+            return 'log-input' + (this.account == '' ? ' log-input-empty' : '')
         }
     },
     components: {
         LoadingEffect
     },
     methods: {
-    }
+        login(){
+            this.$store.commit('userAbout/LOGIN')
+            this.$router.replace({name: 'home'})
+        }
+    },
 }
 </script>
 

@@ -90,7 +90,9 @@ h2 {
     text-align:left;
     color: #333333;
 }
-
+.el-container {
+  margin-top: 10px;
+}
 .favlist-container {
     width: 94%;
     margin: 0 auto;

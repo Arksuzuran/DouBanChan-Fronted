@@ -1,27 +1,24 @@
 //用户信息管理
-
 export default {
-	namespaced:true,
+	namespaced: true,
 	actions:{
 		
 	},
-
 	mutations:{
 		//转换为已登录
-		LOGIN(){
+		LOGIN(state,value){
 			console.log('user mutations中的LOGIN被调用了')
-			isLogin = true
+			state.isLogin = true
 		},
 		//转换为登出
-		LOGOUT(){
+		LOGOUT(state,value){
 			console.log('user mutations中的LOGOUT被调用了')
-			isLogin = false
+			state.isLogin = false
 		},
 	},
-
 	state:{
 		//当前是否登录
-        isLogin: true,
+        isLogin: false,
 		//头像路径
 		userImgUrl: require("../assets/user-image-1.jpg"),
 		//用户昵称
@@ -29,7 +26,6 @@ export default {
 		//用户id
 		userId: "001",
 	},
-
 	getters:{
 
 	},

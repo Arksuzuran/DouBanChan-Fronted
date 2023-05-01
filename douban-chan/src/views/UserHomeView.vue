@@ -1,44 +1,48 @@
 <template>
-  <div class="userhome-bg">
-        <div class="userhome-container">
+  <div>
+    <navigation-bar></navigation-bar>
+    <div class="userhome-bg">
+      <div class="userhome-container">
 
-          <!-- 头图部分 -->
-          <div class="header-container">
-            <!-- 背景头图 -->
-            <img :src="userHeadUrl" class="header-background-image" />
-            <!-- 头像与签名 -->
-            <div class="header-user-info">
-              <img :src="userImgUrl" class="header-user-avatar" />
-              <div class="header-user-details">
-                <div class="header-user-nickname-wrapper">
-                  <p class="header-user-nickname">{{ userName }}</p>
-                </div>
-                <p class="header-user-signature">{{ userSignature }}</p>
+        <!-- 头图部分 -->
+        <div class="header-container">
+          <!-- 背景头图 -->
+          <img :src="userHeadUrl" class="header-background-image" />
+          <!-- 头像与签名 -->
+          <div class="header-user-info">
+            <img :src="userImgUrl" class="header-user-avatar" />
+            <div class="header-user-details">
+              <div class="header-user-nickname-wrapper">
+                <p class="header-user-nickname">{{ userName }}</p>
               </div>
+              <p class="header-user-signature">{{ userSignature }}</p>
             </div>
           </div>
-
-          <!-- 二级导航菜单 -->
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="userpageHome">主页</el-menu-item>
-            <el-menu-item index="userpageFavlist">收藏</el-menu-item>
-            <el-menu-item index="userpageSubscribe">订阅</el-menu-item>
-            <el-menu-item index="userpageGroup">小组</el-menu-item>
-            <el-menu-item index="userpagePost">我的帖子</el-menu-item>
-            <el-menu-item index="userpageMessage">消息</el-menu-item>
-          </el-menu>
-
-          <!-- 二级主页 -->
-          <div class="body-container">
-            <router-view></router-view>
-          </div>
-
         </div>
+
+        <!-- 二级导航菜单 -->
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-menu-item index="userpageHome">主页</el-menu-item>
+          <el-menu-item index="userpageFavlist">收藏</el-menu-item>
+          <el-menu-item index="userpageSubscribe">订阅</el-menu-item>
+          <el-menu-item index="userpageGroup">小组</el-menu-item>
+          <el-menu-item index="userpagePost">我的帖子</el-menu-item>
+          <el-menu-item index="userpageMessage">消息</el-menu-item>
+        </el-menu>
+
+        <!-- 二级主页 -->
+        <div class="body-container">
+          <router-view></router-view>
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import NavigationBar from '../components/NavigationBar.vue';
 export default {
   name: 'UserHomeView',
   data() {
@@ -53,19 +57,15 @@ export default {
       activeIndex: '',
     };
   },
-
-
-  computed:{
+  computed: {
     //头像路径与用户名
     ...mapState('userAbout', ['userName', 'userImgUrl']),
   },
-
-
   methods: {
     //选中二级导航栏
     handleSelect(index) {
       //选中不同的菜单项时才更新
-      if(this.activeIndex != index){
+      if (this.activeIndex != index) {
         this.$router.push({
           name: index,
         })
@@ -74,7 +74,9 @@ export default {
       this.activeIndex = index
     },
   },
-
+  components:{
+    NavigationBar,
+  }
 };
 </script>
 
@@ -82,15 +84,19 @@ export default {
 .userhome-bg {
   background-color: #f3f8fe;
 }
-.userhome-container{
+
+.userhome-container {
   margin: 0 8% 0 8%;
 }
-.body-container{
+
+.body-container {
   background-color: #ffffff;
 }
-.el-menu-demo{
+
+.el-menu-demo {
   font-size: 18px;
 }
+
 .header-container {
   position: relative;
   border-radius: 5px;
@@ -153,5 +159,4 @@ export default {
   margin: 0 0 0 10px;
   font-size: 16px;
   color: #fff;
-}
-</style>
+}</style>

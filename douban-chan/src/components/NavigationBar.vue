@@ -29,14 +29,16 @@
     </div>
     <!-- 登录/登出 -->
     <div class="avatar-wrapper" @click="login">
-      <el-avatar :size="40" @error="errorHandler">
-        <img src="../assets/conroy_img/qq.jpg" />
-      </el-avatar>
+      <!-- 已登录则显示头像 -->
+      <el-avatar :size="40" @error="errorHandler" v-if="isLogin" :src="userImgUrl"></el-avatar>
+      <!-- 未登录则显示“未登录” -->
+      <el-avatar :size="40" @error="errorHandler" v-if="!isLogin">未登录</el-avatar>
     </div>
   </div>
 </template>
 
 <script>
+import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
 const src = require('../assets/conroy_img/logo.png')
 export default {
   data() {
@@ -45,6 +47,10 @@ export default {
       state: '',//搜索用的key，传给后端
       selectedOption: '全部',
     };
+  },
+  computed:{
+    //头像路径与用户名
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
   },
   methods: {
     handleSelect(index) {
@@ -67,7 +73,13 @@ export default {
       this.selectedOption = option.label;
     },
     login() {
-      this.$router.push('/login')
+      if(this.isLogin){
+        this.$router.push('/userHome')
+      }
+      else{
+        this.$router.push('/login')
+      }
+      
     }
   },
 }
