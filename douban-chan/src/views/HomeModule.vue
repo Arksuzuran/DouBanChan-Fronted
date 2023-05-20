@@ -1,8 +1,9 @@
 <template>
     <div class="home-module-container">
         <div class="scroll-movie">
-            <el-carousel :interval="4000" type="card" :style="{ height: '450px' }">
-                <el-carousel-item v-for="(item, index) in  images " :key="index" :style="{ height: '450px' }">
+            <el-carousel :interval="4000" type="card" :style="{ height: '450px' }" :autoplay="false">
+                <!-- <el-carousel :interval="4000" type="card" :style="{ height: '450px' }"> -->
+                <el-carousel-item v-for="(item, index) in  images " :key="index">
                     <img :src="require(`@/assets/conroy_img/${item}`)" alt="" class="scroll-img">
                 </el-carousel-item>
             </el-carousel>
@@ -40,7 +41,7 @@ export default {
     data() {
         return {
             images: [
-                "1.jpg",
+                '1.jpg',
                 "2.jpg",
                 "3.jpg",
                 "4.jpg",
@@ -146,16 +147,19 @@ export default {
     },
 }
 </script>
-  
+
 <style>
+.el-carousel__container {
+    height: 100% !important;
+}
+
 .el-carousel__item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 80% !important;
+    left: -15% !important;
 }
 
 .scroll-movie {
-    width: 70vw;
+    width: 70%;
     margin-left: 3%;
     min-height: 100%;
 }
@@ -188,15 +192,14 @@ export default {
 }
 
 .home-module-container>div:first-child {
-    width: 70vw;
+    width: 70%;
     margin-left: 3%;
 }
 
 .home-module-container>div:last-child {
-    width: 30vw;
+    width: 30%;
     margin-left: 3%;
 }
-
 
 .movie-list {
     display: flex;

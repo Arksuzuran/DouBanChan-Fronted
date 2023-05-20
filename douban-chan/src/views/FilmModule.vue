@@ -1,87 +1,110 @@
 <template>
     <el-container>
         <el-header style="margin-top: 40px;">
-            <div style="float: left; margin-left: 3%;">
+            <div style="float: left; margin-left: 1%;">
                 <h4 style="font-size: 25px; font-weight: bold; margin: 0;">影视栏目</h4>
             </div>
         </el-header>
         <el-main>
-            <!-- 这里是电影卡片列表 -->
-            <div class="movie-card-list">
-                <div v-for="( movie, index ) in  movieList " :key="index" class="movie-card-1">
-                    <img :src="require(`@/assets/conroy_img/${movie.img}`)" alt="" class="movie-img-1">
-                    <div class="movie-info-1">
-                        <div class="movie-name-1">
-                            {{ movie.name }}</div>
-                        <div class="movie-score-1">
-                            {{ movie.score }}分</div>
-                    </div>
-                    <div class="movie-overlay-1">
-                        <el-button type="primary" size="small">查看详情</el-button>
-                    </div>
-                </div>
+            <div class="card-container">
+                <UniversalCard v-for="movie in movieList" :key="movie.id" :ChildType="movie.type" :ChildYear="movie.year"
+                    :ChildName="movie.name" :ChildRate="movie.rate" :ChildTime="movie.time" :ChildFrom="movie.from"
+                    :ChildDir="movie.dir" :ChildStar="movie.star" :ChildText="movie.text">
+                </UniversalCard>
             </div>
         </el-main>
-        <el-footer>
-            <div style="float: right; margin-right: 5%;">
-                <a href=# class="my-button">了解更多</a>
-            </div>
-        </el-footer>
     </el-container>
 </template>
 
 <script>
+import UniversalCard from "../components/UniversalCard";
 export default {
+    components: {
+        UniversalCard, // 注册子组件
+    },
     data() {
         return {
+            ParentName: '伦菲尔德',
+            ParentRate: 9.4,
+            ParentYear: 2020,
+            ParentTime: '2h13min',
+            ParentFrom: '漂亮国',
+            ParentType: '动作 / 冒险 / 科幻',
+            ParentDir: '诺兰',
+            ParentStar: '吴亦凡 李易峰 郑爽',
+            ParentText: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
             movieList: [
                 {
-                    name: "电影1",
-                    img: "1.jpg",
-                    score: 7.5,
-                    desc: "电影1的描述",
+                    id: 1,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
                 {
-                    name: "电影2",
-                    img: "2.jpg",
-                    score: 8.1,
-                    desc: "电影2的描述",
+                    id: 2,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
                 {
-                    name: "电影3",
-                    img: "3.jpg",
-                    score: 9.0,
-                    desc: "电影3的描述",
+                    id: 3,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
                 {
-                    name: "电影4",
-                    img: "4.jpg",
-                    score: 6.8,
-                    desc: "电影4的描述",
+                    id: 4,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
                 {
-                    name: "电影5",
-                    img: "5.jpg",
-                    score: 7.2,
-                    desc: "电影5的描述",
+                    id: 5,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
                 {
-                    name: "电影6",
-                    img: "6.jpg",
-                    score: 8.4,
-                    desc: "电影6的描述",
-                },
-                {
-                    name: "电影7",
-                    img: "1.jpg",
-                    score: 7.9,
-                    desc: "电影7的描述",
-                },
-                {
-                    name: "电影8",
-                    img: "2.jpg",
-                    score: 8.7,
-                    desc: "电影8的描述",
+                    id: 6,
+                    name: '伦菲尔德',
+                    rate: 9.4,
+                    year: 2020,
+                    time: '2h13min',
+                    from: '漂亮国',
+                    type: '动作 / 冒险 / 科幻',
+                    dir: '诺兰',
+                    star: '吴亦凡 李易峰 郑爽',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
                 },
             ],
         }
@@ -89,13 +112,20 @@ export default {
 }
 </script>
 <style>
-.movie-card-list {
+.card-container {
+    margin-left: 1%;
+    margin-top: -20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    height: 100%;
-    /* 将高度设为100% */
+    justify-content: space-between;
+
+}
+
+.UniversalCard {
+    width: calc(16.6667% - 7px);
+    /* 每行六个卡片，间距为 10px */
+    flex: 0 0 auto;
+    /* 禁止卡片自动扩展 */
 }
 
 .movie-card-1 {
