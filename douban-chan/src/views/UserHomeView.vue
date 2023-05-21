@@ -49,7 +49,7 @@ export default {
     return {
       //Header
       //头图设置
-      userHeadUrl: require("../assets/user-bg-2.jpg"),
+      userHeadUrl: require("../assets/user-bg-4.jpg"),
       //用户签名
       userSignature: "你好，我是羽毛笔。",
 

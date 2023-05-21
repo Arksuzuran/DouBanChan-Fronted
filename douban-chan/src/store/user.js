@@ -18,7 +18,7 @@ export default {
 	},
 	state:{
 		//当前是否登录
-        isLogin: false,
+        isLogin: true,
 		//头像路径
 		userImgUrl: require("../assets/user-image-1.jpg"),
 		//用户昵称

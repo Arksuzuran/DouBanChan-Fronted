@@ -15,6 +15,12 @@ import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
 import VideoHome from "../views/Video/VideoHome.vue";
+
+//小组
+import GroupPage from "../views/Group/GroupPage.vue";
+import GroupPostList from "../views/Group/GroupPostList.vue";
+//帖子
+import Post from "../views/Post/Post.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -47,6 +53,26 @@ const routes = [
     path: "/groupHome",
     name: "groupHome",
     component: GroupHomeView,
+  },
+  //某小组的主页
+  {
+    path: "/group",
+    component: GroupPage,
+    children: [
+      //默认的二级路由
+      {
+        path: '',
+        name: "group",  //让默认二级路由设置name
+        component: GroupPostList,
+      },
+      // 帖子的页面
+      {
+        path:'/group/post',
+        name:'groupPost',
+        component: Post
+      },
+      //
+    ]
   },
   //用户个人账户主页
   {

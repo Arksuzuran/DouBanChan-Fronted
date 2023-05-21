@@ -38,7 +38,9 @@
 </template>
 
 <script>
+// 在需要使用vuex的场合下引入vuex
 import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+
 const src = require('../assets/conroy_img/logo.png')
 export default {
   data() {
@@ -50,6 +52,7 @@ export default {
   },
   computed:{
     //头像路径与用户名
+    //引入vuex的userAbout模块里的 state变量
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
   },
   methods: {
