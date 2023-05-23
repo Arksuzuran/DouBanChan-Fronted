@@ -1,14 +1,14 @@
 <!-- 页面右下角 点赞点踩收藏悬浮框 -->
 <!-- 在Post.vue里被调用 -->
 <template>
-    <div class="container">
-        <div class="dataicon-wrapper" @click="handleLike">
-            <i class="fa-solid fa-thumbs-up icon" ref="likeIcon"></i>
-            <span class="data-font">{{ getLikeNumber }}</span>
+    <div class="likefav-button-group-container">
+        <div class="likefav-button-group-dataicon-wrapper" @click="handleLike">
+            <i class="fa-solid fa-thumbs-up likefav-button-group-icon" ref="likeIcon"></i>
+            <span class="likefav-button-group-data-font">{{ getLikeNumber }}</span>
         </div>
-        <div class="dataicon-wrapper" @click="handleDislike">
-            <i class="fa-solid fa-thumbs-down icon" ref="dislikeIcon"></i>
-            <span class="data-font">{{ getDislikeNumber }}</span>
+        <div class="likefav-button-group-dataicon-wrapper" @click="handleDislike">
+            <i class="fa-solid fa-thumbs-down likefav-button-group-icon" ref="dislikeIcon"></i>
+            <span class="likefav-button-group-data-font">{{ getDislikeNumber }}</span>
         </div>
     </div>
 </template>
@@ -101,19 +101,19 @@ export default {
         // 根据点赞来修改css类
         updateLikeClass() {
             if (this.userLike) {
-                this.$refs.likeIcon.classList.add('icon-like')
+                this.$refs.likeIcon.classList.add('likefav-button-group-icon-like')
             }
             else {
-                this.$refs.likeIcon.classList.remove('icon-like')
+                this.$refs.likeIcon.classList.remove('likefav-button-group-icon-like')
             }
         },
         // 根据点踩来修改css类
         updateDislikeClass() {
             if (this.userDislike) {
-                this.$refs.dislikeIcon.classList.add('icon-dislike')
+                this.$refs.dislikeIcon.classList.add('likefav-button-group-icon-dislike')
             }
             else {
-                this.$refs.dislikeIcon.classList.remove('icon-dislike')
+                this.$refs.dislikeIcon.classList.remove('likefav-icon-dislike')
             }
         },
     },
@@ -128,35 +128,35 @@ export default {
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 /* 图标的颜色 */
-.icon {
+.likefav-button-group-icon {
     font-size: 20px;
     color: rgb(97, 97, 97);
     margin: 5px;
     cursor: pointer;
 }
-.icon-small{
+.likefav-button-group-icon-small{
     font-size: 18px;
     color: rgb(97, 97, 97);
     margin: 15px 5px 15px 20px;
     cursor: pointer;
 }
-.icon-like {
+.likefav-button-group-icon-like {
     color: rgb(252, 53, 53);
 }
-.icon-dislike {
+.likefav-button-group-icon-dislike {
     color: rgb(0, 0, 0);
 }
-.dataicon-wrapper {
+.likefav-button-group-dataicon-wrapper {
     margin-bottom: -1px;
 }
-.data-font {
+.likefav-button-group-data-font {
     margin-right: 8px;
     font-size: 16px;
     font-weight: 500;
     color: rgb(35, 35, 35);
 }
 
-.container {
+.likefav-button-group-container {
     width: 120px;
     position: fixed;
     bottom: 150px;
@@ -172,7 +172,7 @@ export default {
     justify-content: center;
 }
 
-.button-report {
+.likefav-button-group-button-report {
     /* 尺寸 */
     width: 100px;
     height: 36px;
@@ -190,12 +190,12 @@ export default {
     cursor: pointer;
 }
 
-.button-report:hover {
+.likefav-button-group-button-report:hover {
     background-color: rgba(255, 126, 126, 1);
 }
 
 /* 鼠标移入的动画效果 */
-.slide-in {
+.likefav-button-group-slide-in {
     animation: slideInAnimation 0.5s forwards;
 }
 
