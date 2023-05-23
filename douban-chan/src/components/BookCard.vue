@@ -103,6 +103,7 @@
                         <i class="fa-solid fa-star fa-2xl rate-custom-icon"
                             :style="{ color: '#669eff', fontSize: starSize }"></i>
                         <span v-if="value" class="rate-count">{{ value }}</span>
+                        <span v-if="!value" class="rate-count">?</span>
                     </div>
                     <div class="rate-block">
                         <span class="rate-this">RATE THIS</span>
@@ -111,8 +112,8 @@
                         <el-rate class="book-rate-ten-star" style="margin-top: 3%;" v-model="value" :colors="colors"
                             :max="10">
                         </el-rate>
-                        <button :class="['book-rate-button', { 'disabled': value === '?' }]"
-                            :disabled="value === '?'">打分</button>
+                        <button :class="['book-rate-button', { 'disabled': value === 0 }]"
+                            :disabled="value === 0">打分</button>
                     </div>
                 </div>
             </div>
@@ -142,7 +143,7 @@ export default {
         return {
             isModalVisible: false, // 控制弹窗的显示与隐藏
             isRateVisible: false,
-            value: '?',
+            value: 0,
             colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
         };
     },
@@ -168,7 +169,7 @@ export default {
             document.addEventListener('scroll', this.disableScroll, { passive: false }); // 禁用滚动事件
         },
         closeRate() {
-            this.value = '?';
+            this.value = 0;
             this.isRateVisible = false;
             if (!this.isModalVisible)
                 document.body.style.overflow = 'auto'; // 恢复滚动条
@@ -177,8 +178,7 @@ export default {
     },
     computed: {
         starSize() {
-            if (this.value != '?') return this.value * 2 + 100 + 'px';
-            else return '100px'
+            return this.value * 2 + 100 + 'px';
         }
     },
 };

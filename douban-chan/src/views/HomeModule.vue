@@ -1,8 +1,7 @@
 <template>
     <div class="home-module-container-new">
         <div class="home-module-scroll-movie-new">
-            <el-carousel :interval="4000" arrow="never" trigger="hover" indicator="custom-indicator"
-                :style="{ height: '540px', width: '960px' }">
+            <el-carousel :interval="4000" arrow="never" trigger="hover" :style="{ height: '540px', width: '960px' }">
                 <el-carousel-item v-for="item in 6" :key="item">
                     <ScrollingScreenCard></ScrollingScreenCard>
                 </el-carousel-item>

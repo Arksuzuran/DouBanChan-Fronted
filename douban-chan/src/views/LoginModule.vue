@@ -68,6 +68,7 @@ export default ({
             fadeOut: false,
             moveRight: false,
             notHideButtons: true,
+            checked: false,
             //swiperOption：swiper配置项信息，需要绑定在swiper标签的 :option 属性中
             swiperOption: {
                 //幻灯片放映方向
@@ -91,11 +92,6 @@ export default ({
                     delay: 8000, // 幻灯片停留时间
                     disableOnInteraction: false, // 用户操作swiper之后，是否禁止autoplay
                     stopOnLastSlide: false, // 切换到最后一个slide时是否停止自动切换。（loop模式下无效）。
-                },
-                on: {
-                    slideChangeTransitionEnd: function () {
-                        console.log(this.activeIndex); //每次切换结束时，在控制台打印现在是第几个slide
-                    },
                 },
             },
         };
@@ -126,15 +122,15 @@ export default ({
                 }, 5000);
             });
         },
-        handleButtonClick2() {
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.moveLeft = false;
-                    this.fadeOut = false;
-                    this.moveRight = false;//后续会修改成登录失败后返回
-                }, 1000);
-            });
-        },
+        // handleButtonClick2() {
+        //     this.$nextTick(() => {
+        //         setTimeout(() => {
+        //             this.moveLeft = false;
+        //             this.fadeOut = false;
+        //             this.moveRight = false;//后续会修改成登录失败后返回
+        //         }, 1000);
+        //     });
+        // },
     }
 })
 </script>
