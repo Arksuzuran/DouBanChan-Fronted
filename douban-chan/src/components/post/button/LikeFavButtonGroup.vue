@@ -1,21 +1,22 @@
+<!-- 页面右下角 点赞点踩收藏悬浮框 -->
+<!-- 在Post.vue里被调用 -->
 <template>
-    <!-- 收藏 评论 点赞 点踩 -->
-    <div class="postcard-dataicon-group">
-        <div class="postcard-dataicon-wrapper" @click="handleLike">
-            <i class="fa-solid fa-thumbs-up" :class="iconClass" ref="likeIcon"></i>
-            <span :class="fontClass">{{ getLikeNumber }}</span>
+    <div class="container">
+        <div class="dataicon-wrapper" @click="handleLike">
+            <i class="fa-solid fa-thumbs-up icon" ref="likeIcon"></i>
+            <span class="data-font">{{ getLikeNumber }}</span>
         </div>
-        <div class="postcard-dataicon-wrapper" @click="handleDislike">
-            <i class="fa-solid fa-thumbs-down" :class="iconClass" ref="dislikeIcon"></i>
-            <span :class="fontClass">{{ getDislikeNumber }}</span>
+        <div class="dataicon-wrapper" @click="handleDislike">
+            <i class="fa-solid fa-thumbs-down icon" ref="dislikeIcon"></i>
+            <span class="data-font">{{ getDislikeNumber }}</span>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name:'LikeButtonGroup',
-    props: ['info', 'small'],
+    name: 'LikeFavButtonGroup',
+    props: ['info'],
     data() {
         return {
             userLike: false,
@@ -25,12 +26,6 @@ export default {
         }
     },
     computed:{
-        fontClass(){
-            return this.small ? 'postcard-data-font-small' : 'postcard-data-font'
-        },
-        iconClass(){
-            return this.small ? 'postcard-icon-small' : 'postcard-icon'
-        },
         getLikeNumber(){
             if(this.userLike){
                 return this.basicLikeNumber + 1;
@@ -106,19 +101,19 @@ export default {
         // 根据点赞来修改css类
         updateLikeClass() {
             if (this.userLike) {
-                this.$refs.likeIcon.classList.add('postcard-icon-like')
+                this.$refs.likeIcon.classList.add('icon-like')
             }
             else {
-                this.$refs.likeIcon.classList.remove('postcard-icon-like')
+                this.$refs.likeIcon.classList.remove('icon-like')
             }
         },
         // 根据点踩来修改css类
         updateDislikeClass() {
             if (this.userDislike) {
-                this.$refs.dislikeIcon.classList.add('postcard-icon-dislike')
+                this.$refs.dislikeIcon.classList.add('icon-dislike')
             }
             else {
-                this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
+                this.$refs.dislikeIcon.classList.remove('icon-dislike')
             }
         },
     },
@@ -131,41 +126,88 @@ export default {
 
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
-/* 底部点赞收藏等信息 */
-.postcard-dataicon-group {
-    /* height: 20px; */
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: flex-start;
-}
 
 /* 图标的颜色 */
-.postcard-icon {
+.icon {
     font-size: 20px;
     color: rgb(97, 97, 97);
-    margin: 0 5px 3px 20px;
+    margin: 5px;
     cursor: pointer;
 }
-.postcard-icon-small{
+.icon-small{
     font-size: 18px;
     color: rgb(97, 97, 97);
     margin: 15px 5px 15px 20px;
     cursor: pointer;
 }
-.postcard-icon-like {
+.icon-like {
     color: rgb(252, 53, 53);
 }
-.postcard-icon-dislike {
+.icon-dislike {
     color: rgb(0, 0, 0);
 }
-.postcard-dataicon-wrapper {
+.dataicon-wrapper {
     margin-bottom: -1px;
 }
-.postcard-data-font {
+.data-font {
     margin-right: 8px;
     font-size: 16px;
     font-weight: 500;
     color: rgb(35, 35, 35);
+}
+
+.container {
+    width: 120px;
+    position: fixed;
+    bottom: 150px;
+    right: 10px;
+    border-radius: 5px;
+    background-color: rgb(255, 217, 217);
+    border: 3px solid rgba(254, 232, 232, 0.8);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-report {
+    /* 尺寸 */
+    width: 100px;
+    height: 36px;
+    margin: 10px;
+    /* 背景 边界 阴影 */
+    background-color: rgba(246, 152, 152, 0.6);
+    border: 2px solid rgba(253, 187, 187, 0.7);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    /* 字体 */
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(49, 49, 49, 0.9);
+    /* 手型 */
+    cursor: pointer;
+}
+
+.button-report:hover {
+    background-color: rgba(255, 126, 126, 1);
+}
+
+/* 鼠标移入的动画效果 */
+.slide-in {
+    animation: slideInAnimation 0.5s forwards;
+}
+
+@keyframes slideInAnimation {
+    from {
+        /* transform: translateX(-100%); */
+        opacity: 0.5;
+    }
+
+    to {
+        /* transform: translateX(0); */
+        opacity: 1;
+    }
 }
 </style>

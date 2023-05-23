@@ -59,12 +59,12 @@ export default {
 
 @keyframes slideInAnimation {
     from {
-        transform: translateX(-100%);
+        /* transform: translateX(-100%); */
         opacity: 0.5;
     }
 
     to {
-        transform: translateX(0);
+        /* transform: translateX(0); */
         opacity: 1;
     }
 }

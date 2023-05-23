@@ -116,7 +116,7 @@ export default {
 }
 
 .postcard-text-img-2 {
-    margin: 4%;
+    margin: 0 2%;
     max-width: 40%;
     /* max-height: 100%; */
     object-fit: cover;

@@ -1,39 +1,21 @@
-<!-- 页面右下方 固定的发帖入口 -->
+<!-- 帖子页面内 回复帖子的悬浮框 以及上拉窗 -->
 <template>
     <div>
         <!-- 右下角固定的发帖窗 -->
         <div class="postbar-container">
             <img :src="userImgUrl" class="postbar-user-image" />
-            <button class="postbar-button" @click="handleStartPost">我要发帖</button>
+            <button class="postbar-button" @click="handleStartPost">我来说两句</button>
         </div>
         <!-- 从下向上的发帖栏 -->
         <el-drawer :before-close="handleClose" :visible.sync="dialog" direction="btt" custom-class="demo-drawer" size="75%"
             ref="drawer">
             <!-- 发帖栏容器 -->
             <div class="form-container">
-                <div class="form-title">发表帖子</div>
+                <div class="form-title">发表回帖</div>
                 <div class="form-main">
                     <!-- 表单区 -->
-                    <el-form :model="form">
-                        <!-- 标题输入框 -->
-                        <el-form-item label="帖子标题" :label-width="formLabelWidth">
-                            <el-input type="text" maxlength="50" show-word-limit v-model="form.title" autocomplete="off">
-                            </el-input>
-                        </el-form-item>
-
-                        <!-- 话题选择框 -->
-                        <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" placeholder="请输入内容"
-                                @select="handleSelect" style="width: 100%;"></el-autocomplete>
-                        </el-form-item>
-
-
-                        <!-- 正文输入框 -->
-                        <el-form-item label="帖子正文" :label-width="formLabelWidth" :rows="20">
-                            <el-input type="textarea" v-model="form.text" :autosize="{ minRows: 10, maxRows: 10 }">
-                            </el-input>
-                        </el-form-item>
-                    </el-form>
+                    <!-- 正文输入框 -->
+                    <textarea type="textarea" v-model="form.text" rows="10" :placeholder="inputPlaceHolderText"></textarea>
 
                     <!-- 缩略图 上传图片 -->
                     <!-- action 是要上传的地址 -->
@@ -62,14 +44,6 @@
                             </div>
                         </el-upload>
                     </template>
-                    <!-- <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card"
-                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
-                        :auto-upload="false">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog> -->
 
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="">
@@ -93,8 +67,10 @@
 <script>
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { nanoid } from 'nanoid'
 export default {
-    name: 'PostCreateBar',
+    name: 'PostReplyBar',
+    props: ['postInfo'],
     data() {
         return {
             // 向后端传入图片的url
@@ -105,17 +81,10 @@ export default {
             loading: false,
             // 表单收集的数据
             form: {
-                title: '',
-                topic: '',
                 imgUrlList: [],
                 text: '',
             },
-            formLabelWidth: '80px',
             timer: null,
-
-            // 话题选择框的数据
-            topicList: [],
-            timeout: null,
 
             //文件的list
             fileList: [],
@@ -129,6 +98,11 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+
+        //回帖栏默认内容
+        inputPlaceHolderText() {
+            return '回复帖子：' + this.postInfo.title
+        }
     },
     methods: {
         // 点击我要发帖按钮
@@ -140,7 +114,7 @@ export default {
             if (this.loading) {
                 return;
             }
-            this.$confirm('确定要提交表单吗？')
+            this.$confirm('确定要发表回帖吗？')
                 .then(_ => {
                     this.createPost();
                     this.loading = true;
@@ -160,110 +134,29 @@ export default {
             this.dialog = false;
             clearTimeout(this.timer);
         },
-        // 创建帖子
+        // 创建回帖
         createPost() {
             //构造对象
-            let newPost = {
-                postId: 'p002',
-                lzId: this.userId,
-                lzName: this.userName,
-                lzImageUrl: this.userImgUrl,
+            let newReply = {
+                textId: nanoid(),
+                floor: 0,
+                userId: this.userId,
+                userName: this.userName,
+                userImageUrl: this.userImgUrl,
                 date: this.getTimeNow(),
-                title: this.form.title,
                 text: this.form.text,
-                postImageUrlList: this.form.imgUrlList,
-                topic: this.form.topic,
-                visits: 1,
-                fav: 0,
+                imageUrlList: this.form.imgUrlList,
                 comments: 0,
                 like: 0,
                 dislike: 0,
-                isTopped: false,
-                isQualityPost: false,
+                childFloorList: [],
             };
-            // 通过事件总线触发自定义事件，并传递新帖子作为参数
-            this.$bus.$emit('postCreated', newPost);
+            // 通过事件总线触发自定义事件，并传递新回复作为参数
+            this.$bus.$emit('postReplyCreated', newReply);
             // 清空内容
             this.fileList = []
-            this.form.title = ''
-            this.form.topic = ''
             this.form.imgUrlList = []
             this.form.text = ''
-        },
-
-        //加载全部话题
-        loadAll() {
-            return [
-                { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-                { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-                { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-                { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
-                { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-                { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
-                { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
-                { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
-                { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
-                { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
-                { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
-                { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
-                { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
-                { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
-                { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
-                { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
-                { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
-                { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
-                { "value": "猫山王（西郊百联店）", "address": "上海市长宁区仙霞西路88号第一层G05-F01-1-306" },
-                { "value": "枪会山", "address": "上海市普陀区棕榈路" },
-                { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
-                { "value": "钱记", "address": "上海市长宁区天山西路" },
-                { "value": "壹杯加", "address": "上海市长宁区通协路" },
-                { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
-                { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
-                { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
-                { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
-                { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
-                { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
-                { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
-                { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
-                { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
-                { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
-                { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
-                { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
-                { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
-                { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
-                { "value": "浏阳蒸菜", "address": "天山西路430号" },
-                { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
-                { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
-                { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
-                { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
-                { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
-                { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
-                { "value": "阳阳麻辣烫", "address": "天山西路389号" },
-                { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
-            ];
-        },
-        //从服务器按照输入的queryString搜索话题
-        querySearchAsync(queryString, cb) {
-            var topicList = this.topicList;
-            var results = queryString ? topicList.filter(this.createStateFilter(queryString)) : topicList;
-
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                cb(results);
-            }, 100 * Math.random());
-        },
-        // 搜索算法 目前是只匹配开头字符串
-        createStateFilter(queryString) {
-            return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        // 选中某话题时
-        handleSelect(item) {
-            this.form.topic = item.value
-            console.log(item.value);
         },
         // 获取当前时间
         getTimeNow() {
@@ -306,6 +199,7 @@ export default {
             // 将图片URL添加到列表中
             this.form.imgUrlList.push(imageUrl);
         },
+        // 自定义上传 目前应该用不上了
         handleUploadOnline(file) {
             // 从上传成功的响应中获取图片URL
             console.log('自定义上传函数,file: ', file)
@@ -344,6 +238,7 @@ export default {
                     });
             });
         },
+        // 移除已选的图片
         handleRemove(file) {
             console.log(file);
             // fileList.remove(file)
@@ -363,7 +258,7 @@ export default {
         }
     },
     mounted() {
-        this.topicList = this.loadAll();
+
     },
 }
 </script>
@@ -372,8 +267,9 @@ export default {
 .el-upload-list__item-thumbnail {
     object-fit: cover;
 }
+
 .postbar-container {
-    width: 120px;
+    width: 130px;
     position: fixed;
     bottom: 10px;
     right: 10px;
@@ -386,10 +282,6 @@ export default {
     flex-flow: column wrap;
     align-items: center;
     justify-content: space-around;
-}
-
-.drawer-container {
-    background-color: rgb(255, 212, 212);
 }
 
 .form-container {
@@ -429,7 +321,7 @@ export default {
 }
 
 .postbar-button {
-    width: 80px;
+    width: 90px;
     height: 40px;
     border-radius: 10px;
     color: rgb(106, 106, 106);
@@ -445,5 +337,25 @@ export default {
     background-color: rgb(255, 56, 56);
     color: rgb(255, 255, 255);
     cursor: pointer;
+}
+
+textarea {
+    padding: 15px;
+    width: 75%;
+    border: 2px solid #ffeaea;
+    resize: vertical;
+    background-color: rgba(255, 252, 252, 0.7);
+    border-radius: 5px;
+    margin: 20px;
+    /* 字体 */
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #2c3e50;
+}
+
+textarea:focus {
+    border-color: pink;
+    outline: rgb(255, 131, 152);
+    z-index: 100;
 }
 </style>

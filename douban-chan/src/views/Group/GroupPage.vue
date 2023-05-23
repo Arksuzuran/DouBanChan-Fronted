@@ -218,8 +218,9 @@ export default {
 }
 .group-header-introbox {
     margin-left: 2%;
+    margin-right: 300px;
     text-align: left;
-    width: 75%;
+    /* width: 75%; */
     /* 字体 */
     font-size: 14px;
     color: rgba(5, 5, 5, 0.9);

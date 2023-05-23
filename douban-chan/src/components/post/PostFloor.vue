@@ -11,25 +11,31 @@
         <div class="postfloor-text-container">
             <!-- 楼层 -->
             <div class="postfloor-floorNumberBox">
-                <div class="postfloor-floorNumberBox-floor">{{ floorNum + '楼' }}</div>
+                <div class="postfloor-floorNumberBox-floor">{{ info.floor + '楼' }}</div>
             </div>
             <!-- 是否楼主 -->
-            <div class="postfloor-LZBox">
+            <div class="postfloor-LZBox" v-if="lz">
                 <div class="postfloor-LZBox-LZ">楼主</div>
             </div>
             <!-- 帖子正文 -->
             <PostCardText class="postfloor-maintext" :info="textInfo" />
 
-            <!-- 赞与踩 -->
+            <!-- 赞与踩 回复按钮-->
             <div class="postfloor-like-container">
-                <LikeButtonGroup :like="info.like" :dislike="info.dislike" :textId="info.textId" />
+                <LikeButtonGroup :info="likeInfo" />
+                <!-- 回复按钮 -->
+                <div class="postfloor-reply-button" @click="changeReplying">
+                    回复
+                </div>
             </div>
         </div>
 
-
-        <!-- 未被折叠的评论 -->
         <div class="postfloor-comment-container">
-            <ComentUnderFloor v-for="(info, index) in showedchildFloorList" :key="index" :info="info"></ComentUnderFloor>
+            <!-- 撰写评论的区域 -->
+            <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName">
+            </CommentReplyInputBox>
+            <!-- 展示未被折叠的评论 -->
+            <ComentUnderFloor v-for="info in showedchildFloorList" :key="info.textId" :info="info"></ComentUnderFloor>
         </div>
 
         <!-- 底部被折叠的评论 -->
@@ -42,7 +48,7 @@
                     </div>
                 </template>
                 <!-- 在这里放置余下的评论 -->
-                <!-- 未被折叠的评论 -->
+                <!-- 被折叠的评论 -->
                 <div class="postfloor-comment-container">
                     <ComentUnderFloor v-for="(info, index) in restchildFloorList" :key="index" :info="info">
                     </ComentUnderFloor>
@@ -54,41 +60,64 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import PostCardUserInfo from './PostCardUserInfo.vue';
 import PostCardText from './PostCardText.vue';
 import PostReportButton from './button/PostReportButton.vue';
 import ComentUnderFloor from './ComentUnderFloor.vue';
 import LikeButtonGroup from './button/LikeButtonGroup.vue';
+import CommentReplyInputBox from './button/CommentReplyInputBox.vue';
 
 export default {
-    props: ['info', 'floorNum'],
+    props: ['post', 'info', 'lz'],
     components: {
         PostCardUserInfo,
         PostCardText,
         PostReportButton,
         ComentUnderFloor,
         LikeButtonGroup,
+        CommentReplyInputBox,
     },
     data() {
         return {
-            // 要传递给PostCardUserInfo组件的信息
-            userInfo: {
+            // 用户是否正在回复评论
+            isReplying: false,
+            // 允许直接展示的最多楼中楼层数
+            maxCommentsNum: 1,
+        }
+    },
+    computed: {
+        // 要传递给PostCardUserInfo组件的信息
+        userInfo() {
+            return {
                 id: this.info.userId,
                 name: this.info.userName,
                 date: this.info.date,
                 imageUrl: this.info.userImageUrl,
-            },
-            // 要传递给PostCardText组件的信息
-            textInfo: {
+            }
+        },
+        // 要传递给PostCardText组件的信息
+        textInfo() {
+            if (this.info.floor == 1) {
+                return {
+                    title: this.post.title,
+                    text: this.info.text,
+                    postImageUrlList: this.info.imageUrlList,
+                }
+            }
+            return {
                 text: this.info.text,
                 postImageUrlList: this.info.imageUrlList,
-            },
-            maxCommentsNum: 1,
-            like: this.info.like,
-            dislike: this.info.dislike,
-        }
-    },
-    computed: {
+            }
+        },
+        // 要传递给LikeButtonGroup组件的信息
+        likeInfo() {
+            return {
+                like: this.info.like,
+                dislike: this.info.dislike,
+                textId: this.info.textId,
+            }
+        },
         showFoldedComments() {
             return this.info.childFloorList && this.info.childFloorList.length >= this.maxCommentsNum;
         },
@@ -97,6 +126,7 @@ export default {
         },
         // 筛选评论
         showedchildFloorList() {
+            console.log(this.info)
             // 获取前两条评论
             return this.info.childFloorList.slice(0, this.maxCommentsNum);
         },
@@ -104,16 +134,23 @@ export default {
             // 获取除前两条评论外的其余评论
             return this.info.childFloorList.slice(this.maxCommentsNum);
         },
+        //头像路径与用户名
+        //引入vuex的userAbout模块里的 state变量
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     },
     methods: {
+        // 改变用户对当层楼的回复状态
+        changeReplying() {
+            this.isReplying = !this.isReplying
+        },
         //处理点赞
-        updateLike(cnt) {
-            console.log('用户点赞', cnt)
-        },
-        //处理点踩
-        updateDislike(cnt) {
-            console.log('用户点踩', cnt)
-        },
+        // updateLike(cnt) {
+        //     console.log('用户点赞', cnt)
+        // },
+        // //处理点踩
+        // updateDislike(cnt) {
+        //     console.log('用户点踩', cnt)
+        // },
     },
     mounted() {
 
@@ -156,6 +193,23 @@ export default {
 /* 赞和踩的图标组容器 */
 .postfloor-like-container {
     margin-left: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* 回复按钮 */
+.postfloor-reply-button {
+    margin: 0 0 3px 20px;
+    height: 25px;
+    width: 50px;
+    background-color: rgb(255, 235, 235);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 252, 252, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
 .postcard-icon {

@@ -8,8 +8,8 @@
                 <img :src="info.userImageUrl" class="user-img">
                 <div class="username">{{ info.userName }}</div>
             </div>
-            <div class="height-taker"></div>
             <div class="text-container">
+                <div class="height-taker"></div>
                 <div class="text">
                     {{ info.text }}
                 </div>
@@ -18,7 +18,7 @@
             <div class="footer-container">
                 <div>{{ info.date }}</div>
                 <div>
-                    <LikeButtonGroup :like="info.like" :dislike="info.dislike" :textId="info.textId" :small="true"/>
+                    <LikeButtonGroup :info="likeInfo" :small="true"/>
                     <!-- <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>{{ info.like }}
                     <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>{{ info.dislike }} -->
                 </div>
@@ -40,6 +40,15 @@ export default {
 
         }
     },
+    computed:{
+        likeInfo(){
+            return {
+                like: this.info.like,
+                dislike: this.info.dislike,
+                textId: this.info.textId,
+            }
+        },
+    },
     methods: {
         // 点击用户昵称或者头像即可跳转到其主页
         jumpToUserHome() {
@@ -55,7 +64,7 @@ export default {
 @import '~@fortawesome/fontawesome-free/css/all.css';
 .main-container {
     max-width: 1000px;
-    margin: 20px;
+    margin: 10px 20px 0 20px;
     min-height: 60px
 }
 
@@ -76,7 +85,8 @@ export default {
     background-color: rgb(255, 232, 232);
 }
 .height-taker{
-    height: 4px;
+    height: 5px;
+    /* background-color: rgb(255, 60, 60); */
 }
 .user-img {
     width: 30px;
@@ -116,6 +126,7 @@ export default {
 }
 .footer-container {
     margin: 5px;
+    font-size: 16px;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
