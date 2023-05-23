@@ -38,9 +38,7 @@
 </template>
 
 <script>
-// 在需要使用vuex的场合下引入vuex
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
-
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 const src = require('../assets/conroy_img/logo.png')
 export default {
   data() {
@@ -50,7 +48,7 @@ export default {
       selectedOption: '全部',
     };
   },
-  computed:{
+  computed: {
     //头像路径与用户名
     //引入vuex的userAbout模块里的 state变量
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
@@ -76,13 +74,13 @@ export default {
       this.selectedOption = option.label;
     },
     login() {
-      if(this.isLogin){
+      if (this.isLogin) {
         this.$router.push('/userHome')
       }
-      else{
+      else {
         this.$router.push('/login')
       }
-      
+
     }
   },
 }
@@ -91,27 +89,30 @@ export default {
 .search-wrapper {
   display: flex;
   align-items: center;
-  padding: 20px 40px;
-  background-color: #f5f5f5;
+  padding: 0px 0px;
+  background-image: url('@/assets/conroy_img/bar.jpg');
+  background-repeat: repeat-x;
+  background-size: 100% auto;
 }
 
 .logo-wrapper {
-  margin-right: 30px;
+  width: 200px;
+  height: 120px;
+  flex: 1;
 }
 
 .logo-img {
-  height: 30px;
+  height: 120px;
+  width: 200px;
 }
 
 .menu-wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex: 1;
-
+  border: none;
+  flex: 2;
 }
 
 .search-input-wrapper {
-  flex: 2;
+  flex: 3;
 }
 
 .avatar-wrapper {
@@ -119,12 +120,48 @@ export default {
 }
 
 .el-menu-demo {
+  justify-content: center;
   display: flex;
-  width: 600px;
+  background-color: transparent;
+  border-bottom: 0px solid transparent;
+  box-shadow: 0 0px 0 #F7CB83;
 }
 
 .el-menu-demo .el-menu-item {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  position: relative;
+  border-radius: 20px;
+}
+
+.el-menu-demo .el-menu-item.is-active,
+.el-menu-demo .el-menu-item:hover {
+  background-color: #f7cb83;
+}
+
+
+.centered-menu-item {
+  text-align: right;
+}
+
+.el-menu-demo .el-menu-item::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background-color: #f7cb83;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.el-menu-demo .el-menu-item.is-active::before,
+.el-menu-demo .el-menu-item:hover::before {
+  opacity: 1;
 }
 </style>
