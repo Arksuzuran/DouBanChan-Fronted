@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navigation-bar></navigation-bar>
     <div class="userhome-bg">
       <div class="userhome-container">
 
@@ -42,7 +41,6 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import NavigationBar from '../components/NavigationBar.vue';
 export default {
   name: 'UserHomeView',
   data() {
@@ -74,8 +72,8 @@ export default {
       this.activeIndex = index
     },
   },
-  components:{
-    NavigationBar,
+  components: {
+
   }
 };
 </script>
@@ -159,4 +157,5 @@ export default {
   margin: 0 0 0 10px;
   font-size: 16px;
   color: #fff;
-}</style>
+}
+</style>

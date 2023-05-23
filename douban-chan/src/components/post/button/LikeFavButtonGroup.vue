@@ -113,7 +113,7 @@ export default {
                 this.$refs.dislikeIcon.classList.add('likefav-button-group-icon-dislike')
             }
             else {
-                this.$refs.dislikeIcon.classList.remove('likefav-icon-dislike')
+                this.$refs.dislikeIcon.classList.remove('likefav-button-group-icon-dislike')
             }
         },
     },
@@ -132,12 +132,6 @@ export default {
     font-size: 20px;
     color: rgb(97, 97, 97);
     margin: 5px;
-    cursor: pointer;
-}
-.likefav-button-group-icon-small{
-    font-size: 18px;
-    color: rgb(97, 97, 97);
-    margin: 15px 5px 15px 20px;
     cursor: pointer;
 }
 .likefav-button-group-icon-like {

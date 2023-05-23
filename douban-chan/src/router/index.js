@@ -6,6 +6,7 @@ import TopicHomeView from '../views/TopicHomeView.vue'
 import GroupHomeView from '../views/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import VideoHomeView from "../views/Video/VideoHomeView.vue";
 
 
 import UserHomeFavlist from "../views/User/Favlist.vue";
@@ -14,13 +15,16 @@ import UserHomeHome from "../views/User/Home.vue";
 import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
-import VideoHome from "../views/Video/VideoHome.vue";
 
+import VideoDetail from "../views/Video/VideoDetail.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
 //帖子
 import Post from "../views/Post/Post.vue";
+import reviewView from "../views/Review/ReviewView.vue";
+
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,12 +33,6 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  //电影版块主页
-  {
-    path: '/videoHome',
-    name: 'videoHome',
-    component: VideoHome
   },
   //图书版块主页
   {
@@ -53,6 +51,12 @@ const routes = [
     path: "/groupHome",
     name: "groupHome",
     component: GroupHomeView,
+  },
+  //影视主页
+  {
+    path: "/videoHome",
+    name: "videoHome",
+    component: VideoHomeView
   },
   //某小组的主页
   {
@@ -73,6 +77,18 @@ const routes = [
       },
       //
     ]
+  },
+  //影视详情页面
+  {
+    path: "/videoDetail",
+    name: "videoDetail",
+    component: VideoDetail,
+  },
+  //评论详情页面
+  {
+    path: "/review",
+    name: "review",
+    component: reviewView,
   },
   //用户个人账户主页
   {
@@ -141,8 +157,8 @@ const router = new VueRouter({
   routes,
 });
 
-let originPush=VueRouter.prototype.push;
-let originReplace=VueRouter.prototype.replace;
+let originPush = VueRouter.prototype.push;
+let originReplace = VueRouter.prototype.replace;
 //重写push/replace
 //第一个参数：告诉原来的push方法，往哪里跳转（传递哪些参数）
 //第二个参数：成功的回调
@@ -150,19 +166,19 @@ let originReplace=VueRouter.prototype.replace;
 //call/apply区别
 //相同点：都可以调用函数一次，都可以篡改函数的上下文(this）一次‘
 //不同点：call/apply传递参数：call传递参数用逗号隔开，apply方法执行，传递数组
-VueRouter.prototype.push=function(location,resolve,reject){
-    if(resolve&&reject){
-        originPush.call(this,location,resolve,reject);
-    }else{
-        originPush.call(this,location,()=>{},()=>{});
-    }
+VueRouter.prototype.push = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originPush.call(this, location, resolve, reject);
+  } else {
+    originPush.call(this, location, () => { }, () => { });
+  }
 }
-VueRouter.prototype.replace=function(location,resolve,reject){
-    if(resolve&&reject){
-        originReplace.call(this,location,resolve,reject);
-    }else{
-        originReplace.call(this,location,()=>{},()=>{});
-    }
+VueRouter.prototype.replace = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originReplace.call(this, location, resolve, reject);
+  } else {
+    originReplace.call(this, location, () => { }, () => { });
+  }
 }
 
 

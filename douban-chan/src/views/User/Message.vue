@@ -7,27 +7,28 @@
                 <el-badge v-if="!unreadLiked" class="item" type="success">
                     <el-button size="small" @click="readLiked">点赞</el-button>
                 </el-badge>
-                <el-badge v-if="unreadLiked" :value="unreadLiked"  class="item" type="success">
+                <el-badge v-if="unreadLiked" :value="unreadLiked" class="item" type="success">
                     <el-button size="small" @click="readLiked">点赞</el-button>
                 </el-badge>
 
                 <el-badge v-if="!unreadComment" class="item">
                     <el-button size="small" @click="readComment">评论</el-button>
                 </el-badge>
-                <el-badge v-if="unreadComment" :value="unreadComment"  class="item">
+                <el-badge v-if="unreadComment" :value="unreadComment" class="item">
                     <el-button size="small" @click="readComment">评论</el-button>
                 </el-badge>
 
                 <el-badge v-if="!unreadNotice" class="item">
                     <el-button size="small" @click="readNotice">通知</el-button>
                 </el-badge>
-                <el-badge v-if="unreadNotice" :value="unreadNotice"  class="item">
+                <el-badge v-if="unreadNotice" :value="unreadNotice" class="item">
                     <el-button size="small" @click="readNotice">通知</el-button>
                 </el-badge>
             </el-header>
             <el-main>
                 <div class="msg-container">
-                    <DetailedMessageCard v-for="(msg, index) in selectedList" :key="index" :info="msg" :type="selectedSection"/>
+                    <DetailedMessageCard v-for="(msg, index) in selectedList" :key="index" :info="msg"
+                        :type="selectedSection" />
                 </div>
             </el-main>
         </el-container>
@@ -120,7 +121,7 @@ export default {
                 },
             ],
             noticeList: [
-            {
+                {
                     name: "管理员",
                     imageUrl: require('../../assets/user-image-2.jpg'),
                     date: '2023-5-1 08:05',
@@ -133,31 +134,31 @@ export default {
             ],
         }
     },
-    computed:{
-        selectedList(){
-            if(this.selectedSection === 1){
+    computed: {
+        selectedList() {
+            if (this.selectedSection === 1) {
                 return this.likedList
             }
-            else if(this.selectedSection === 2){
+            else if (this.selectedSection === 2) {
                 return this.commentList
             }
-            else{
+            else {
                 return this.noticeList
             }
         }
     },
     methods: {
-        readLiked(){
+        readLiked() {
             this.unreadLiked = 0
             this.selectedSection = 1
             console.log("readLiked被调用了")
         },
-        readComment(){
-            this.unreadComment= 0
+        readComment() {
+            this.unreadComment = 0
             this.selectedSection = 2
             console.log("readComment被调用了")
         },
-        readNotice(){
+        readNotice() {
             this.unreadNotice = 0
             this.selectedSection = 3
             console.log("readNotice被调用了")
@@ -177,7 +178,7 @@ export default {
     justify-content: flex-start;
 }
 
-.el-badge{
+.el-badge {
     margin-top: 20px;
     margin-right: 15px;
 }
