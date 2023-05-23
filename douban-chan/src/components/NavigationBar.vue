@@ -7,12 +7,12 @@
     <!-- 菜单 -->
     <div class="menu-wrapper">
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-        text-color="#545c64" active-text-color="#ffd04b">
-        <el-menu-item index="home">首页</el-menu-item>
-        <el-menu-item index="videoHome">影视</el-menu-item>
-        <el-menu-item index="bookHome">图书</el-menu-item>
-        <el-menu-item index="topicHome">话题</el-menu-item>
-        <el-menu-item index="groupHome">小组</el-menu-item>
+        text-color="#072B73" active-text-color="#CF4B73" active-background-color="#F7CB83">
+        <el-menu-item index="home" class="centered-menu-item">首页</el-menu-item>
+        <el-menu-item index="videoHome" class="centered-menu-item">影视</el-menu-item>
+        <el-menu-item index="bookHome" class="centered-menu-item">图书</el-menu-item>
+        <el-menu-item index="topicHome" class="centered-menu-item">话题</el-menu-item>
+        <el-menu-item index="groupHome" class="centered-menu-item">小组</el-menu-item>
       </el-menu>
     </div>
     <!-- 搜索输入框 -->
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {mapState,mapGetters,mapMutations,mapActions} from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 const src = require('../assets/conroy_img/logo.png')
 export default {
   data() {
@@ -48,7 +48,7 @@ export default {
       selectedOption: '全部',
     };
   },
-  computed:{
+  computed: {
     //头像路径与用户名
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
   },
@@ -73,13 +73,13 @@ export default {
       this.selectedOption = option.label;
     },
     login() {
-      if(this.isLogin){
+      if (this.isLogin) {
         this.$router.push('/userHome')
       }
-      else{
+      else {
         this.$router.push('/login')
       }
-      
+
     }
   },
 }
@@ -88,27 +88,30 @@ export default {
 .search-wrapper {
   display: flex;
   align-items: center;
-  padding: 20px 40px;
-  background-color: #f5f5f5;
+  padding: 0px 0px;
+  background-image: url('@/assets/conroy_img/bar.jpg');
+  background-repeat: repeat-x;
+  background-size: 100% auto;
 }
 
 .logo-wrapper {
-  margin-right: 30px;
+  width: 200px;
+  height: 120px;
+  flex: 1;
 }
 
 .logo-img {
-  height: 30px;
+  height: 120px;
+  width: 200px;
 }
 
 .menu-wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex: 1;
-
+  border: none;
+  flex: 2;
 }
 
 .search-input-wrapper {
-  flex: 2;
+  flex: 3;
 }
 
 .avatar-wrapper {
@@ -116,12 +119,48 @@ export default {
 }
 
 .el-menu-demo {
+  justify-content: center;
   display: flex;
-  width: 600px;
+  background-color: transparent;
+  border-bottom: 0px solid transparent;
+  box-shadow: 0 0px 0 #F7CB83;
 }
 
 .el-menu-demo .el-menu-item {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  position: relative;
+  border-radius: 20px;
+}
+
+.el-menu-demo .el-menu-item.is-active,
+.el-menu-demo .el-menu-item:hover {
+  background-color: #f7cb83;
+}
+
+
+.centered-menu-item {
+  text-align: right;
+}
+
+.el-menu-demo .el-menu-item::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background-color: #f7cb83;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.el-menu-demo .el-menu-item.is-active::before,
+.el-menu-demo .el-menu-item:hover::before {
+  opacity: 1;
 }
 </style>

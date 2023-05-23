@@ -4,40 +4,41 @@
             <div class="flag">
                 <button class="favorite-button">
                     <span class="fa-layers fa-fw" style="background:transparent position: absolute; top: 0px; left: 0px;">
-                        <i class="fas fa-bookmark" style="opacity: 0.3 font-size: 24px;"></i>
+                        <i class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
                         <i class="fa-duotone fa-plus fa-xs"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-55%, -300%); color: #ffffff; font-size: 30px;"></i>
                     </span>
                 </button>
             </div>
             <div class="image-container">
-                <img src="../assets/conroy_img/card-text.png" class="image">
+                <img :src="ChildImage" class="image">
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ ChildRate }}</span>
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ ChildRate
+                }}</span>
                 <button class="star-button" @click="showRate">
-                    <i class="fa-solid fa-star" style="color: #dcdde0;"></i>
+                    <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
-            <div class="text" style="text-align: left;">
-                <span style="display: inline-block;">{{ ChildName }}</span>
+            <div style="margin-top: -5px;text-align: left;margin-left: 10px;">
+                <span class="card-name" style="display: inline-block;">{{ ChildName }}</span>
             </div>
             <el-button type="info" plain
-                style="border: none;margin-left: 5px;margin-top: 10px;color:#003899; float: left;width: 200px;font-weight: bold;">
+                style="border: none;margin-left: 10px;margin-top: 10px;color:#003899; float: left;width: 210px;font-weight: bold;">
                 <i class="fa-solid fa-plus" style="color: #003899;"></i>
-                &nbsp 关注列表
+                &nbsp 我的订阅
             </el-button>
             &nbsp
-            <div style="float: left;width: 200px;margin-top: 10px;">
+            <div style="float: left;width: 240px;margin-top: 10px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 5px;margin-top: 5px;color:#003899; width: 120px;font-weight: bold;float: left;"><i
+                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 125px;font-weight: bold;float: left;"><i
                         class="fa-solid fa-play"> </i>&nbsp
                     预告片
                 </el-button>
                 &nbsp
                 &nbsp
-                <el-button circle style="border: none;margin-top: 2px;" @click="showModal"><i
+                <el-button circle style="border: none;margin-top: 2px;background-color:#002333;" @click="showModal"><i
                         class="fa-solid fa-circle-info custom-icon"></i></el-button>
             </div>
         </el-card>
@@ -47,7 +48,7 @@
             <div class="modal-overlay" @click="closeModal"></div> <!-- 遮罩层 -->
             <div class="modal-content">
                 <div>
-                    <img src="../assets/conroy_img/card-text.png" class="image-modal">
+                    <img :src="ChildImage" class="image-modal">
                 </div>
                 <button class="modal-name">{{ ChildName }} <i class="
                     el-icon-arrow-right custom-icon-arrow"></i></button>
@@ -69,7 +70,7 @@
                     <span
                         style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 2px;color: rgba(0, 0, 0, 0.5);">/10</span>
                     <button class="modal-rating" @click="showRate"><i class="fa-solid fa-star" style="color: #dcdde0;"></i>
-                        <span class="text-rating">Rate</span></button>
+                        <span class="text-rating"> 打分</span></button>
                 </div>
                 <div class="modal-introduction">
                     <span class="modal-introduction-text">
@@ -89,7 +90,7 @@
                 <el-button type="info" plain
                     style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;">
                     <i class="fa-solid fa-plus" style="color: #003899;"></i>
-                    &nbsp 关注列表
+                    &nbsp 我的订阅
                 </el-button>
                 <el-button type="info" plain
                     style="border: none;margin-top: 70%;float: right;color:#003899; width: 150px;font-weight: bold;">
@@ -117,7 +118,8 @@
                         <!-- <span class="demonstration">区分颜色</span> -->
                         <el-rate style="margin-top: 3%;" v-model="value" :colors="colors" :max="10">
                         </el-rate>
-                        <button class="rate-button" :disabled="value === 0" :class="{ 'disabled': value === 0 }">打分</button>
+                        <button class="universal-rate-button" :disabled="value === '?'"
+                            :class="{ 'disabled': value === '?' }">打分</button>
                     </div>
                 </div>
             </div>
@@ -138,6 +140,10 @@ export default {
         ChildDir: String,
         ChildStar: String,
         ChildText: String,
+        ChildImage: {
+            type: String,
+            required: true,
+        }
     },
     data() {
         return {
@@ -185,15 +191,24 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 .card {
-    width: 210px;
+    width: 240px;
     height: 500px;
     display: flex;
     flex-direction: column;
     position: relative;
+    border: none;
+    background-color: #002333;
+}
+
+.card-name {
+    font-family: "Montserrat", sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: #f2f2f2;
 }
 
 .flag {
@@ -210,11 +225,13 @@ export default {
 }
 
 .favorite-button {
+    position: relative;
     top: 0px;
+    margin-left: -1px;
     left: 0px;
     background-color: transparent;
     border: none;
-    font-size: 40px;
+    font-size: 45px;
     color: #333333;
     cursor: pointer;
     padding: 0px;
@@ -225,6 +242,7 @@ export default {
     width: 100%;
     height: 290px;
     overflow: hidden;
+    background-color: transparent;
 }
 
 .image {
@@ -234,6 +252,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    border: none;
     z-index: 1;
 }
 
@@ -244,6 +263,7 @@ export default {
     padding-left: 12px;
     z-index: 1;
     margin-top: -5px;
+    font-size: 18px;
 }
 
 .text {
@@ -271,17 +291,26 @@ export default {
 }
 
 .star-button {
+    font-size: 18px;
     border: none;
-    margin-left: 45px;
+    margin-left: 80px;
     background-color: transparent;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 15px 15px;
+    border-radius: 30px;
     /* 调整按钮的宽度和高度 */
 }
 
 .star-button:hover {
-    background-color: #f1f1f1;
+    background-color: #159A9C;
     /* 设置悬停状态下的背景色 */
+}
+
+.star-button-color-1 {
+    color: #dcdde0;
+}
+
+.star-button:hover .star-button-color-1 {
+    color: #faa328;
 }
 
 .custom-icon {
@@ -311,7 +340,7 @@ export default {
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 8;
+    z-index: 99;
 }
 
 .rate-content {
@@ -391,13 +420,12 @@ export default {
     font-weight: bold;
 }
 
-
 .el-rate .el-rate__icon {
     font-size: 27px;
     /* 设置星星的大小为 27px */
 }
 
-.rate-button {
+.universal-rate-button {
     display: block;
     margin-top: 5%;
     margin-left: auto;
@@ -412,7 +440,7 @@ export default {
     transition: background-color 0.3s ease;
 }
 
-.rate-button.disabled {
+.universal-rate-button.disabled {
     /* 按钮的禁用状态样式 */
     background-color: #ccc;
     color: #999;
@@ -429,7 +457,7 @@ export default {
     pointer-events: none;
 }
 
-.rate-button:hover {
+.universal-rate-button:hover {
     background-color: #faa328;
 }
 
@@ -452,8 +480,8 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.65);
+    z-index: 98;
 }
 
 .modal-overlay {

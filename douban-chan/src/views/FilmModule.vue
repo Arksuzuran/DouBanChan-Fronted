@@ -1,19 +1,27 @@
 <template>
-    <el-container>
-        <el-header style="margin-top: 40px;">
-            <div style="float: left; margin-left: 1%;">
-                <h4 style="font-size: 25px; font-weight: bold; margin: 0;">影视栏目</h4>
-            </div>
-        </el-header>
-        <el-main>
-            <div class="card-container">
-                <UniversalCard v-for="movie in movieList" :key="movie.id" :ChildType="movie.type" :ChildYear="movie.year"
-                    :ChildName="movie.name" :ChildRate="movie.rate" :ChildTime="movie.time" :ChildFrom="movie.from"
-                    :ChildDir="movie.dir" :ChildStar="movie.star" :ChildText="movie.text">
-                </UniversalCard>
-            </div>
-        </el-main>
-    </el-container>
+    <div class="film-module-block">
+        <el-container>
+            <el-header style="margin-top: 20px;">
+                <div style="margin-left: 1%;">
+                    <i class="fa-brands fa-youtube movie-logo" style="color: #004ac2;"></i>
+                    <div style="float: left; display: inline-block; margin-left: 5px;width: 1300px;">
+                        <span
+                            style="float: left;margin-left: 5px;font-size: 40px; font-weight: bold;color: #000000;">影视栏目</span>
+                        <button class="for-more">更多<i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </el-header>
+            <el-main>
+                <div class="card-container">
+                    <UniversalCard v-for="movie in movieList" :key="movie.id" :ChildType="movie.type"
+                        :ChildYear="movie.year" :ChildName="movie.name" :ChildRate="movie.rate" :ChildTime="movie.time"
+                        :ChildFrom="movie.from" :ChildDir="movie.dir" :ChildStar="movie.star" :ChildText="movie.text"
+                        :ChildImage="require(`../assets/conroy_img/${movie.image}`)">
+                    </UniversalCard>
+                </div>
+            </el-main>
+        </el-container>
+    </div>
 </template>
 
 <script>
@@ -24,20 +32,12 @@ export default {
     },
     data() {
         return {
-            ParentName: '伦菲尔德',
-            ParentRate: 9.4,
-            ParentYear: 2020,
-            ParentTime: '2h13min',
-            ParentFrom: '漂亮国',
-            ParentType: '动作 / 冒险 / 科幻',
-            ParentDir: '诺兰',
-            ParentStar: '吴亦凡 李易峰 郑爽',
-            ParentText: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
             movieList: [
                 {
                     id: 1,
                     name: '伦菲尔德',
-                    rate: 9.4,
+                    image: 'card-text.png',
+                    rate: 9.1,
                     year: 2020,
                     time: '2h13min',
                     from: '漂亮国',
@@ -48,10 +48,11 @@ export default {
                 },
                 {
                     id: 2,
-                    name: '伦菲尔德',
+                    name: '斗破苍穹',
+                    image: 'doupo.png',
                     rate: 9.4,
                     year: 2020,
-                    time: '2h13min',
+                    time: '52013页',
                     from: '漂亮国',
                     type: '动作 / 冒险 / 科幻',
                     dir: '诺兰',
@@ -61,6 +62,7 @@ export default {
                 {
                     id: 3,
                     name: '伦菲尔德',
+                    image: '2.jpg',
                     rate: 9.4,
                     year: 2020,
                     time: '2h13min',
@@ -73,6 +75,7 @@ export default {
                 {
                     id: 4,
                     name: '伦菲尔德',
+                    image: '3.jpg',
                     rate: 9.4,
                     year: 2020,
                     time: '2h13min',
@@ -85,18 +88,7 @@ export default {
                 {
                     id: 5,
                     name: '伦菲尔德',
-                    rate: 9.4,
-                    year: 2020,
-                    time: '2h13min',
-                    from: '漂亮国',
-                    type: '动作 / 冒险 / 科幻',
-                    dir: '诺兰',
-                    star: '吴亦凡 李易峰 郑爽',
-                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-                },
-                {
-                    id: 6,
-                    name: '伦菲尔德',
+                    image: '4.jpg',
                     rate: 9.4,
                     year: 2020,
                     time: '2h13min',
@@ -112,13 +104,26 @@ export default {
 }
 </script>
 <style>
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+
+.film-module-block {
+    margin-right: 1%;
+    width: 1420px;
+    margin-top: 50px;
+    margin-left: 1%;
+    border-radius: 10px;
+    border: 0px solid #d2c7c7;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f3f3f3;
+}
+
 .card-container {
     margin-left: 1%;
-    margin-top: -20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-
+    background-color: transparent;
 }
 
 .UniversalCard {
@@ -126,6 +131,12 @@ export default {
     /* 每行六个卡片，间距为 10px */
     flex: 0 0 auto;
     /* 禁止卡片自动扩展 */
+}
+
+.movie-logo {
+    float: left;
+    font-size: 50px;
+    margin-top: 5px;
 }
 
 .movie-card-1 {
@@ -189,33 +200,25 @@ export default {
     opacity: 1;
 }
 
-
-/* 按下效果 */
-.my-button:active {
-    background-color: #66b1ff;
-    color: #fff;
-}
-
-/* 阴影效果 */
-.my-button {
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-    padding: 0.5rem 1rem;
-    background-color: #409eff;
-    color: #fff;
-    font-size: 1rem;
+.for-more {
+    margin-top: 5px;
+    border: none;
+    font-size: 25px;
     text-align: center;
-    text-decoration: none;
-    text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    float: right;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: #000000;
+    border-radius: 4px;
+    padding: 8px 16px;
     transition: background-color 0.3s ease;
 }
 
-/* 点击扩散效果 */
-.my-button:active:before {
-    width: 100%;
-    height: 100%;
-    opacity: 1;
+.for-more:hover {
+    color: #ff8c20;
 }
 </style>

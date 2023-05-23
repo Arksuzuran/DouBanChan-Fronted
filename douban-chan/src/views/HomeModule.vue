@@ -1,35 +1,20 @@
 <template>
-    <div class="home-module-container">
-        <div class="scroll-movie">
-            <el-carousel :interval="4000" type="card" :style="{ height: '450px' }" :autoplay="false">
-                <!-- <el-carousel :interval="4000" type="card" :style="{ height: '450px' }"> -->
-                <el-carousel-item v-for="(item, index) in  images " :key="index">
-                    <img :src="require(`@/assets/conroy_img/${item}`)" alt="" class="scroll-img">
+    <div class="home-module-container-new">
+        <div class="home-module-scroll-movie-new">
+            <el-carousel :interval="4000" arrow="never" trigger="hover" indicator="custom-indicator"
+                :style="{ height: '540px', width: '960px' }">
+                <el-carousel-item v-for="item in 6" :key="item">
+                    <ScrollingScreenCard></ScrollingScreenCard>
                 </el-carousel-item>
             </el-carousel>
         </div>
-        <!-- 在父容器上添加样式，使其横向排列，且与走马灯对齐 -->
-        <div style="display: flex; align-items: flex-start; width: 30vw;height: 100%; margin-right: 3%; margin-top: -15px;">
-            <div style="flex: 1; margin-right: 3%;">
-                <!-- 电影影评标题和换一批按钮 -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h2 style="font-size: 16px; font-weight: bold; margin: 0;">今日精选</h2>
-                    <el-button type="primary" size="small" @click="changeMovieList" style="font-size: 12px;">换一批</el-button>
-                </div>
-                <!-- 电影影评列表 -->
-                <div class="movie-list">
-                    <div v-for="( movie, index ) in  displayedMovieList " :key="index" class="movie-card">
-                        <img :src="require(`@/assets/conroy_img/${movie.img}`)" alt="" class="movie-img">
-                        <div class="movie-info">
-                            <div class="movie-name">
-                                {{ movie.name }}</div>
-                            <div class="movie-score">
-                                {{ movie.score }}分</div>
-                        </div>
-                        <div class="movie-overlay">
-                            <el-button type="primary" size="small">查看详情</el-button>
-                        </div>
-                    </div>
+        <div class="home-module-collection-book">
+            <span class="home-module-collection-book-list"><i class="fa-brands fa-hotjar" style="color: #ff7032;">
+                </i> 书香之选</span>
+            <div class="home-module-collection-book-check"><i class="fa-solid fa-rotate-right"></i></div>
+            <div class="home-module-collection-book-show">
+                <div v-for="card in 3" class="home-module-collection-book-card">
+                    <CollectionCard></CollectionCard>
                 </div>
             </div>
         </div>
@@ -37,6 +22,8 @@
 </template>
 
 <script>
+import ScrollingScreenCard from '../components/ScrollingScreenCard.vue';
+import CollectionCard from '../components/CollectionCard.vue';
 export default {
     data() {
         return {
@@ -145,139 +132,93 @@ export default {
             this.displayedMovieList = this.movieList.slice(startIndex, endIndex);
         },
     },
+    components: {
+        ScrollingScreenCard,
+        CollectionCard,
+    },
 }
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@500&family=Zhi+Mang+Xing&display=swap');
+
+
 .el-carousel__container {
     height: 100% !important;
 }
 
-.el-carousel__item {
-    width: 80% !important;
-    left: -15% !important;
-}
-
-.scroll-movie {
+.home-module-scroll-movie-new {
     width: 70%;
-    margin-left: 3%;
+    margin-left: 1%;
     min-height: 100%;
+    border: none;
 }
 
-.scroll-img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-}
-
-.el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-}
-
-.el-carousel__indicators {
-    display: none;
-}
-
-.home-module-container {
+.home-module-container-new {
+    border: none;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    height: 450px;
-    margin-top: 30px;
+    height: 540px;
+    margin-top: 20px;
 }
 
-.home-module-container>div:first-child {
-    width: 70%;
-    margin-left: 3%;
-}
-
-.home-module-container>div:last-child {
+.home-module-collection-book {
+    margin-right: 1%;
+    border: 0px solid #d2c7c7;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
     width: 30%;
-    margin-left: 3%;
+    height: 540px;
+    background-color: #f3f3f3;
 }
 
-.movie-list {
+.home-module-collection-book-list {
+    position: absolute;
+    font-size: 24px;
+    color: black;
+    margin-top: 10px;
+    margin-left: 30px;
+    font-family: 'Noto Serif SC', serif;
+}
+
+.home-module-collection-book-check {
+    margin-top: 10px;
+    margin-left: 320px;
+    font-size: 24px;
+    color: black;
+    transition: transform 0.2s ease-in-out;
+
+}
+
+.home-module-collection-book-check:hover {
+    transform: scale(1.1);
+    color: rgb(254, 132, 45);
+}
+
+.home-module-collection-book-show {
+    flex: 1;
+    margin-top: 1%;
+    margin-left: 3%;
+    width: 90%;
+    height: 500px;
+    background-color: transparent;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    height: 100%;
-    /* 将高度设为100% */
-}
-
-.movie-card {
-    width: 40%;
-    height: 200px;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.movie-card:nth-child(1),
-.movie-card:nth-child(2) {
-    margin-bottom: 0px;
-}
-
-.movie-card:nth-child(3),
-.movie-card:nth-child(4) {
-    margin-top: 0px;
-}
-
-.movie-img {
-    /* width: 80px;
-    height: 120px; */
-    width: 100%;
-    height: 65%;
-    object-fit: cover;
-}
-
-.movie-info {
-    flex-direction: column;
-    justify-content: center;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-    background-color: #f5f5f5;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.movie-name {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.movie-score {
-    color: #FF9900;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.movie-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
     align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s;
+    padding: 5px;
 }
 
-.movie-card:hover .movie-overlay {
-    opacity: 1;
+.home-module-collection-book-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.home-module-collection-book-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
