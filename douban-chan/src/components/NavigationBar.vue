@@ -7,12 +7,12 @@
     <!-- 菜单 -->
     <div class="menu-wrapper">
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
-        text-color="#072B73" active-text-color="#CF4B73" active-background-color="#F7CB83">
-        <el-menu-item index="home" class="centered-menu-item">首页</el-menu-item>
-        <el-menu-item index="videoHome" class="centered-menu-item">影视</el-menu-item>
-        <el-menu-item index="bookHome" class="centered-menu-item">图书</el-menu-item>
-        <el-menu-item index="topicHome" class="centered-menu-item">话题</el-menu-item>
-        <el-menu-item index="groupHome" class="centered-menu-item">小组</el-menu-item>
+        text-color="#545c64" active-text-color="#ffd04b">
+        <el-menu-item index="home">首页</el-menu-item>
+        <el-menu-item index="videoHome">影视</el-menu-item>
+        <el-menu-item index="bookHome">图书</el-menu-item>
+        <el-menu-item index="topicHome">话题</el-menu-item>
+        <el-menu-item index="groupHome">小组</el-menu-item>
       </el-menu>
     </div>
     <!-- 搜索输入框 -->
@@ -50,6 +50,7 @@ export default {
   },
   computed: {
     //头像路径与用户名
+    //引入vuex的userAbout模块里的 state变量
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
   },
   methods: {

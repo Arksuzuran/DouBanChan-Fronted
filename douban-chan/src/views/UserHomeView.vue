@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- <navigation-bar></navigation-bar> -->
-    <!-- <nav-bar></nav-bar> -->
     <div class="userhome-bg">
       <div class="userhome-container">
 
@@ -43,15 +41,13 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import NavigationBar from '../components/NavigationBar.vue';
-import NavBar from '../components/NavBar.vue'
 export default {
   name: 'UserHomeView',
   data() {
     return {
       //Header
       //头图设置
-      userHeadUrl: require("../assets/user-bg-2.jpg"),
+      userHeadUrl: require("../assets/user-bg-4.jpg"),
       //用户签名
       userSignature: "你好，我是羽毛笔。",
 
@@ -77,8 +73,7 @@ export default {
     },
   },
   components: {
-    NavigationBar,
-    NavBar,
+
   }
 };
 </script>

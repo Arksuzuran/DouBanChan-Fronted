@@ -6,7 +6,7 @@ import TopicHomeView from '../views/TopicHomeView.vue'
 import GroupHomeView from '../views/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import VideoHomeView from "../views/VideoHomeView.vue";
+import VideoHomeView from "../views/Video/VideoHomeView.vue";
 
 
 import UserHomeFavlist from "../views/User/Favlist.vue";
@@ -16,7 +16,13 @@ import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
 
-import VideoDetail from "../views/Video/VideoDetail.vue";
+import VideoDetail from "../views/Video/VideoDetail.vue"
+//小组
+import GroupPage from "../views/Group/GroupPage.vue";
+import GroupPostList from "../views/Group/GroupPostList.vue";
+//帖子
+import Post from "../views/Post/Post.vue";
+import reviewView from "../views/Review/ReviewView.vue";
 
 
 Vue.use(VueRouter);
@@ -27,18 +33,6 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  //电影版块主页
-  {
-    path: '/videoHome',
-    name: 'videoHome',
-    component: VideoHomeView,
-  },
-  //电影详情页
-  {
-    path: '/videoDetail',
-    name: 'videoDetail',
-    component: VideoDetail,
   },
   //图书版块主页
   {
@@ -57,6 +51,44 @@ const routes = [
     path: "/groupHome",
     name: "groupHome",
     component: GroupHomeView,
+  },
+  //影视主页
+  {
+    path: "/videoHome",
+    name: "videoHome",
+    component: VideoHomeView
+  },
+  //某小组的主页
+  {
+    path: "/group",
+    component: GroupPage,
+    children: [
+      //默认的二级路由
+      {
+        path: '',
+        name: "group",  //让默认二级路由设置name
+        component: GroupPostList,
+      },
+      // 帖子的页面
+      {
+        path:'/group/post',
+        name:'groupPost',
+        component: Post
+      },
+      //
+    ]
+  },
+  //影视详情页面
+  {
+    path: "/videoDetail",
+    name: "videoDetail",
+    component: VideoDetail,
+  },
+  //评论详情页面
+  {
+    path: "/review",
+    name: "review",
+    component: reviewView,
   },
   //用户个人账户主页
   {
