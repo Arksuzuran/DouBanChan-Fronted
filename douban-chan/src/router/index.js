@@ -6,7 +6,7 @@ import TopicHomeView from '../views/TopicHomeView.vue'
 import GroupHomeView from '../views/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import VideoHomeView from "../views/VideoHomeView.vue";
+import VideoHomeView from "../views/Video/VideoHomeView.vue";
 
 import UserHomeFavlist from "../views/User/Favlist.vue";
 import UserHomeGroup from "../views/User/Group.vue";
@@ -17,6 +17,7 @@ import UserHomeSubscribe from "../views/User/Subscribe.vue";
 
 import VideoDetail from "../views/Video/VideoDetail.vue"
 
+import reviewView from "../views/Review/ReviewView.vue"
 Vue.use(VueRouter);
 
 const routes = [
@@ -55,6 +56,12 @@ const routes = [
     path: "/groupHome",
     name: "groupHome",
     component: GroupHomeView,
+  },
+  //评论详情页面
+  {
+    path: "/review",
+    name: "review",
+    component: reviewView,
   },
   //用户个人账户主页
   {

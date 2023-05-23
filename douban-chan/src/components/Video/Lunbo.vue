@@ -1,8 +1,8 @@
 <template>
     <div class="block">
-      <el-carousel height="500px">
+      <el-carousel height="400px">
         <el-carousel-item v-for="item in items" :key="item.id">
-          <!-- <img :src="item.imageSrc" alt=""> -->
+          <img :src="item.imageSrc" alt="" @click="toDetail(item.id)">
           <div class="image-with-text">
             <div class="info-container">
               <div class="info">
@@ -18,8 +18,11 @@
 <script>
     export default {
         props:['items'],
-        data(){
-            
+        methods:{
+            toDetail(id){
+                console.log(id)
+                this.$router.push({path: '/videoDetail', query: {id: id}})
+            }
         }
     }
 </script>
@@ -36,8 +39,8 @@
     .image-with-text {
       height: 100%;
       width: 100%;
-      background-image: url('../assets/movie/roll-banner1.jpg');
       background-size: cover;
+      pointer-events: none;
     }
     .el-carousel__item:nth-child(2n) {
        background-color: #99a9bf;

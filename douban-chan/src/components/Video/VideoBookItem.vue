@@ -28,7 +28,7 @@ import Rate from './Rate.vue'
 </script>
 <style scoped>
     .item{
-        width: 150px;
+        width: 180px;
         height: 250px;
     }
     .item img{

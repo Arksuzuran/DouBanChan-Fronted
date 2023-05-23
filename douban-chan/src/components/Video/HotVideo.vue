@@ -1,6 +1,6 @@
 <template>
     <div class="movie-ranking">
-      <h2>{{ title }}</h2>
+      <div class="board-title">{{ title }}</div>
       <ul>
         <li v-for="(movie, index) in movies" :key="movie.id">
           <span class="rank">{{ index + 1 }}</span>
@@ -27,15 +27,21 @@
   }
   </script>
   
-  <style>
+  <style scoped>
   .movie-ranking {
     max-width: 600px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
     margin: 0 auto;
   }
   
-  h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+  .board-title{
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    
   }
   
   ul {
@@ -47,24 +53,22 @@
   li {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 0;
+    padding: 6px 0;
   }
   
   .rank {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     margin-right: 10px;
   }
   
   .title {
     flex-grow: 1;
-    font-size: 16px;
-    margin-right: 10px;
+    font-size: 14px;
   }
   
   .score {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
   }
   </style>
