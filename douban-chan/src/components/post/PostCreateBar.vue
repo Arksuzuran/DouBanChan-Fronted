@@ -93,6 +93,8 @@
 <script>
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { nanoid } from 'nanoid'
+
 export default {
     name: 'PostCreateBar',
     data() {
@@ -164,7 +166,7 @@ export default {
         createPost() {
             //构造对象
             let newPost = {
-                postId: 'p002',
+                postId: nanoid(),
                 lzId: this.userId,
                 lzName: this.userName,
                 lzImageUrl: this.userImgUrl,
