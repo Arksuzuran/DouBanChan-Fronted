@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <NavigationBar></NavigationBar> -->
     <div class="container">
       <VideoNavBar></VideoNavBar>
       <el-row :gutter="20">
@@ -33,14 +32,13 @@
 </template>
 
 <script>
-import NavigationBar from '@/components/NavigationBar.vue';
 import Lunbo from '@/components/Lunbo.vue';
 import HotVideo from '@/views/Video/HotVideo.vue';
 import VideoRow from '@/views/Video/VideoRow.vue';
 import VideoNavBar from '@/views/Video/VideoNavBar.vue';
 export default {
   components: {
-    NavigationBar, Lunbo,
+    Lunbo,
     HotVideo, VideoRow,
     VideoNavBar
   },

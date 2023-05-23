@@ -68,6 +68,7 @@ export default ({
             fadeOut: false,
             moveRight: false,
             notHideButtons: true,
+            checked: false,
             //swiperOption：swiper配置项信息，需要绑定在swiper标签的 :option 属性中
             swiperOption: {
                 //幻灯片放映方向

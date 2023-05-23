@@ -33,6 +33,9 @@
 </template>
 
 <script>
+// 在需要使用vuex的场合下引入vuex
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+
 import { defineComponent } from 'vue';
 import LoginModule from '../views/LoginModule.vue';
 export default {
@@ -54,7 +57,7 @@ export default {
             restaurants: [],
             state: '',
             isLogin: false,
-            // circleUrl: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+            circleUrl_not: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
             circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
         };
     },
@@ -157,9 +160,15 @@ export default {
             console.log(ev);
         },
     },
+    computed:{
+        //头像路径与用户名
+        //引入vuex的userAbout模块里的 state变量
+        //像一般的计算属性一样使用即可 例如：console.log(this.userName)
+        // ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     mounted() {
         this.restaurants = this.loadAll();
-    }
+    },
 };
 </script>
 

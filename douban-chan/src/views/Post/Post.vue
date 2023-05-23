@@ -396,7 +396,7 @@ export default {
 /* 顶栏sticky部分容器 */
 .post-top-container {
     position: sticky;
-    top: 1px;
+    top: 60px;
     background-color: rgb(255, 255, 255);
     z-index: 10;
 }

@@ -15,7 +15,6 @@ import UserHomeHome from "../views/User/Home.vue";
 import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
-import VideoHome from "../views/Video/VideoHome.vue";
 
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
@@ -30,18 +29,6 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  //电影版块主页
-  {
-    path: '/videoHome',
-    name: 'videoHome',
-    component: VideoHomeView,
-  },
-  //电影详情页
-  {
-    path: '/videoDetail',
-    name: 'videoDetail',
-    component: VideoDetail,
   },
   //图书版块主页
   {

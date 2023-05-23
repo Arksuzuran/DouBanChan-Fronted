@@ -1,6 +1,5 @@
 <template>
     <div class="group-backgroud-container">
-        <navigation-bar></navigation-bar>
         <div class="group-main-container">
 
             <!-- 小组简介头栏 -->
@@ -59,12 +58,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import NavigationBar from '../../components/NavigationBar.vue'
 
 export default {
     name: 'GroupPage',
     components: {
-        NavigationBar,
+        
     },
     data() {
         return {
@@ -140,7 +138,7 @@ export default {
 .group-main-container {
     background-color: #FCF7F9;
     margin: 0 auto;
-    width: 80%;
+    width: 75%;
 }
 
 .group-header-container {

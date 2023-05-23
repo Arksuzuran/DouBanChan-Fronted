@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <navigation-bar></navigation-bar> -->
-    <!-- <nav-bar></nav-bar> -->
-
     <nav-bar-back-ground></nav-bar-back-ground>
     <home-module></home-module>
     <film-module></film-module>
@@ -15,7 +12,6 @@
 
 <script>
 // @ is an alias to /src
-import NavigationBar from '../components/NavigationBar.vue';
 import HomeModule from './HomeModule.vue';
 import FilmModule from './FilmModule.vue';
 import BookModule from './BookModule.vue';
@@ -25,7 +21,6 @@ import LoginModule from './LoginModule.vue';
 export default {
   name: 'HomeView',
   components: {
-    NavigationBar,
     HomeModule,
     FilmModule,
     BookModule,
