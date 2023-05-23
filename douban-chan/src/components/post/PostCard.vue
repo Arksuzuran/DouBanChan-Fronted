@@ -6,7 +6,7 @@
             <span class="postcard-label">置顶</span>
         </div>
         <!-- 加精标记 -->
-        <div class="postcard-quality-label" v-if="info.isQualityPost">
+        <div class="postcard-quality-label" v-if="info.isGoodPost">
             <i class="el-icon-medal" style="font-size: 20px;"></i>
             <span class="postcard-label">精华</span>
         </div>

@@ -119,7 +119,7 @@ export default {
             }
         },
         showFoldedComments() {
-            return this.info.childFloorList && this.info.childFloorList.length >= this.maxCommentsNum;
+            return this.info.childFloorList && this.info.childFloorList.length > this.maxCommentsNum;
         },
         restFoldedCommentsNum() {
             return this.info.childFloorList ? this.info.childFloorList.length - this.maxCommentsNum : 0;

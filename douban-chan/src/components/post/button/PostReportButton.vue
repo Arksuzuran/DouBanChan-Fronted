@@ -5,16 +5,29 @@
             @click="report">
             <span ref="reportButtonText">举报</span>
         </button>
+        <ReportInputBox :signal="inputBoxOpenSignal" :info="info"></ReportInputBox>
     </div>
 </template>
 
 <script>
+import ReportInputBox from '../ReportInputBox.vue'
 export default {
     name: 'PostReportButton',
+    // 举报信息
+    // info:{ textId, userId, userName, userImageUrl, title, text, }
+    props:['info'],
+    data(){
+        return{
+            inputBoxOpenSignal: false,  //当该值变化时即打开弹窗 由弹窗自己进行关闭
+        }
+    },
+    components:{
+        ReportInputBox,
+    },
     methods: {
         // 打开举报单弹窗
         report() {
-
+            this.inputBoxOpenSignal = !this.inputBoxOpenSignal
         },
         mouseenterReportButton() {
             this.$refs.reportButtonText.textContent = "填写举报单"

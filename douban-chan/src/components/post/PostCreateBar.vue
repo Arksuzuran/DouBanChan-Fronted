@@ -17,20 +17,22 @@
                     <el-form :model="form">
                         <!-- 标题输入框 -->
                         <el-form-item label="帖子标题" :label-width="formLabelWidth">
-                            <el-input type="text" maxlength="50" show-word-limit v-model="form.title" autocomplete="off">
+                            <el-input type="text" maxlength="50" show-word-limit v-model="form.title" autocomplete="off"
+                                placeholder="请输入帖子标题">
                             </el-input>
                         </el-form-item>
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" placeholder="请输入内容"
+                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" placeholder="请选择话题"
                                 @select="handleSelect" style="width: 100%;"></el-autocomplete>
                         </el-form-item>
 
 
                         <!-- 正文输入框 -->
-                        <el-form-item label="帖子正文" :label-width="formLabelWidth" :rows="20">
-                            <el-input type="textarea" v-model="form.text" :autosize="{ minRows: 10, maxRows: 10 }">
+                        <el-form-item label="帖子正文" :label-width="formLabelWidth">
+                            <el-input type="textarea" v-model="form.text" :autosize="{ minRows: 10, maxRows: 10 }"
+                                :rows="20">
                             </el-input>
                         </el-form-item>
                     </el-form>
@@ -40,7 +42,10 @@
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
-                    <template>
+                    <!-- 上传图片 -->
+                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
+
+                    <!-- <template>
                         <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
                             :on-change="handleUpload" :on-success="handleUpload" :file-list="fileList" :limit="9"
                             :http-request="handleUploadOnline">
@@ -61,7 +66,7 @@
                                 </span>
                             </div>
                         </el-upload>
-                    </template>
+                    </template> -->
                     <!-- <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card"
                         :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                         :auto-upload="false">
@@ -71,9 +76,9 @@
                         <img width="100%" :src="dialogImageUrl" alt="">
                     </el-dialog> -->
 
-                    <el-dialog :visible.sync="dialogVisible">
+                    <!-- <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog>
+                    </el-dialog> -->
 
                     <!-- 结束区 -->
                     <div class="form-footer">
@@ -91,16 +96,20 @@
 </template>
 
 <script>
+import PictureChooser from './PictureChooser.vue'
+
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 
 export default {
     name: 'PostCreateBar',
+    components:{
+        PictureChooser,
+    },
     data() {
         return {
-            // 向后端传入图片的url
-            backendImgUrl: "#",
+            
             // 控制是否打开发帖表单
             dialog: false,
             // 控制是否正在提交数据
@@ -119,12 +128,16 @@ export default {
             topicList: [],
             timeout: null,
 
-            //文件的list
+            
+            // 图片的list
             fileList: [],
-            // 查看文件缩略图的弹窗
-            dialogImageUrl: '',
-            dialogVisible: false,
-            disabled: false
+            // // 图片发送相关
+            // // 向后端传入图片的url
+            // backendImgUrl: "#",
+            // // 查看文件缩略图的弹窗
+            // dialogImageUrl: '',
+            // dialogVisible: false,
+            // disabled: false
         }
     },
     computed: {
@@ -181,7 +194,7 @@ export default {
                 like: 0,
                 dislike: 0,
                 isTopped: false,
-                isQualityPost: false,
+                isGoodPost: false,
             };
             // 通过事件总线触发自定义事件，并传递新帖子作为参数
             this.$bus.$emit('postCreated', newPost);
@@ -297,72 +310,72 @@ export default {
             }
             return year + "-" + month + "-" + day + " " + hour + sign2 + minutes + sign2 + seconds;
         },
-        // 上传成功 这里需要修改
-        // 实现假上传
-        handleUpload(file) {
-            // 从上传成功的响应中获取图片URL
-            console.log('状态改变,file: ', file)
-            console.log('状态改变,file.raw: ', file.raw)
-            //假上传
-            let imageUrl = file.url;
-            // 将图片URL添加到列表中
-            this.form.imgUrlList.push(imageUrl);
-        },
-        handleUploadOnline(file) {
-            // 从上传成功的响应中获取图片URL
-            console.log('自定义上传函数,file: ', file)
-            console.log('自定义上传函数,file.file: ', file.file)
-            console.log('自定义上传函数,fileList ', this.fileList)
-            // // 手动更新fileList
-            this.fileList.push({
-                name: file.name,
-                url: '',
-                status: 'success',
-                uid: file.uid
-            });
+        // // 上传成功 这里需要修改
+        // // 实现假上传
+        // handleUpload(file) {
+        //     // 从上传成功的响应中获取图片URL
+        //     console.log('状态改变,file: ', file)
+        //     console.log('状态改变,file.raw: ', file.raw)
+        //     //假上传
+        //     let imageUrl = file.url;
+        //     // 将图片URL添加到列表中
+        //     this.form.imgUrlList.push(imageUrl);
+        // },
+        // handleUploadOnline(file) {
+        //     // 从上传成功的响应中获取图片URL
+        //     console.log('自定义上传函数,file: ', file)
+        //     console.log('自定义上传函数,file.file: ', file.file)
+        //     console.log('自定义上传函数,fileList ', this.fileList)
+        //     // // 手动更新fileList
+        //     this.fileList.push({
+        //         name: file.name,
+        //         url: '',
+        //         status: 'success',
+        //         uid: file.uid
+        //     });
 
-            return new Promise((resolve, reject) => {
-                const formData = new FormData();
-                formData.append('file', file.file); // 将文件对象添加到FormData中，key可以根据后端接口的要求进行修改
+        //     return new Promise((resolve, reject) => {
+        //         const formData = new FormData();
+        //         formData.append('file', file.file); // 将文件对象添加到FormData中，key可以根据后端接口的要求进行修改
 
-                // 填入具体的url
-                axios.post('/upload', formData, {
-                    headers: {
-                        //文件类型
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                    .then(response => {
-                        // 根据上传接口返回的结果处理上传成功或失败的情况
-                        const { data } = response;
-                        if (data.success) {
-                            resolve({ success: true, message: '上传成功', imageUrl: data.imageUrl });
-                        } else {
-                            reject({ success: false, message: '上传失败' });
-                        }
-                    })
-                    .catch(error => {
-                        reject({ success: false, message: '上传出错' });
-                    });
-            });
-        },
-        handleRemove(file) {
-            console.log(file);
-            // fileList.remove(file)
-            // const fileList = this.$refs.upload.uploadFiles; // 获取上传组件的文件列表
-            // 找到对应的文件索引
-            let index = this.fileList.findIndex(f => f.uid === file.uid);
-            if (index !== -1) {
-                this.fileList.splice(index, 1); // 从文件列表中移除该文件
-            }
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
-        },
-        handleDownload(file) {
-            console.log(file);
-        }
+        //         // 填入具体的url
+        //         axios.post('/upload', formData, {
+        //             headers: {
+        //                 //文件类型
+        //                 'Content-Type': 'multipart/form-data'
+        //             }
+        //         })
+        //             .then(response => {
+        //                 // 根据上传接口返回的结果处理上传成功或失败的情况
+        //                 const { data } = response;
+        //                 if (data.success) {
+        //                     resolve({ success: true, message: '上传成功', imageUrl: data.imageUrl });
+        //                 } else {
+        //                     reject({ success: false, message: '上传失败' });
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 reject({ success: false, message: '上传出错' });
+        //             });
+        //     });
+        // },
+        // handleRemove(file) {
+        //     console.log(file);
+        //     // fileList.remove(file)
+        //     // const fileList = this.$refs.upload.uploadFiles; // 获取上传组件的文件列表
+        //     // 找到对应的文件索引
+        //     let index = this.fileList.findIndex(f => f.uid === file.uid);
+        //     if (index !== -1) {
+        //         this.fileList.splice(index, 1); // 从文件列表中移除该文件
+        //     }
+        // },
+        // handlePictureCardPreview(file) {
+        //     this.dialogImageUrl = file.url;
+        //     this.dialogVisible = true;
+        // },
+        // handleDownload(file) {
+        //     console.log(file);
+        // }
     },
     mounted() {
         this.topicList = this.loadAll();
@@ -374,11 +387,12 @@ export default {
 .el-upload-list__item-thumbnail {
     object-fit: cover;
 }
+
 .postbar-container {
     width: 120px;
     position: fixed;
-    bottom: 10px;
-    right: 10px;
+    bottom: 20px;
+    right: 20px;
     border-radius: 5px;
     background-color: rgb(255, 217, 217);
     border: 3px solid rgba(254, 232, 232, 0.8);
@@ -401,7 +415,7 @@ export default {
 }
 
 .form-title {
-    margin: 40px;
+    margin: 0 40px 40px 40px;
     font-size: 28px;
     font-weight: 800;
     color: rgb(255, 111, 111);
@@ -447,5 +461,4 @@ export default {
     background-color: rgb(255, 56, 56);
     color: rgb(255, 255, 255);
     cursor: pointer;
-}
-</style>
+}</style>

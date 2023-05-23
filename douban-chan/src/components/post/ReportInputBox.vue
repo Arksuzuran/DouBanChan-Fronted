@@ -1,29 +1,25 @@
-<!-- 帖子页面内 回复帖子的框 以及上拉窗 -->
+<!-- 举报上拉栏 -->
+<!-- 该组件需要依存于一个用来触发的按钮 透过传入的值来决定是否显示 -->
 <template>
-    <div class="replybox-container">
-        <!-- 右下角固定的发帖窗 -->
-        <div class="postbar-container">
-            <img :src="userImgUrl" class="postbar-user-image" />
-            <button class="postbar-button" @click="handleStartPost">我来说两句</button>
-        </div>
+    <div>
         <!-- 从下向上的发帖栏 -->
-        <el-drawer :before-close="handleClose" :visible.sync="dialog" direction="btt" custom-class="demo-drawer" size="75%"
-            ref="drawer" :append-to-body="true">
+        <el-drawer :before-close="handleClose" :visible.sync="visable" direction="btt" custom-class="demo-drawer" size="75%"
+            ref="drawer" :append-to-body="true" :modal-append-to-body="false">
             <!-- 发帖栏容器 -->
             <div class="form-container">
-                <div class="form-title">发表回帖</div>
+                <div class="form-title">发起举报</div>
+
                 <div class="form-main">
                     <!-- 表单区 -->
                     <!-- 正文输入框 -->
-                    <textarea type="textarea" v-model="form.text" rows="10" :placeholder="inputPlaceHolderText"></textarea>
+                    <textarea type="textarea" v-model="form.text" rows="10" placeholder="请告诉我们发生了什么"></textarea>
 
                     <!-- 缩略图 上传图片 -->
                     <!-- action 是要上传的地址 -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
-                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
-                    <!-- <template>
+                    <!-- <div class="img-chooser-box">
                         <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
                             :on-change="handleUpload" :on-success="handleUpload" :file-list="fileList" :limit="9"
                             :http-request="handleUploadOnline">
@@ -44,45 +40,52 @@
                                 </span>
                             </div>
                         </el-upload>
-                    </template>
+                    </div> -->
+                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
 
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog> -->
+                    <!-- <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog> -->
 
                     <!-- 结束区 -->
                     <div class="form-footer">
                         <el-button class="footer-button" type="info" plain @click="cancelForm">取 消</el-button>
                         <el-button class="footer-button" type="danger" @click="$refs.drawer.closeDrawer()"
                             :loading="loading">
-                            {{ loading ? '提交中...' : '发 表' }}
+                            {{ loading ? '提交中...' : '提 交' }}
                         </el-button>
                     </div>
                 </div>
             </div>
         </el-drawer>
-
     </div>
 </template>
 
 <script>
+import PictureChooser from './PictureChooser.vue'
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
-
-import PictureChooser from './PictureChooser.vue'
-
 export default {
-    name: 'PostReplyBar',
-    props: ['postInfo'],
-    components:{
+    name: 'ReportInputBox',
+    props: ['signal', 'postInfo'],
+    components: {
         PictureChooser,
     },
     data() {
         return {
-            
-            // 控制是否打开发帖表单
-            dialog: false,
+            // 前一次传入的信号 控制是否打开发帖表单
+            osignal: false,
+
+            // 向后端传入图片的url
+            backendImgUrl: "#",
+            //文件的list
+            fileList: [],
+            // 查看文件缩略图的弹窗
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false,
+
             // 控制是否正在提交数据
             loading: false,
             // 表单收集的数据
@@ -91,15 +94,6 @@ export default {
                 text: '',
             },
             timer: null,
-
-            fileList: [],
-            // // 向后端传入图片的url
-            // backendImgUrl: "#",
-            // //文件的list
-            // // 查看文件缩略图的弹窗
-            // dialogImageUrl: '',
-            // dialogVisible: false,
-            // disabled: false
         }
     },
     computed: {
@@ -110,13 +104,18 @@ export default {
         //回帖栏默认内容
         inputPlaceHolderText() {
             return '回复帖子：' + this.postInfo.title
+        },
+        visable: {
+            get() {
+                return this.osignal != this.signal
+            },
+            set(value) {
+                this.osignal = !this.osignal
+            }
         }
+
     },
     methods: {
-        // 点击我要发帖按钮
-        handleStartPost() {
-            this.dialog = true
-        },
         // 关闭上拉栏
         handleClose(done) {
             if (this.loading) {
@@ -124,7 +123,9 @@ export default {
             }
             this.$confirm('确定要发表回帖吗？')
                 .then(_ => {
-                    this.createPost();
+                    //发送请求
+                    this.createReport();
+
                     this.loading = true;
                     this.timer = setTimeout(() => {
                         done();
@@ -139,28 +140,16 @@ export default {
         //取消发送
         cancelForm() {
             this.loading = false;
-            this.dialog = false;
+
+            // 设置二者一致 即关闭
+            this.osignal = this.signal
             clearTimeout(this.timer);
         },
         // 创建回帖
-        createPost() {
-            //构造对象
-            let newReply = {
-                textId: nanoid(),
-                floor: 0,
-                userId: this.userId,
-                userName: this.userName,
-                userImageUrl: this.userImgUrl,
-                date: this.getTimeNow(),
-                text: this.form.text,
-                imageUrlList: this.form.imgUrlList,
-                comments: 0,
-                like: 0,
-                dislike: 0,
-                childFloorList: [],
-            };
-            // 通过事件总线触发自定义事件，并传递新回复作为参数
-            this.$bus.$emit('postReplyCreated', newReply);
+        createReport() {
+            // 在此发送请求
+            console.log('用户发送举报请求',this.form.imgUrlList)
+
             // 清空内容
             this.fileList = []
             this.form.imgUrlList = []
@@ -272,11 +261,6 @@ export default {
 </script>
 
 <style scoped>
-.replybox-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .el-upload-list__item-thumbnail {
     object-fit: cover;
 }
@@ -288,10 +272,6 @@ export default {
     border: 3px solid rgba(254, 232, 232, 0.8);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
 
-    display: flex;
-    flex-flow: column wrap;
-    align-items: center;
-    justify-content: space-around;
 }
 
 .form-container {
@@ -304,20 +284,15 @@ export default {
     margin: 40px;
     font-size: 28px;
     font-weight: 800;
-    color: rgb(255, 111, 111);
-    background-color: rgb(255, 250, 250);
+    color: rgb(255, 55, 55);
+    background-color: rgb(255, 207, 207);
 
     display: flex;
     flex-flow: column wrap;
     align-items: center;
     justify-content: center;
 }
-.form-main{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: column wrap;
-}
+
 .form-footer {
     display: flex;
     align-items: center;
@@ -326,6 +301,13 @@ export default {
 
 .footer-button {
     margin: 40px;
+}
+
+.form-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
 }
 
 .postbar-user-image {
@@ -358,6 +340,12 @@ export default {
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
+
+/* .img-chooser-box{
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+} */
 
 textarea {
     padding: 15px;
