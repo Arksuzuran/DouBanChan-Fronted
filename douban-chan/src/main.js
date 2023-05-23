@@ -18,6 +18,12 @@ Vue.use(VueAwesomeSwiper)
 import 'tdesign-vue/es/style/index.css';
 Vue.use(TDesign);
 
+import AtComponents from 'at-ui'
+import 'at-ui-style'    // 引入组件样式
+
+// import 'at-ui-style/src/index.scss'      // 或者引入未构建版本的 scss 样式
+Vue.use(AtComponents)
+
 Vue.config.productionTip = false
 Vue.prototype.$qs = qs
 axios.defaults.baseURL = 'http://10.193.245.41:8000'

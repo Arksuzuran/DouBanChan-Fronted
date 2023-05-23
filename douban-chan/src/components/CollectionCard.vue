@@ -89,7 +89,7 @@ export default {
 }
 
 .collection-card-star {
-    margin-top: 10px;
+    margin-top: 7px;
     margin-left: 7px;
     font-size: 12px;
     color: #ffffff;
@@ -99,7 +99,7 @@ export default {
 }
 
 .collection-card-word {
-    margin-top: 10px;
+    margin-top: 7px;
     margin-left: 7px;
     font-size: 14px;
     color: #ffffff;

@@ -10,24 +10,28 @@
                     <div class="login-module-logo-image"></div>
                 </div>
                 <div v-if="notHideButtons" class="login-module-input">
-                    <el-input v-model="inputAccount" placeholder="请输入账号"></el-input>
+                    <el-input v-model="inputAccount" prefix-icon="el-icon-user-solid" placeholder="请输入账号">
+                    </el-input>
                     <br>
                     <br>
-                    <el-input placeholder="请输入密码" v-model="inputPassword" show-password></el-input>
+                    <el-input placeholder="请输入密码" v-model="inputPassword" prefix-icon="el-icon-lock" show-password>
+                    </el-input>
                 </div>
                 <div v-if="notHideButtons" class="login-module-button">
-                    <el-button plain class="login-module-button-sign-up">注 册</el-button>
-                    <el-button type="primary" class="login-module-button-login" @click="handleButtonClick"> 登 录 </el-button>
+                    <el-button plain class="login-module-button-sign-up" @click="clickToSignUp">注 册</el-button>
+                    <el-button :disabled="isLoginDisabled" type="primary" class="login-module-button-login"
+                        @click="handleButtonClick"> 登 录
+                    </el-button>
                 </div>
                 <div v-if="notHideButtons" class="login-module-radio">
-                    <el-checkbox v-model="checked" class="login-module-radio-remember" size="mini">记住密码</el-checkbox>
+                    <el-checkbox v-model="remember" class="login-module-radio-remember" size="mini">记住密码</el-checkbox>
                     <span class="login-module-radio-forget">忘记密码?</span>
                 </div>
                 <div v-if="notHideButtons" class="login-module-text">
                     <span>这一枪，叫温柔</span>
                 </div>
             </div>
-            <div div class=" login-module-right-content">
+            <div class="login-module-right-content">
                 <div class="login-module-right-container">
                     <swiper :options="swiperOption" ref="mySwiper" id="mySwiper">
                         <swiper-slide class="swiper_slide_item">
@@ -45,6 +49,35 @@
                         <!--分页器-->
                         <div class="swiper-pagination" slot="pagination"></div>
                     </swiper>
+                    <!-- 注册界面 -->
+                </div>
+            </div>
+            <div :class="['login-module-right-enroll', { 'notTransparent': isNotTransparent, 'toHighIndex': toHighIndex }]">
+                <div class="login-module-logo" style="margin-top: -30px;">
+                    <div class="login-module-logo-image"></div>
+                </div>
+                <div class="login-module-input" style="margin-top: -30px;">
+                    <el-input v-model="inputEnrollAccount" prefix-icon="el-icon-user-solid" placeholder="请输入用户名">
+                    </el-input>
+                    <br>
+                    <br>
+                    <el-input v-model="inputEnrollPassword_1" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password>
+                    </el-input>
+                    <br>
+                    <br>
+                    <el-input v-model="inputEnrollPassword_2" prefix-icon="el-icon-lock" placeholder="请确认密码" show-password>
+                    </el-input>
+                </div>
+                <el-button :disabled="!agreeAll" @click="clickToTransparent" class="login-module-button-right-enroll">
+                    注 册
+                </el-button>
+                <div class="login-module-right-enroll-radio">
+                    <el-checkbox v-model="agreeAll" class="login-module--right-enroll-fbd" size="mini">
+                        <span class="login-module-right-enroll-radio-long-text">同意我们的服务条款、隐私政策等</span>
+                    </el-checkbox>
+                </div>
+                <div class="login-module-right-enroll-text">
+                    <span>爱没有技巧,真情才是必杀技</span>
                 </div>
             </div>
         </div>
@@ -59,6 +92,14 @@ export default ({
     },
     data() {
         return {
+            inputEnrollAccount: '',
+            inputEnrollPassword_1: '',
+            inputEnrollPassword_2: '',
+            accounts: [
+                { account: '20375337', password: '20375337' },
+                { account: 'CR666', password: 'sb' },
+                // 可以添加更多账号和密码组合
+            ],
             imageUrl_1: 'login-back.jpg',
             imageUrl_2: 'OM.jpg',
             imageUrl_3: 'shadowdie2.jpg',
@@ -68,7 +109,10 @@ export default ({
             fadeOut: false,
             moveRight: false,
             notHideButtons: true,
-            checked: false,
+            remember: false,//是否记住密码
+            agreeAll: false,
+            isNotTransparent: false,
+            toHighIndex: false,
             //swiperOption：swiper配置项信息，需要绑定在swiper标签的 :option 属性中
             swiperOption: {
                 //幻灯片放映方向
@@ -101,6 +145,9 @@ export default ({
         swiper() {
             return this.$refs.mySwiper.$swiper;
         },
+        isLoginDisabled() {
+            return this.inputAccount === '' || this.inputPassword === '';
+        },
     },
     methods: {
         handleButtonClick() {
@@ -111,27 +158,147 @@ export default ({
                     this.fadeOut = true;
                     this.moveRight = !this.moveRight;
                 }, 1000);
-                // setTimeout(() => {
-                //     this.notHideButtons = !this.notHideButtons;
-                // }, 1025)
+            });
+            const enteredAccount = this.inputAccount;
+            const enteredPassword = this.inputPassword;
+            // 验证账号和密码
+            const isCredentialsValid = this.accounts.some(
+                ({ account, password }) => account === enteredAccount && password === enteredPassword
+            );
+            if (isCredentialsValid) {
+                if (this.remember) {
+                    // 如果用户选择记住密码，保存账号和密码到本地存储
+                    localStorage.setItem('inputAccount', this.inputAccount);
+                    localStorage.setItem('inputPassword', this.inputPassword);
+                } else {
+                    // 如果用户取消记住密码，移除本地存储中的账号和密码
+                    localStorage.removeItem('inputAccount');
+                    localStorage.removeItem('inputPassword');
+                }
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.loginSuccess();
+                    }, 2000);
+                    //多余的，后续父子组件通信会删掉
+                    setTimeout(() => {
+                        this.moveLeft = false;
+                        this.fadeOut = false;
+                        this.moveRight = false;
+                    }, 7000);
+                });
+            } else {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.loginFail();
+                        this.moveLeft = false;
+                        this.fadeOut = false;
+                        this.moveRight = false;
+                        this.inputPassword = '';//清空密码
+                    }, 2500);
+                });
+            }
+        },
+        clickToTransparent() {
+            if (this.inputEnrollAccount == '') {
+                this.errorUserName();
+                return;
+            } else if (this.inputEnrollPassword_1 == '' || this.inputEnrollPassword_2 == '') {
+                this.errorPassword();
+                return;
+            } else if (!(this.inputEnrollPassword_1 === this.inputEnrollPassword_2)) {
+                this.errorPasswordMatch();
+                return;
+            } else {
+                this.signUpSuccess();
+                this.inputAccount = this.inputEnrollAccount;
+                this.inputPassword = this.inputEnrollPassword_1;
+                this.remember = false;//是否记住呢
+                const newAccountObj = { account: this.inputAccount, password: this.inputPassword };
+                this.accounts.push(newAccountObj);//传入数据
+            }
+            this.$nextTick(() => {
                 setTimeout(() => {
+                    this.toHighIndex = false;
+                    this.isNotTransparent = false;
                     this.moveLeft = false;
                     this.fadeOut = false;
-                    this.moveRight = false;//后续会修改成登录失败后返回
-                    // this.notHideButtons = !this.notHideButtons;
-                }, 5000);
+                    this.moveRight = false;
+                }, 500);
             });
         },
-        // handleButtonClick2() {
-        //     this.$nextTick(() => {
-        //         setTimeout(() => {
-        //             this.moveLeft = false;
-        //             this.fadeOut = false;
-        //             this.moveRight = false;//后续会修改成登录失败后返回
-        //         }, 1000);
-        //     });
-        // },
-    }
+        clickToSignUp() {
+            // 点击按钮事件处理
+            this.toHighIndex = true;
+            this.isNotTransparent = true; // 将模块设置为透明
+            this.moveLeft = !this.moveLeft;
+            this.fadeOut = false;
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.fadeOut = true;
+                    this.moveRight = !this.moveRight;
+                }, 1000);
+            });
+        },
+        loginSuccess() {
+            this.$Notify.success({
+                title: '登录成功',
+                message: '软件工程真是一坨shit捏~',
+                showClose: false,
+            })
+        },
+        signUpSuccess() {
+            this.$Notify.success({
+                title: '注册成功',
+                message: '恭喜你注册成功捏',
+                showClose: false,
+            })
+        },
+        loginFail() {
+            this.$Notify.error({
+                title: '密码错误',
+                message: '软件工程嘿嘿嘿嘿',
+                showClose: false,
+            })
+        },
+        errorAccount() {
+            this.$Notify.error({
+                title: '账号错误',
+                message: '请重新输入账号捏bb',
+                showClose: false,
+            })
+        },
+        errorPassword() {
+            this.$Notify.error({
+                title: '密码错误',
+                message: '请重新输入密码捏bb',
+                showClose: false,
+            })
+        },
+        errorUserName() {
+            this.$Notify.error({
+                title: '用户名不合法',
+                message: '请重新输入用户名',
+                showClose: false,
+            })
+        },
+        errorPasswordMatch() {
+            this.$Notify.error({
+                title: '密码不一致',
+                message: '请重新输入密码',
+                showClose: false,
+            })
+        },
+    },
+    mounted() {
+        // 检查本地存储中是否存在记住的账号和密码
+        const savedUsername = localStorage.getItem('inputAccount');
+        const savedPassword = localStorage.getItem('inputPassword');
+        if (savedUsername && savedPassword) {
+            this.inputAccount = savedUsername;
+            this.inputPassword = savedPassword;
+            this.remember = true;
+        }
+    },
 })
 </script>
 
@@ -163,6 +330,7 @@ export default ({
     height: 60px;
 }
 
+
 .login-module-logo-image {
     position: absolute;
     top: 120px;
@@ -174,6 +342,7 @@ export default ({
     background-position: center;
     background-repeat: no-repeat;
 }
+
 
 .login-module-input {
     position: absolute;
@@ -228,13 +397,43 @@ export default ({
     float: left;
 }
 
+.login-module-right-enroll-radio {
+    position: absolute;
+    width: 250px;
+    height: 150px;
+    top: 340px;
+    left: 45px;
+}
+
 .login-module-radio-forget {
     margin-right: 8px;
     float: right;
     font-size: 14px;
 }
 
+.login-module--right-enroll-fbd {
+    margin-left: 8px;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .login-module-text {
+    position: absolute;
+    width: 270px;
+    height: 20px;
+    top: 450px;
+    left: 45px;
+    font-size: 7px;
+    color: #d8d8d8;
+    opacity: 0.95;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-module-right-enroll-text {
     position: absolute;
     width: 270px;
     height: 20px;
@@ -277,7 +476,7 @@ export default ({
 }
 
 .login-module-left-content.move-left {
-    transform: translateX(-365px);
+    transform: translateX(-380px);
     /* 控制向左移动的动画效果 */
 }
 
@@ -289,7 +488,8 @@ export default ({
 .login-module-left-content.move-right {
     transform: translateX(0px);
     opacity: 0.8;
-    border: 0px solid rgb(77, 84, 88);
+    border: 0px solid transparent;
+    background-color: rgb(77, 84, 88);
     /* 控制向右移动的动画效果 */
 }
 
@@ -324,5 +524,60 @@ export default ({
 
 #mySwiper /deep/ .swiper-pagination-bullet-custom {
     background-color: transparent !important;
+}
+
+.login-module-right-enroll {
+    position: absolute;
+    width: 360px;
+    height: 500px;
+    left: 50%;
+    background-color: rgb(255, 255, 255);
+    z-index: 85;
+    opacity: 0;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    transform: z-index 2s ease;
+    transition: transform 2s ease;
+}
+
+.login-module-button-right-enroll {
+    position: relative;
+    top: 380px;
+    left: 90px;
+    width: 180px;
+    height: 40px;
+    border-color: #0099DD;
+    color: #0099DD;
+    font-weight: 500;
+    font-size: 18px;
+    z-index: 85;
+    opacity: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: z-index 2s ease;
+    transition: transform 1.5s ease;
+}
+
+.login-module-right-enroll-radio-long-text {
+    white-space: pre-wrap;
+    font-size: 10px;
+}
+
+.login-module-right-enroll.notTransparent {
+    opacity: 1;
+    /* 设置透明度 */
+    /* 设置 z-index */
+    transition: opacity 2s ease;
+    /* 添加过渡效果 */
+}
+
+
+.login-module-right-enroll.toHighIndex {
+    z-index: 95;
+}
+
+.login-module-button-right-enroll.toHighIndex {
+    z-index: 95;
 }
 </style>
