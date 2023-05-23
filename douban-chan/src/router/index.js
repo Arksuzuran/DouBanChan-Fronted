@@ -6,7 +6,7 @@ import TopicHomeView from '../views/TopicHomeView.vue'
 import GroupHomeView from '../views/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import VideoHomeView from "../views/VideoHomeView.vue";
+import VideoHomeView from "../views/Video/VideoHomeView.vue";
 
 
 import UserHomeFavlist from "../views/User/Favlist.vue";
@@ -16,11 +16,15 @@ import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
 
+import VideoDetail from "../views/Video/VideoDetail.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
 //帖子
 import Post from "../views/Post/Post.vue";
+import reviewView from "../views/Review/ReviewView.vue";
+
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -48,6 +52,12 @@ const routes = [
     name: "groupHome",
     component: GroupHomeView,
   },
+  //影视主页
+  {
+    path: "/videoHome",
+    name: "videoHome",
+    component: VideoHomeView
+  },
   //某小组的主页
   {
     path: "/group",
@@ -67,6 +77,18 @@ const routes = [
       },
       //
     ]
+  },
+  //影视详情页面
+  {
+    path: "/videoDetail",
+    name: "videoDetail",
+    component: VideoDetail,
+  },
+  //评论详情页面
+  {
+    path: "/review",
+    name: "review",
+    component: reviewView,
   },
   //用户个人账户主页
   {
