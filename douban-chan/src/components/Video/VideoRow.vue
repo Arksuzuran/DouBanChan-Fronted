@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
   <div id="v-carousel">
     <div class="card-carousel-wrapper">
       <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
@@ -16,7 +17,7 @@
       <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
     </div>
   </div>
-  
+</div>
 </template>
 
 <script>
@@ -54,7 +55,6 @@ export default {
 </script>
 
 <style scoped>
-
 .card-carousel-wrapper {
   display: flex;
   align-items: center;
@@ -66,7 +66,7 @@ export default {
 .card-carousel {
   display: flex;
   justify-content: center;
-  width: 1200px;
+  width: 1050px;
 }
 .card-carousel--overflow-container {
   overflow: hidden;

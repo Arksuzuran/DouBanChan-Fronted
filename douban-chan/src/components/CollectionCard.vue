@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .collection-card-big-block {
     display: flex;
     justify-content: center;

@@ -5,8 +5,9 @@
   <div class="topbar">
     影视之家
   </div>
+
   <div class="container">
-    <el-row :gutter="24">
+    <!-- <el-row :gutter="24">
 
       <el-col :span="6"><div class="grid-content bg-purple">
         <HotVideo title="热门电影" :movies="monthlyMovies"></HotVideo>
@@ -17,7 +18,7 @@
       <el-col :span="6"><div class="grid-content bg-purple">
         <HotVideo title="热门电视剧" :movies="monthlyMovies"></HotVideo>
       </div></el-col>
-    </el-row>
+    </el-row> -->
     
     <SectionTitle title="近期热门"></SectionTitle>
     <VideoRow :items="recommendItems"></VideoRow>
@@ -29,7 +30,6 @@
     <VideoRow :items="recentItems"></VideoRow>
 
     <VideoRow :items="recentItems"></VideoRow>
-
 
   </div>
 </div>
@@ -90,7 +90,8 @@ export default {
 
 <style scoped>
 .container{
-  margin: 0 8% 0 8%
+  margin: 0 auto;
+  width: 75%;
 }
 
 .topbar{
