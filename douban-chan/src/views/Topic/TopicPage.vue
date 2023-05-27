@@ -1,5 +1,6 @@
+<!-- 话题版块详情页 -->
 <template>
-  <h1>这是话题版块主页</h1>
+  
 </template>
 
 <script>
