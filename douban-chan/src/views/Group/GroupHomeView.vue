@@ -23,7 +23,7 @@
       </div>
       <!-- 右部值得加入的小组 -->
       <div class="grouphome-right-container">
-        <GroupList :groupList="groupList" :usersOwnGroup="usersGrouplabelChoosen"></GroupList>
+        <GroupList :groupList="inGroupList" :usersOwnGroup="usersGrouplabelChoosen"></GroupList>
       </div>
     </div>
 
@@ -196,13 +196,13 @@ export default {
               userId: '001',
               userName: "羽毛笔",
               userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: false,
+              isAdmin: true,
             },
             {
               userId: '004',
               userName: "bochi",
               userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: true,
+              isAdmin: false,
             },
           ],
         },
@@ -220,8 +220,38 @@ export default {
               userId: '001',
               userName: "羽毛笔",
               userImageUrl: require('../../assets/user-image-1.jpg'),
+              isAdmin: false,
+            },
+            {
+              userId: '002',
+              userName: "Chino",
+              userImageUrl: require('../../assets/user-image-8.jpg'),
               isAdmin: true,
             },
+            {
+              userId: '003',
+              userName: "_Karasu_",
+              userImageUrl: require('../../assets/user-image-6.jpg'),
+              isAdmin: true,
+            },
+            {
+              userId: '004',
+              userName: "bochi",
+              userImageUrl: require('../../assets/user-image-7.jpg'),
+              isAdmin: false,
+            },
+          ],
+        },
+        {
+          groupId: 'g003',
+          groupHeadBgUrl: require('../../assets/group-img-8.jpg'),
+          groupAvatarImgUrl: require('../../assets/group-avatar-3.jpg'),
+          groupName: "蔚蓝档案小组",
+          groupIntro: "联邦理事会宣布对此事件负责",
+          tagList: ['游戏'],
+          groupPostNumber: 1367,
+          groupFollowNumber: 59521,
+          memberList: [
             {
               userId: '002',
               userName: "Chino",
@@ -234,18 +264,34 @@ export default {
               userImageUrl: require('../../assets/user-image-6.jpg'),
               isAdmin: false,
             },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
           ],
         },
       ]
     },
   },
   computed: {
+    // 要传递的小组列表
+    inGroupList() {
+      // 筛选我的小组
+      // 该功能应该由后端实现 此处只是假筛选
+      if (this.activeHeaderLabel == 6) {
+        let list = []
+        for (let group of this.groupList) {
+          for (let member of group.memberList) {
+            if (member.userId === this.userId) {
+              list.push(group)
+              break
+            }
+          }
+        }
+        return list
+      }
+      else {
+        return this.groupList
+      }
+    },
+
+
     //要传递的帖子列表
     inPostList() {
       if (this.activeHeaderLabel == 0) {
@@ -254,9 +300,7 @@ export default {
       else if (this.activeHeaderLabel == 1) {
         return this.getGoodPostList()
       }
-      else {
-        return []
-      }
+      return []
     },
     // 用户是否选中了'我的小组'
     // 用户是否选择‘我的小组’标签
@@ -281,7 +325,7 @@ export default {
       console.log('用户创建小组成功：', newGroup)
     });
   },
-  
+
 }
 </script>
   

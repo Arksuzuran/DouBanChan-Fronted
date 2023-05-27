@@ -8,6 +8,8 @@
         <div class="groupcard-infos">
             <!-- 对于管理员用户 显示特殊上标 -->
             <div class="groupcard-admin" v-if="userIsAdmin">管理</div>
+            <!-- 对于已加入的非管理员用户 显示特殊上标 -->
+            <div class="groupcard-joined" v-if="userInGroup && !userIsAdmin">我的小组</div>
             <img class="groupcard-img" :src="group.groupAvatarImgUrl" />
             <div class="groupcard-info">
                 <div class="groupcard-name">
@@ -116,6 +118,7 @@ export default {
 </script>
 
 <style scoped>
+/* card的背景和颜色 */
 .groupcard-container {
     /* max-width: 320px; */
     border-radius: 1rem;
@@ -136,12 +139,26 @@ export default {
     position: relative;
     /* margin: 10px; */
 }
+/* 管理员的特殊上标 */
 .groupcard-admin{
     position: absolute;
     top: 0;
     left: 0;
     height: 1.1rem;
     width: 2.1rem;
+    border-radius: 0.5rem;
+    /* background-color: rgb(250, 43, 43); */
+    background-color: rgb(247, 96, 96);
+    font-size: 12px;
+    color: white;
+}
+/* 普通组员的上标 */
+.groupcard-joined{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1.1rem;
+    width: 4.1rem;
     border-radius: 0.5rem;
     background-color: rgb(248, 130, 130);
     font-size: 12px;
@@ -219,7 +236,9 @@ export default {
     line-height: 1.5rem;
     transition: all .3s ease;
     background-color: rgba(244, 236, 236, 0.9);
-    ;
+    
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 1px 2px 0px rgba(247, 61, 61, 0.2);
 
     cursor: pointer;
 }

@@ -8,7 +8,7 @@
   <div class="grouplist-container">
     <div class="grouplist-header-container">
       <div class="color-block"></div>
-      <span class="grouplist-header-title">值得加入的小组</span>
+      <span class="grouplist-header-title">{{ headerTitle}}</span>
     </div>
     <GroupCard v-for="group in groupList" :key="group.groupId" :group="group"></GroupCard>
   </div>
@@ -23,7 +23,7 @@ export default {
         GroupCard,
     },
     computed:{
-      title(){
+      headerTitle(){
         return this.usersOwnGroup ? '我加入的小组' : '值得加入的小组'
       }
     },
