@@ -1,19 +1,26 @@
 <template>
     <div class="score-container">
-      <el-rate
-        v-model="scoreInFive"
-        disabled
-        text-color="#ff9900"
-        score-template="{value}"
-      ></el-rate>
-      <span class="score-num">{{ score }}</span>
-      <div style="clear: both;"></div> <!-- 添加一个“清除浮动”的元素 -->
+      <el-row>
+        <el-col :span="5"><div class="left-section">
+          <div class="score-num">{{ score }}</div>
+        </div></el-col>
+        <el-col :span="19"><div class="grid-content bg-purple-light">
+          <el-rate
+            v-model="scoreInFive"
+            disabled
+            text-color="#ff9900"
+            score-template="{value}"
+          ></el-rate>
+
+          <span class="number-rate">1111人参与评分</span>
+        </div></el-col>
+      </el-row>
     </div>
-  </template>
+</template>
 
 <script>
-export default {
-    name: 'Rate',
+export default {  
+  name: 'Rate',
     props:['score'],
     computed: {
         scoreInFive(){
@@ -25,13 +32,19 @@ export default {
 
 <style scoped>
 .score-container {
+  margin: 10px 20px;
+}
+
+.score-num {
+  font-size: 30px;
+  color: black;
+}
+.left-section{
   display: flex;
   align-items: center;
 }
 
-.score-num {
-  font-size: 13px;
-  color: orange;
-  margin-left: 10px;
+.number-rate{
+  color: gray;
 }
 </style>

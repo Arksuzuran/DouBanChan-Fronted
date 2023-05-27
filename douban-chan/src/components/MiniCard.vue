@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .mini-card-block {
     background-color: transparent;
     width: 400px;
