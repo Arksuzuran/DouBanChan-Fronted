@@ -1,5 +1,5 @@
 <template>
-    <div class="menu-wrapper">
+    <div class="menu-wrapper navbar-scroll">
         <div class="logo-wrapper">
             <img height="40px" src="https://tdesign.gtimg.com/site/baseLogo-light.png" alt="logo" />
         </div>
@@ -10,24 +10,28 @@
             </div>
         </div>
         <!-- 搜索 -->
-        <el-autocomplete class="my-autocomplete" style="width: 400px;" v-model="state" :fetch-suggestions="querySearch"
-            placeholder="请输入内容" @select="handleSelect">
-            <i class="el-icon-search el-input__icon" slot="suffix" @click="handleIconClick">
-            </i>
-            <template slot-scope="{ item }">
-                <div class="name">{{ item.value }}</div>
-                <span class="addr">{{ item.address }}</span>
-            </template>
-        </el-autocomplete>
-        <!-- 头像 -->
-        <div class="NavBar-block" @click="gotoUserHome" v-if="isLogin"><el-avatar :size="60" :src="circleUrl"></el-avatar>
+        <div>
+            <Search></Search>
         </div>
-        <div class="NavBar-block" @click="showLogin" v-if="!isLogin"><el-avatar :size="60" :src="circleUrl"></el-avatar>
+        <!-- 头像 -->
+        <div class="NavBar-block" @mouseover="showIndividualBlock" @click="gotoUserHome" v-if="isLogin">
+            <el-avatar :size="60" :src="circleUrl"></el-avatar>
+        </div>
+        <div class="NavBar-block" @click="showLogin" v-if="!isLogin">
+            <el-avatar :size="60" :src="circleUrl"></el-avatar>
         </div>
         <!-- 登录弹窗 -->
         <div v-if="clickLogin" class="NavBar-login-block">
             <div class="NavBar-login-overlay" @click="closeLogin"></div>
             <LoginModule></LoginModule>
+        </div>
+        <div class="cartoon">
+            <NavBarCartoon></NavBarCartoon>
+        </div>
+        <!-- 个人简介弹窗 -->
+        <div v-if="showIndividual" class="NavBar-individual-block" :style="{ opacity: individualBlockOpacity }"
+            @mouseleave="hideIndividualBlock">
+            <IndividualMiniCard></IndividualMiniCard>
         </div>
     </div>
 </template>
@@ -38,12 +42,20 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 import { defineComponent } from 'vue';
 import LoginModule from '../views/LoginModule.vue';
+import IndividualMiniCard from '../views/IndividualMiniCard.vue';
+import Search from '../views/Search.vue'
+import NavBarCartoon from '../components/NavBarCartoon.vue';
 export default {
     components: {
         LoginModule,
+        IndividualMiniCard,
+        Search,
+        NavBarCartoon,
     },
     data() {
         return {
+            showIndividual: false,
+            individualBlockOpacity: 0, // 初始透明度为 0
             clickLogin: false,
             image: "qq.jpg",
             menuItems: [
@@ -61,6 +73,27 @@ export default {
         };
     },
     methods: {
+        handleScroll() {
+            const navbarWrapper = document.querySelector('.navbar-scroll');
+            if (window.pageYOffset > 130) {
+                navbarWrapper.classList.add('scrolled');
+                navbarWrapper.classList.remove('reset');
+
+            } else {
+                navbarWrapper.classList.remove('scrolled');
+                navbarWrapper.classList.add('reset');
+            }
+        },
+        showIndividualBlock() {
+            this.showIndividual = true;
+            this.individualBlockOpacity = 1; // 鼠标悬停时将透明度设置为 1
+        },
+        hideIndividualBlock() {
+            this.individualBlockOpacity = 0; // 鼠标离开时将透明度恢复为 0
+            setTimeout(() => {
+                this.showIndividual = false;
+            }, 500);
+        },
         showLogin() {
             this.clickLogin = true; // 显示弹窗
             this.isLogin = true;
@@ -167,14 +200,86 @@ export default {
     },
     mounted() {
         this.restaurants = this.loadAll();
+        window.addEventListener('scroll', this.handleScroll);
     },
+    beforeDestroy() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
 };
 </script>
 
 <style scoped>
+@keyframes navbarAnimation {
+    from {
+        height: 120px;
+        border-radius: 0px;
+        background-image: url('../assets/conroy_img/backImage.png');
+    }
+
+    to {
+        height: 75px;
+        border-radius: 10px;
+        background-color: #f2f2f2;
+        background-image: none;
+    }
+}
+
+
+.navbar-scroll.scrolled {
+    animation: navbarAnimation 0.5s forwards;
+}
+
+@keyframes navbarResetAnimation {
+    from {
+        height: 75px;
+        border-radius: 10px;
+        background-color: #f2f2f2;
+        background-image: none;
+    }
+
+    to {
+        height: 120px;
+        border-radius: 0px;
+        background-image: url('../assets/conroy_img/backImage.png');
+    }
+}
+
+.navbar-scroll.reset {
+    animation: navbarResetAnimation 0.5s forwards;
+}
+
+.scrolled {
+    animation: none;
+    height: 120px;
+    border-radius: 0px;
+}
+
+
+.cartoon {
+    margin-left: 30px;
+}
+
+.NavBar-individual-block {
+    width: 17em;
+    height: 22.5em;
+    background-color: transparent;
+    border-radius: 10px;
+    position: absolute;
+    top: 55px;
+    left: 1185px;
+    clip-path: polygon(30px 0%, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0% 30px);
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    /* 初始透明度为 0 */
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    z-index: 49;
+}
+
 .NavBar-block {
     position: relative;
-    margin-left: 10%;
+    margin-left: 17%;
+    z-index: 50;
 }
 
 .el-icon-search {
@@ -184,10 +289,10 @@ export default {
 
 .menu-wrapper {
     width: 100%;
-    height: 50px;
+    height: 120px;
     display: flex;
     align-items: center;
-    background-color: transparent;
+    background-image: url('../assets/conroy_img/backImage.png');
     border: none;
     padding: 10px;
 }
@@ -202,15 +307,16 @@ export default {
 }
 
 .menu-item {
-    padding: 20px 40px;
+    padding: 15px 40px;
     font-size: 20px;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 30px;
+    color: rgb(104, 104, 104);
     transition: background-color 0.3s;
 }
 
 .menu-item.active {
-    background-color: #4b4b4b;
+    background-color: #e07523;
     color: #fff;
 }
 

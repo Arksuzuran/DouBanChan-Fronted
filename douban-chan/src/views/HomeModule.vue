@@ -1,7 +1,7 @@
 <template>
     <div class="home-module-container-new">
         <div class="home-module-scroll-movie-new">
-            <el-carousel :interval="4000" arrow="never" trigger="hover" :style="{ height: '540px', width: '960px' }">
+            <el-carousel :interval="4000" arrow="never" trigger="hover" :style="{ height: '480px', width: '800px' }">
                 <el-carousel-item v-for="item in 6" :key="item">
                     <ScrollingScreenCard></ScrollingScreenCard>
                 </el-carousel-item>
@@ -10,7 +10,9 @@
         <div class="home-module-collection-book">
             <span class="home-module-collection-book-list"><i class="fa-brands fa-hotjar" style="color: #ff7032;">
                 </i> 书香之选</span>
-            <div class="home-module-collection-book-check"><i class="fa-solid fa-rotate-right"></i></div>
+            <div class="home-module-collection-book-check">
+                <RefreshButton></RefreshButton>
+            </div>
             <div class="home-module-collection-book-show">
                 <div v-for="card in 3" class="home-module-collection-book-card">
                     <CollectionCard></CollectionCard>
@@ -23,6 +25,7 @@
 <script>
 import ScrollingScreenCard from '../components/ScrollingScreenCard.vue';
 import CollectionCard from '../components/CollectionCard.vue';
+import RefreshButton from './RefreshButton.vue';
 export default {
     data() {
         return {
@@ -134,6 +137,7 @@ export default {
     components: {
         ScrollingScreenCard,
         CollectionCard,
+        RefreshButton,
     },
 }
 </script>
@@ -154,25 +158,25 @@ export default {
 }
 
 .home-module-container-new {
+    width: 85%;
+    margin-left: 7.5%;
     border: none;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    height: 540px;
+    height: 480px;
     margin-top: 20px;
 }
 
 .home-module-collection-book {
-    margin-right: 1%;
-    border: 0px solid #d2c7c7;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     width: 30%;
-    height: 540px;
-    background-color: #f3f3f3;
+    height: 480px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    background-color: #f9f9f9;
 }
 
 .home-module-collection-book-list {
@@ -185,17 +189,9 @@ export default {
 }
 
 .home-module-collection-book-check {
-    margin-top: 10px;
-    margin-left: 320px;
+    margin-top: 15px;
+    margin-left: 180px;
     font-size: 24px;
-    color: black;
-    transition: transform 0.2s ease-in-out;
-
-}
-
-.home-module-collection-book-check:hover {
-    transform: scale(1.1);
-    color: rgb(254, 132, 45);
 }
 
 .home-module-collection-book-show {
@@ -203,7 +199,7 @@ export default {
     margin-top: 1%;
     margin-left: 3%;
     width: 90%;
-    height: 500px;
+    height: 440px;
     background-color: transparent;
     display: flex;
     flex-wrap: wrap;

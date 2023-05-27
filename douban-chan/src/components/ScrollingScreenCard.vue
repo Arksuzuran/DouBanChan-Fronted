@@ -25,13 +25,13 @@ export default {
 
 <style>
 .scrolling-screen-card-block {
-    width: 960px;
-    height: 540px;
+    width: 800px;
+    height: 480px;
 }
 
 .scrolling-screen-card-image-container {
-    width: 960px;
-    height: 540px;
+    width: 800px;
+    height: 480px;
 }
 
 .scrolling-screen-card-image {

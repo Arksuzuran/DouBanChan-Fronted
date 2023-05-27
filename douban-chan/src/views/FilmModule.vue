@@ -4,10 +4,12 @@
             <el-header style="margin-top: 20px;">
                 <div style="margin-left: 1%;">
                     <i class="fa-brands fa-youtube movie-logo" style="color: #004ac2;"></i>
-                    <div style="float: left; display: inline-block; margin-left: 5px;width: 1300px;">
+                    <div style="float: left; display: inline-block; margin-left: 5px;width: 90%;">
                         <span
                             style="float: left;margin-left: 5px;font-size: 40px; font-weight: bold;color: #000000;">影视栏目</span>
-                        <button class="for-more">更多<i class="fa-solid fa-arrow-right"></i></button>
+                        <div class="button-for-more">
+                            <ButtonForMore></ButtonForMore>
+                        </div>
                     </div>
                 </div>
             </el-header>
@@ -26,9 +28,11 @@
 
 <script>
 import UniversalCard from "../components/UniversalCard";
+import ButtonForMore from './ButtonForMore.vue';
 export default {
     components: {
         UniversalCard, // 注册子组件
+        ButtonForMore,
     },
     data() {
         return {
@@ -103,19 +107,23 @@ export default {
     }
 }
 </script>
-<style>
+<style >
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
+.button-for-more {
+    margin-top: 5px;
+    float: right;
+    margin-left: 20px;
+}
 
 .film-module-block {
     margin-right: 1%;
-    width: 1420px;
+    width: 85%;
     margin-top: 50px;
-    margin-left: 1%;
+    margin-left: 7.5%;
     border-radius: 10px;
-    border: 0px solid #d2c7c7;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #f3f3f3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    background-color: #f9f9f9;
 }
 
 .card-container {

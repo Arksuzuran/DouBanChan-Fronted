@@ -1,7 +1,6 @@
 <!-- 小组主页 -->
 <template>
   <div>
-    <nav-bar-back-ground></nav-bar-back-ground>
     <!-- 背景色 -->
     <div class="grouphome-background"></div>
 
