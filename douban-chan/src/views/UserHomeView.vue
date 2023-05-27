@@ -78,7 +78,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .userhome-bg {
   background-color: #f3f8fe;
 }

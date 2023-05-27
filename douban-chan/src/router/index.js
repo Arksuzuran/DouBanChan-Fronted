@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BookHomeView from '../views/BookHomeView.vue'
 import TopicHomeView from '../views/TopicHomeView.vue'
-import GroupHomeView from '../views/GroupHomeView.vue'
+import GroupHomeView from '../views/Group/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import VideoHomeView from "../views/Video/VideoHomeView.vue";

@@ -35,6 +35,10 @@
                                 :rows="20">
                             </el-input>
                         </el-form-item>
+
+                        <el-form-item label="上传帖子图片" :label-width="formLabelWidth">
+                            <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
+                        </el-form-item>
                     </el-form>
 
                     <!-- 缩略图 上传图片 -->
@@ -43,7 +47,7 @@
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 上传图片 -->
-                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
+                    
 
                     <!-- <template>
                         <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
@@ -455,6 +459,8 @@ export default {
     border: 2px solid rgba(255, 238, 238, 0.8);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     font-size: 14px;
+
+    transition: .5s ease;
 }
 
 .postbar-button:hover {

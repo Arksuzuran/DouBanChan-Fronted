@@ -52,14 +52,12 @@
             <div class="group-content-container">
                 <router-view :postList="inPostList"></router-view>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-
 
 export default {
     name: 'GroupPage',
@@ -78,6 +76,7 @@ export default {
             userIsAdmin: false,
             activeIndex: 'groupPostList',
 
+            // 帖子列表
             // 帖子列表信息
             postList: [
                 {
@@ -99,6 +98,7 @@ export default {
                     dislike: 456,
                     isTopped: true,
                     isGoodPost: false,
+                    group: 'Game' //来自的小组
                 },
                 {
                     postId: 'p002',
@@ -117,6 +117,7 @@ export default {
                     dislike: 59,
                     isTopped: false,
                     isGoodPost: true,
+                    group: '北京航空航天大学' //来自的小组
                 },
                 {
                     lzId: '002',
@@ -134,6 +135,7 @@ export default {
                     dislike: 0,
                     isTopped: false,
                     isGoodPost: false,
+                    group: '牢大'       //来自的小组
                 },
             ],
         }
@@ -168,10 +170,10 @@ export default {
             }
         },
         // 返回精华帖列表
-        getGoodPostList(){
+        getGoodPostList() {
             let goodPostList = []
-            for(let post of this.postList){
-                if(post.isGoodPost){
+            for (let post of this.postList) {
+                if (post.isGoodPost) {
                     goodPostList.push(post)
                 }
             }
@@ -181,7 +183,8 @@ export default {
     computed: {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
-        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin']),
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+
         joinButtonClass() {
             return this.userJoined ? 'group-header-button-selected' : 'group-header-button-unselected';
         },
@@ -189,14 +192,14 @@ export default {
             return this.userIsAdmin ? 'group-header-button-selected' : 'group-header-button-unselected';
         },
         //要传递的帖子列表
-        inPostList(){
-            if(this.activeIndex == 'groupPostList'){
+        inPostList() {
+            if (this.activeIndex == 'groupPostList') {
                 return this.postList.slice()
             }
-            else if(this.activeIndex == 'groupGoodPostList'){
+            else if (this.activeIndex == 'groupGoodPostList') {
                 return this.getGoodPostList()
             }
-            else{
+            else {
                 return []
             }
         },
@@ -233,6 +236,13 @@ export default {
     border-radius: 5px;
     width: 100%;
     height: 350px;
+}
+
+/* 小组头图 */
+.header-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* 小组头像 */

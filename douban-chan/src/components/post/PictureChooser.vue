@@ -1,7 +1,7 @@
 <!-- 图片选择器 用于上传图片 -->
 <template>
     <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false" :on-change="handleUpload"
-        :on-success="handleUpload" :file-list="fileList" :limit="9" :http-request="handleUploadOnline">
+        :on-success="handleUpload" :file-list="fileList" :limit="maxImgNumber" :http-request="handleUploadOnline">
         <i slot="default" class="el-icon-plus"></i>
         <div slot="file" slot-scope="{ file }">
             <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
@@ -24,7 +24,7 @@
 export default {
     name:'PictureChooser',
     // 将数据传入imgUrlList
-    props:['imgUrlList', 'fileList'],
+    props:['imgUrlList', 'fileList', 'maxImgNumber'],
     data() {
         return {
             // 向后端传入图片的url

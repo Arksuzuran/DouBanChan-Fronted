@@ -9,7 +9,7 @@
                 <!-- 排序部分 -->
                 <PostSortLabel></PostSortLabel>
                 <!-- 只看楼主 -->
-                <OnlyLzButton class="post-OnlyLz-button" @click="handleOnlyLz"></OnlyLzButton>
+                <OnlySelectButton class="post-OnlyLz-button" labelName="楼主" eventName="setOnlyLz"></OnlySelectButton>
                 <!-- 右侧 -->
                 <!-- 来自小组 和 举报按钮 -->
                 <div class="postcard-buttongroup">
@@ -27,7 +27,8 @@
 
         <!-- 楼层列表 -->
         <div class="postlist-container">
-            <PostFloor v-for="floor in activeFloorList" :key="floor.textId" :info="floor" :lz="floor.userId == postInfo.lzId" :post="postInfo"></PostFloor>
+            <PostFloor v-for="floor in activeFloorList" :key="floor.textId" :info="floor"
+                :lz="floor.userId == postInfo.lzId" :post="postInfo"></PostFloor>
         </div>
 
         <!-- 右下角悬浮框 -->
@@ -117,7 +118,7 @@
 
 <script>
 import PostSortLabel from '@/components/post/PostSortLabel.vue'
-import OnlyLzButton from '@/components/post/button/OnlyLzButton.vue'
+import OnlySelectButton from '@/components/post/button/OnlySelectButton.vue'
 import PostReportButton from '@/components/post/button/PostReportButton.vue';
 import PostTopicButton from '@/components/post/button/PostTopicButton.vue';
 import PostFloor from '@/components/post/PostFloor.vue';
@@ -129,7 +130,7 @@ export default {
     name: 'Post',
     components: {
         PostSortLabel,
-        OnlyLzButton,
+        OnlySelectButton,
         PostTopicButton,
         PostReportButton,
         PostFloor,
@@ -138,13 +139,10 @@ export default {
         ScrollToTopButton,
     },
     methods: {
-        handleOnlyLz() {
-            this.onlyLz = !this.onlyLz
-        },
         // 向楼层列表里加入楼中楼回复
-        insertCommentIntoFloor(newReply, textId){
-            for(let floor of this.floorList){
-                if(floor.textId === textId){
+        insertCommentIntoFloor(newReply, textId) {
+            for (let floor of this.floorList) {
+                if (floor.textId === textId) {
                     floor.childFloorList.push(newReply)
                     console.log('楼层被回复：', textId)
                     break;
@@ -152,8 +150,9 @@ export default {
             }
         },
         // 向楼层列表里加入回复
-        insertFloorIntoFloor(newReply){
-            newReply.floor = this.floorList.length
+        insertFloorIntoFloor(newReply) {
+            // 注意：在此加入楼层信息
+            newReply.floor = this.floorList.length + 1
             this.floorList.push(newReply)
         },
     },
@@ -162,7 +161,7 @@ export default {
         //筛选出当前的列表内容和顺序
         activeFloorList() {
             let list = this.floorList
-            
+
             //只看楼主
             if (this.onlyLz) {
                 list = this.floorList.filter(item => {
@@ -379,8 +378,8 @@ export default {
                     date: '2023-5-19 23:19',
                     text: "第一章《天生废材的我误入了超级大国》第二章《好客的大学》第三章《三美女陪同倒贴测》第四章《高额奖学金随便送》第五章《生好多孩子送不完》第六章《黑龙也是龙》番外《该滚的是你们吧》",
                     imageUrlList: [require('../../assets/favlist-2.jpg'),
-                        require('../../assets/favlist-3.png'),
-                        require('../../assets/user-image-3.jpg')],
+                    require('../../assets/favlist-3.png'),
+                    require('../../assets/user-image-3.jpg')],
                     comments: 2,
                     like: 4231,
                     dislike: 54,
@@ -502,19 +501,20 @@ export default {
 }
 
 /* 右下角回帖按钮 */
-.post-replybar{
+.post-replybar {
     position: fixed;
     bottom: 20px;
     right: 20px;
 }
+
 /* 右下角悬浮按钮组 */
-.post-likefav-buttongroup{
+.post-likefav-buttongroup {
     position: fixed;
     bottom: 150px;
     right: 20px;
 }
 
-.post-likefav-scrollbutton{
+.post-likefav-scrollbutton {
     position: fixed;
     bottom: 350px;
     right: 20px;
