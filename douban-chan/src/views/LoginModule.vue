@@ -10,7 +10,8 @@
                     <div class="login-module-logo-image"></div>
                 </div>
                 <div v-if="notHideButtons" class="login-module-input">
-                    <el-input v-model="inputAccount" prefix-icon="el-icon-user-solid" placeholder="请输入账号">
+                    <el-input v-model="inputAccount" autocomplete="off" name="text" class="input"
+                        prefix-icon="el-icon-user-solid" placeholder="请输入账号">
                     </el-input>
                     <br>
                     <br>
@@ -55,6 +56,9 @@
             <div :class="['login-module-right-enroll', { 'notTransparent': isNotTransparent, 'toHighIndex': toHighIndex }]">
                 <div class="login-module-logo" style="margin-top: -30px;">
                     <div class="login-module-logo-image"></div>
+                </div>
+                <div class="login-module-backToLogin">
+                    <el-button type="text" @click="backToLogin"><i class="fa-solid fa-arrow-left"></i> 回到登录</el-button>
                 </div>
                 <div class="login-module-input" style="margin-top: -30px;">
                     <el-input v-model="inputEnrollAccount" prefix-icon="el-icon-user-solid" placeholder="请输入用户名">
@@ -151,6 +155,7 @@ export default ({
     },
     methods: {
         handleButtonClick() {
+            this.start();//开始捏
             this.moveLeft = !this.moveLeft;
             this.fadeOut = false;
             this.$nextTick(() => {
@@ -178,6 +183,7 @@ export default ({
                 this.$nextTick(() => {
                     setTimeout(() => {
                         this.loginSuccess();
+                        this.finish();
                     }, 2000);
                     //多余的，后续父子组件通信会删掉
                     setTimeout(() => {
@@ -190,32 +196,46 @@ export default ({
                 this.$nextTick(() => {
                     setTimeout(() => {
                         this.loginFail();
+                        this.error();
                         this.moveLeft = false;
                         this.fadeOut = false;
                         this.moveRight = false;
                         this.inputPassword = '';//清空密码
+                        this.remember = false;
                     }, 2500);
                 });
             }
         },
         clickToTransparent() {
+            this.start();
             if (this.inputEnrollAccount == '') {
                 this.errorUserName();
+                this.error();
                 return;
             } else if (this.inputEnrollPassword_1 == '' || this.inputEnrollPassword_2 == '') {
                 this.errorPassword();
+                this.error();
                 return;
             } else if (!(this.inputEnrollPassword_1 === this.inputEnrollPassword_2)) {
                 this.errorPasswordMatch();
+                this.error();
                 return;
-            } else {
-                this.signUpSuccess();
-                this.inputAccount = this.inputEnrollAccount;
-                this.inputPassword = this.inputEnrollPassword_1;
-                this.remember = false;//是否记住呢
-                const newAccountObj = { account: this.inputAccount, password: this.inputPassword };
-                this.accounts.push(newAccountObj);//传入数据
             }
+            // 使用 find 方法查找数组中是否存在指定 key 的元素
+            const foundElement = this.accounts.find(item => item.account === this.inputEnrollAccount);
+            if (foundElement) {
+                this.notOnlyUserName();
+                this.error();
+                return;
+            }
+            this.signUpSuccess();
+            this.finish();
+            this.inputAccount = this.inputEnrollAccount;
+            this.inputPassword = this.inputEnrollPassword_1;
+            this.remember = false;//是否记住呢
+            const newAccountObj = { account: this.inputAccount, password: this.inputPassword };
+            this.accounts.push(newAccountObj);//传入数据
+
             this.$nextTick(() => {
                 setTimeout(() => {
                     this.toHighIndex = false;
@@ -225,6 +245,15 @@ export default ({
                     this.moveRight = false;
                 }, 500);
             });
+        },
+        backToLogin() {
+            this.start();
+            this.toHighIndex = false;
+            this.isNotTransparent = false;
+            this.moveLeft = false;
+            this.fadeOut = false;
+            this.moveRight = false;
+            this.finish();
         },
         clickToSignUp() {
             // 点击按钮事件处理
@@ -276,7 +305,14 @@ export default ({
         },
         errorUserName() {
             this.$Notify.error({
-                title: '用户名不合法',
+                title: '用户名为空',
+                message: '请输入用户名',
+                showClose: false,
+            })
+        },
+        notOnlyUserName() {
+            this.$Notify.error({
+                title: '用户名已存在',
                 message: '请重新输入用户名',
                 showClose: false,
             })
@@ -287,6 +323,18 @@ export default ({
                 message: '请重新输入密码',
                 showClose: false,
             })
+        },
+        start() {
+            this.$Loading.start()
+        },
+        finish() {
+            this.$Loading.finish()
+        },
+        error() {
+            this.$Loading.error()
+        },
+        update() {
+            this.$Loading.update(1000)
         },
     },
     mounted() {
@@ -322,6 +370,15 @@ export default ({
     font-size: 30px;
     top: 20px;
     left: 20px;
+}
+
+.login-module-backToLogin {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    top: 10px;
+    left: 250px;
 }
 
 .login-module-logo {

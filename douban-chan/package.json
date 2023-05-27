@@ -29,9 +29,12 @@
     "tdesign-vue": "^1.3.3",
     "vue": "^2.6.14",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-core-video-player": "^0.2.0",
     "vue-devui": "^1.5.3",
     "vue-router": "^3.6.5",
     "vue-slick-carousel": "^1.0.6",
+    "vue-vam-video": "^1.3.6",
+    "vue-video-player": "^6.0.0",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

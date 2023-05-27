@@ -24,9 +24,9 @@
             <div style="margin-top: -8px;text-align: left;margin-left: 10px;">
                 <span class="card-name" style="display: inline-block;">{{ ChildName }}</span>
             </div>
-            <div style="float: left;width: 215px;margin-top: 5px;">
+            <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 135px;font-weight: bold;float: left;"><i
+                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 110px;font-weight: bold;float: left;"><i
                         class="fa-solid fa-plus" style="color: #003899;"></i>
                     我的订阅
                 </el-button>
@@ -85,7 +85,7 @@
                     &nbsp 我的订阅
                 </el-button>
                 <el-button type="info" plain
-                    style="border: none;margin-top: 70%;float: right;color:#003899; width: 150px;font-weight: bold;">
+                    style="border: none;margin-top: 70%;float: right;color:#003899; width: 120px;font-weight: bold;">
                     <i class="fa-solid fa-pen-to-square"></i>
                     &nbsp 写书评
                 </el-button>
@@ -188,8 +188,8 @@ export default {
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 .book-card {
-    width: 225px;
-    height: 450px;
+    width: 190px;
+    height: 380px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -233,7 +233,7 @@ export default {
 .image-container {
     position: relative;
     width: 100%;
-    height: 290px;
+    height: 230px;
     overflow: hidden;
     border: black;
     background-color: black;
@@ -251,12 +251,13 @@ export default {
 
 .content {
     text-align: left;
-    padding: 10px;
+    padding: 5px;
     position: relative;
     padding-left: 12px;
     z-index: 1;
     margin-top: -5px;
-    font-size: 18px;
+    font-size: 16px;
+    max-height: 70px;
 }
 
 .text {
@@ -281,14 +282,15 @@ export default {
 .button {
     padding: 0px;
     float: right;
+    border-radius: 20px;
 }
 
 .star-button {
-    font-size: 18px;
+    font-size: 13px;
     border: none;
     margin-left: 80px;
     background-color: transparent;
-    padding: 15px 15px;
+    padding: 9px 9px;
     border-radius: 30px;
     /* 调整按钮的宽度和高度 */
 }
@@ -620,8 +622,11 @@ export default {
     height: 100%;
     font-size: 16px;
     text-align: center;
-    padding: 10px 20px;
+    padding: 24px 20px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-rating:hover {

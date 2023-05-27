@@ -21,24 +21,21 @@
                     <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
-            <div style="margin-top: -5px;text-align: left;margin-left: 10px;">
+            <div style="margin-top: -15px;text-align: left;margin-left: 10px;">
                 <span class="card-name" style="display: inline-block;">{{ ChildName }}</span>
             </div>
             <el-button type="info" plain
-                style="border: none;margin-left: 10px;margin-top: 10px;color:#003899; float: left;width: 210px;font-weight: bold;">
+                style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; float: left;width: 180px; font-weight: bold;">
                 <i class="fa-solid fa-plus" style="color: #003899;"></i>
                 &nbsp 我的订阅
             </el-button>
-            &nbsp
-            <div style="float: left;width: 240px;margin-top: 10px;">
+            <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 125px;font-weight: bold;float: left;"><i
+                    style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; width: 110px;font-weight: bold;float: left;"><i
                         class="fa-solid fa-play"> </i>&nbsp
                     预告片
                 </el-button>
-                &nbsp
-                &nbsp
-                <el-button circle style="border: none;margin-top: 2px;background-color:#002333;" @click="showModal"><i
+                <el-button circle style="border: none;margin-top: -3px;background-color:#002333;" @click="showModal"><i
                         class="fa-solid fa-circle-info custom-icon"></i></el-button>
             </div>
         </el-card>
@@ -93,7 +90,7 @@
                     &nbsp 我的订阅
                 </el-button>
                 <el-button type="info" plain
-                    style="border: none;margin-top: 70%;float: right;color:#003899; width: 150px;font-weight: bold;">
+                    style="border: none;margin-top: 70%;float: right;color:#003899; width: 120px;font-weight: bold;">
                     <i class="fa-solid fa-pen-to-square"></i>
                     &nbsp 写影评
                 </el-button>
@@ -195,8 +192,8 @@ export default {
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 .card {
-    width: 240px;
-    height: 500px;
+    width: 200px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -240,7 +237,7 @@ export default {
 .image-container {
     position: relative;
     width: 100%;
-    height: 290px;
+    height: 240px;
     overflow: hidden;
     background-color: transparent;
 }
@@ -258,12 +255,13 @@ export default {
 
 .content {
     text-align: left;
-    padding: 10px;
+    padding: 5px;
     position: relative;
     padding-left: 12px;
     z-index: 1;
     margin-top: -5px;
-    font-size: 18px;
+    font-size: 16px;
+    max-height: 70px;
 }
 
 .text {
@@ -287,15 +285,16 @@ export default {
 
 .button {
     padding: 0px;
+    border-radius: 20px;
     float: right;
 }
 
 .star-button {
-    font-size: 18px;
+    font-size: 13px;
     border: none;
     margin-left: 80px;
     background-color: transparent;
-    padding: 15px 15px;
+    padding: 10px 10px;
     border-radius: 30px;
     /* 调整按钮的宽度和高度 */
 }
@@ -626,10 +625,13 @@ export default {
     left: 35%;
     width: 35%;
     height: 100%;
-    font-size: 16px;
+    font-size: 15px;
     text-align: center;
-    padding: 10px 20px;
+    padding: 24px 20px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-rating:hover {
@@ -639,7 +641,7 @@ export default {
 
 .text-rating {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     color: rgb(0, 3, 7);
 }
 

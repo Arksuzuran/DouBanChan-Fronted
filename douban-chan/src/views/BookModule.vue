@@ -4,10 +4,12 @@
             <el-header style="margin-top: 20px;">
                 <div style="margin-left: 1%;">
                     <i class="fa-solid fa-book-open book-logo" style="color: #004ac2;"></i>
-                    <div style="float: left; display: inline-block; margin-left: 5px;width: 1300px;">
+                    <div style="float: left; display: inline-block; margin-left: 5px;width: 90%;">
                         <span
                             style="float: left;margin-left: 5px;font-size: 40px; font-weight: bold;color: #000000;">图书栏目</span>
-                        <button class="for-more">更多<i class="fa-solid fa-arrow-right"></i></button>
+                        <div class="button-for-more">
+                            <ButtonForMore></ButtonForMore>
+                        </div>
                     </div>
                 </div>
             </el-header>
@@ -33,6 +35,7 @@ import MiniCard from '../components/MiniCard.vue';
 import ScrollingScreenCard from '../components/ScrollingScreenCard.vue';
 import CollectionCard from '../components/CollectionCard.vue';
 import NavBar from '../components/NavBar.vue'
+import ButtonForMore from './ButtonForMore.vue';
 export default {
     components: {
         BookCard, // 注册子组件
@@ -40,12 +43,26 @@ export default {
         ScrollingScreenCard,
         CollectionCard,
         NavBar,
+        ButtonForMore,
     },
     data() {
         return {
             bookList: [
                 {
                     id: 1,
+                    name: '斗破苍穹',
+                    image: 'doupo.png',
+                    rate: 9.4,
+                    year: 2020,
+                    page: '1459页',
+                    from: '漂亮国',
+                    type: '言情 / 冒险 / 科幻',
+                    dir: '天蚕土豆',
+                    star: '萧炎 美杜莎 萧薰儿',
+                    text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
+                },
+                {
+                    id: 6,
                     name: '斗破苍穹',
                     image: 'doupo.png',
                     rate: 9.4,
@@ -119,13 +136,12 @@ export default {
 
 .book-module-block {
     margin-right: 1%;
-    width: 1420px;
+    width: 85%;
     margin-top: 50px;
-    margin-left: 1%;
+    margin-left: 7.5%;
     border-radius: 10px;
-    border: 0px solid #d2c7c7;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #f3f3f3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+    background-color: #f9f9f9;
 }
 
 .card-container {

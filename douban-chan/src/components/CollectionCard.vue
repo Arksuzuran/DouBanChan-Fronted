@@ -32,8 +32,8 @@ export default {
     /* 水平居中对齐 */
     align-items: center;
     /* 垂直居中对齐 */
-    width: 360px;
-    height: 140px;
+    width: 300px;
+    height: 120px;
     background-color: #002333;
     border-radius: 5px;
     border: transparent;
@@ -49,20 +49,22 @@ export default {
 
 .collection-card-image-container {
     position: absolute;
+    margin-top: 5px;
+    margin-left: 5px;
     width: 80px;
-    height: 120px;
+    height: 110px;
     z-index: 12;
 }
 
 .collection-card-image {
     object-fit: cover;
     width: 80px;
-    height: 120px;
+    height: 110px;
 }
 
 .collection-card-good {
-    margin-left: 220px;
-    width: 250px;
+    margin-left: 200px;
+    width: 200px;
     height: 30px;
     background-color: transparent;
     font-size: 12px;
@@ -75,23 +77,23 @@ export default {
     position: absolute;
     text-align: left;
     margin-left: 80px;
-    margin-top: 10px;
-    width: 250px;
-    height: 90px;
+    margin-top: 0px;
+    width: 200px;
+    height: 100px;
     background-color: transparent;
     z-index: 12;
 }
 
 .collection-card-name {
-    margin-left: 5px;
+    margin-left: 10px;
     font-size: 27px;
     color: #ffffff;
 }
 
 .collection-card-star {
-    margin-top: 7px;
-    margin-left: 7px;
-    font-size: 12px;
+    margin-top: 0px;
+    margin-left: 12px;
+    font-size: 10px;
     color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
@@ -99,9 +101,9 @@ export default {
 }
 
 .collection-card-word {
-    margin-top: 7px;
-    margin-left: 7px;
-    font-size: 14px;
+    margin-top: 3px;
+    margin-left: 12px;
+    font-size: 13px;
     color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
