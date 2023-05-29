@@ -22,7 +22,7 @@
       </div>
       <!-- 右部值得加入的小组 -->
       <div class="grouphome-right-container">
-        <GroupList :groupList="inGroupList" :usersOwnGroup="usersGrouplabelChoosen"></GroupList>
+        <GroupList :groupList="inGroupList" :title="groupListComponentsTitle"></GroupList>
       </div>
     </div>
 
@@ -301,11 +301,11 @@ export default {
       }
       return []
     },
-    // 用户是否选中了'我的小组'
-    // 用户是否选择‘我的小组’标签
+
+    // 根据用户是否选中了'我的小组' 来决定groupList组件的标题
     // 这里姑且以字符串来比较 因为后面大概率改id顺序
-    usersGrouplabelChoosen() {
-      return this.buttons[this.activeHeaderLabel].label == '我的小组'
+    groupListComponentsTitle(){
+      return this.buttons[this.activeHeaderLabel].label == '我的小组' ? '我加入的小组' : '值得浏览的小组'
     },
 
     //头像路径与用户名

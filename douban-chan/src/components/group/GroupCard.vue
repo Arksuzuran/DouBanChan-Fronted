@@ -177,10 +177,10 @@ export default {
 
 /* 图片和文本的容器 */
 .groupcard-info {
-    max-height: 180px;
+    max-height: 240px;
     flex: 1;
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column;
     justify-content: space-between;
     align-items: flex-start;
 }
@@ -191,13 +191,15 @@ export default {
     /* line-height: 16px; */
     font-weight: 600;
     color: rgb(19, 19, 19);
+    text-align: start;
 }
 
 .groupcard-intro {
-    margin: 10px 0;
+    margin: 7px 0;
     font-size: 14px;
     line-height: 16px;
     color: rgba(32, 31, 31, 0.9);
+    text-align: start;
 }
 
 .groupcard-stats {

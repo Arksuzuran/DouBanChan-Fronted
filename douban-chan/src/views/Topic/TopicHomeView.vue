@@ -2,27 +2,31 @@
 <template>
   <div>
     <!-- 背景色 -->
-    <div class="grouphome-background"></div>
+    <div class="topichome-background"></div>
 
     <!-- 顶部二级导航栏 -->
-    <div class="grouphome-header-container">
-      <div class="grouphome-header-title">豆瓣话题酱</div>
+    <div class="topichome-header-container">
+      <div class="topichome-header-title">豆瓣话题酱</div>
       <!-- 按钮组 -->
-      <div v-for="button in buttons" :key="button.id" class="grouphome-header-btn"
+      <div v-for="button in buttons" :key="button.id" class="topichome-header-btn"
         :class="getActiveButtonClass(button.id)" @click="handleSelect(button.id)">
         {{ button.label }}
       </div>
     </div>
 
     <!-- 下部内容区 -->
-    <div class="grouphome-main-container">
-      <!-- 左部推荐的帖子 -->
-      <div class="grouphome-left-container">
+    <div class="topichome-main-container">
+      <!-- 左部三级导航栏 -->
+      <div class="topichome-left-container">
+        <ContentSizerSideNavBar :labelList="labelList"></ContentSizerSideNavBar>
+      </div>
+      <!-- 中部页面的主要内容 -->
+      <div class="topichome-mid-container">
         <GroupHomePostList :postList="inPostList"></GroupHomePostList>
       </div>
-      <!-- 右部值得加入的小组 -->
-      <div class="grouphome-right-container">
-        <GroupList :groupList="inGroupList" :usersOwnGroup="usersGrouplabelChoosen"></GroupList>
+      <!-- 右部页面的主要内容 -->
+      <div class="topichome-right-container">
+        <GroupList :groupList="inGroupList" title="正在热议的小组" DIYCardComponentName="GroupCardWithTopic"></GroupList>
       </div>
     </div>
 
@@ -43,6 +47,8 @@ import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue'
 import GroupList from '@/components/group/GroupList.vue'
 import GroupCreateBar from '@/components/group/GroupCreateBar.vue'
 
+import ContentSizerSideNavBar from '@/components/topic/ContentSizerSideNavBar.vue'
+
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
@@ -54,6 +60,8 @@ export default {
     GroupHomePostList,
     GroupList,
     GroupCreateBar,
+
+    ContentSizerSideNavBar,
   },
   data() {
     return {
@@ -61,13 +69,22 @@ export default {
       activeHeaderLabel: 0,
       // 按钮展示信息
       buttons: [
+        { id: 0, label: '浏览发现' },
+        { id: 1, label: '今日热榜' },
+        { id: 2, label: '话题广场' },
+      ],
+
+      // 对应当前二级路由页面的筛选标签
+      activeContentLabel: 0,
+      // 侧边三级导航栏 筛选信息
+      labelList: [
         { id: 0, label: '精选' },
         { id: 1, label: '生活' },
         { id: 2, label: '文化', },
         { id: 3, label: '影视' },
         { id: 4, label: '图书' },
         { id: 5, label: '游戏' },
-        { id: 6, label: '我的小组' },
+        { id: 6, label: '我的话题' },
       ],
 
       // 帖子列表
@@ -93,7 +110,7 @@ export default {
     // 更新被选中标签的属性
     getActiveButtonClass(index) {
       if (this.activeHeaderLabel === index) {
-        return 'grouphome-header-btn-active'
+        return 'topichome-header-btn-active'
       }
       return ''
     },
@@ -179,6 +196,8 @@ export default {
 
     // 命名规则：与后端交互相关的函数都带有Online
     // 获得小组列表groupLIst
+    // 此处的小组列表需要额外属性：aboutTopic:{topicId, topicName, topicAvatarUrl}
+    // 即该小组是因为参与了这个话题 才被推送上来的
     getGroupListOnline() {
       return [
         {
@@ -190,6 +209,7 @@ export default {
           tagList: ['生活', '文化'],
           groupPostNumber: 321,
           groupFollowNumber: 594,
+          aboutTopic:{topicId:'t001', topicName:'游戏', topicAvatarUrl:require('../../assets/topic-avatar-1.jpg')},
           memberList: [
             {
               userId: '001',
@@ -214,6 +234,7 @@ export default {
           tagList: ['生活', '游戏', '文化'],
           groupPostNumber: 597,
           groupFollowNumber: 792,
+          aboutTopic:{topicId:'t001', topicName:'游戏', topicAvatarUrl:require('../../assets/topic-avatar-1.jpg')},
           memberList: [
             {
               userId: '001',
@@ -250,6 +271,7 @@ export default {
           tagList: ['游戏'],
           groupPostNumber: 1367,
           groupFollowNumber: 59521,
+          aboutTopic:{topicId:'t002', topicName:'BUAA', topicAvatarUrl:require('../../assets/topic-avatar-2.jpg')},
           memberList: [
             {
               userId: '002',
@@ -331,7 +353,7 @@ export default {
 <style scoped>
 /* 内容区容器 */
 /* 主容器 */
-.grouphome-main-container {
+.topichome-main-container {
   width: 80%;
   margin: 0 auto;
   background-color: rgb(255, 251, 251);
@@ -342,16 +364,19 @@ export default {
   flex-flow: row wrap;
 }
 
-/* 内容区左侧容器 */
-.grouphome-left-container {
+/* 左侧导航栏 */
+.topichome-left-container {
   flex: 2;
 
 }
-
-.grouphome-right-container {
-  flex: 1;
+/* 中部内容区 */
+.topichome-mid-container {
+  flex: 10;
 }
-
+/* 右侧随机推荐区 */
+.topichome-right-container {
+  flex: 4;
+}
 
 /* 滚动至顶部 */
 .group-likefav-scrollbutton {
@@ -361,16 +386,16 @@ export default {
 }
 
 /* 页面背景色 */
-.grouphome-background {
+.topichome-background {
   position: fixed;
   width: 100%;
   height: 100%;
   background-color: rgb(255, 248, 248);
-  z-index: -1;
+  z-index: -2;
 }
 
 /* 顶部二级导航栏容器 */
-.grouphome-header-container {
+.topichome-header-container {
   padding: 0 11%;
   position: sticky;
   top: 65px;
@@ -386,7 +411,7 @@ export default {
 }
 
 /* 页面顶栏处标题 */
-.grouphome-header-title {
+.topichome-header-title {
   margin: 0 40px;
   font-size: 36px;
   font-weight: 700;
@@ -397,8 +422,8 @@ export default {
 /* === removing default button style ===*/
 /* === removing default button style ===*/
 /* 按钮基本样式 */
-.grouphome-header-btn {
-  margin: 0 10px;
+.topichome-header-btn {
+  margin: 0 15px;
 
   font-size: 18px;
   background: transparent;
@@ -412,7 +437,7 @@ export default {
   cursor: pointer;
 }
 
-.grouphome-header-btn::before {
+.topichome-header-btn::before {
   content: '';
   position: absolute;
   left: 0;
@@ -423,24 +448,24 @@ export default {
   transition: .5s ease;
 }
 
-.grouphome-header-btn:hover,
-.grouphome-header-btn.grouphome-header-btn-active {
+.topichome-header-btn:hover,
+.topichome-header-btn.topichome-header-btn-active {
   color: #ffffff;
   transition-delay: .5s;
 }
 
-.grouphome-header-btn-active {
+.topichome-header-btn-active {
   border-radius: 10px;
   transition: .5s ease;
   background-color: rgb(255, 97, 97);
 }
 
-.grouphome-header-btn:hover::before,
-.grouphome-header-btn.grouphome-header-btn-active::before {
+.topichome-header-btn:hover::before,
+.topichome-header-btn.topichome-header-btn-active::before {
   width: 100%;
 }
 
-.grouphome-header-btn::after {
+.topichome-header-btn::after {
   content: '';
   position: absolute;
   left: 0;
@@ -453,8 +478,8 @@ export default {
   z-index: -1;
 }
 
-.grouphome-header-btn:hover::after,
-.grouphome-header-btn.grouphome-header-btn-active::after {
+.topichome-header-btn:hover::after,
+.topichome-header-btn.topichome-header-btn-active::after {
   height: 100%;
   transition-delay: 0.4s;
   color: aliceblue;
