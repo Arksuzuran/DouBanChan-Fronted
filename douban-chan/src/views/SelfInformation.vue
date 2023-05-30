@@ -23,7 +23,7 @@
                     </div>
                     <div style="height: 7px;"></div>
                     <div class="sex">
-                        <label>性别:</label>
+                        <label>性别</label>
                         <div class="radio-input">
                             <input type="radio" id="man" name="value-radio" value="man" v-model="form.sex">
                             <label for="man">男</label>
@@ -34,14 +34,14 @@
                         </div>
                     </div>
                     <div style="height: 25px;"></div>
-                    <el-form-item label="出生日期:">
+                    <el-form-item label="出生日期">
                         <el-col :span="15">
                             <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
                                 style="width: 100%;"></el-date-picker>
                         </el-col>
                     </el-form-item>
                     <div style="height: 7px;"></div>
-                    <el-form-item label="个人简介:" prop="desc">
+                    <el-form-item label="个人简介" prop="desc">
                         <el-input type="textarea" placeholder="填写个人简介更有利于交友哟qwq" v-model="form.desc"></el-input>
                     </el-form-item>
                 </el-form>
@@ -113,7 +113,7 @@ export default ({
 }
 
 .sex {
-    margin-left: 8px;
+    margin-left: 12px;
     display: flex;
     align-items: center;
 }
@@ -212,7 +212,7 @@ export default ({
 }
 
 .radio-input {
-    margin-left: 5px;
+    margin-left: 20px;
     display: flex;
     flex-direction: row;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
