@@ -48,6 +48,9 @@ export default {
 </script>
 
 <style scoped>
+.grouplist-container{
+  margin: 0 20px;
+}
 /* 顶部标题 */
 .grouplist-header-container {
   position: sticky;

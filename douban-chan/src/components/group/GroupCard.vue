@@ -7,9 +7,9 @@
     <div class="groupcard-container">
         <div class="groupcard-infos">
             <!-- 对于管理员用户 显示特殊上标 -->
-            <div class="groupcard-admin" v-if="userIsAdmin">管理</div>
+            <div class="groupcard-admin" v-if="group.userIsAdmin">管理</div>
             <!-- 对于已加入的非管理员用户 显示特殊上标 -->
-            <div class="groupcard-joined" v-if="userInGroup && !userIsAdmin">我的小组</div>
+            <div class="groupcard-joined" v-if="group.userInGroup && !group.userIsAdmin">我的小组</div>
             <img class="groupcard-img" :src="group.groupAvatarImgUrl" />
             <div class="groupcard-info">
                 <div class="groupcard-name">
@@ -36,14 +36,14 @@
         </div>
         <div>
             <!-- 对于未加入小组的用户 -->
-            <button class="groupcard-request" type="button" @click="handleEnterGroupPage" v-if="!userInGroup">
+            <button class="groupcard-request" type="button" @click="handleEnterGroupPage" v-if="!group.userInGroup">
                 进入小组主页
             </button>
-            <button class="groupcard-request" type="button" @click="handleJoinGroup" v-if="!userInGroup">
+            <button class="groupcard-request" type="button" @click="handleJoinGroup" v-if="!group.userInGroup">
                 申请加入小组
             </button>
             <!-- 对于已加入小组的用户 -->
-            <button class="groupcard-request groupcard-request-full" type="button" @click="handleEnterGroupPage" v-if="userInGroup">
+            <button class="groupcard-request groupcard-request-full" type="button" @click="handleEnterGroupPage" v-if="group.userInGroup">
                 进入小组主页
             </button>
         </div>
@@ -71,27 +71,27 @@ export default {
         groupName() {
             return this.cutStrByLength(this.group.groupName, 11)
         },
-        // 判断用户是否加入了小组
-        userInGroup(){
-            for(let member of this.group.memberList){
-                if(member.userId === this.userId){
-                    return true
-                }
-            }
-            return false
-        },
-        // 判断用户是否是管理员
-        userIsAdmin(){
-            for(let member of this.group.memberList){
-                if(member.userId === this.userId){
-                    if(member.isAdmin === true){
-                        return true
-                    }
-                    return false
-                }
-            }
-            return false
-        },
+        // // 判断用户是否加入了小组
+        // userInGroup(){
+        //     for(let member of this.group.memberList){
+        //         if(member.userId === this.userId){
+        //             return true
+        //         }
+        //     }
+        //     return false
+        // },
+        // // 判断用户是否是管理员
+        // userIsAdmin(){
+        //     for(let member of this.group.memberList){
+        //         if(member.userId === this.userId){
+        //             if(member.isAdmin === true){
+        //                 return true
+        //             }
+        //             return false
+        //         }
+        //     }
+        //     return false
+        // },
     },
     methods: {
         cutStrByLength(str, length) {
@@ -125,7 +125,7 @@ export default {
     background-color: rgb(255, 245, 245);
     padding: 16px;
 
-    margin: 35px;
+    margin: 35px 0;
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0px 2px 4px 0px rgba(247, 61, 61, 0.2);
 }
@@ -171,7 +171,8 @@ export default {
     border: 1px solid rgba(241, 232, 232, 0.8);
     background-color: rgb(255, 243, 243);
     box-shadow: 0px 2px 4px 0px rgba(247, 61, 61, 0.2);
-    background: linear-gradient(to bottom right, rgb(255, 63, 63), rgb(255, 248, 248));
+    background: linear-gradient(to bottom right, rgb(253, 168, 168), rgb(255, 248, 248));
+    object-fit: cover;
 }
 
 
@@ -200,6 +201,7 @@ export default {
     line-height: 16px;
     color: rgba(32, 31, 31, 0.9);
     text-align: start;
+    font-family: 'Poppins' sans-serif;
 }
 
 .groupcard-stats {

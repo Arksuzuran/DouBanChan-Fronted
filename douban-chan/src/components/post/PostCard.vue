@@ -30,9 +30,9 @@
                     <div class="postcard-likeNumberBox-likenumber">{{ likeNumber }}</div>
                 </div>
                 <!-- 来自某某小组 -->
-                <div class="postcard-groupFromBox" v-if="!notShowFromGroup && info.group != ''">
+                <div class="postcard-groupFromBox" v-if="showGroupFromBox">
                     <div class="postcard-likeNumberBox-like">来自</div>
-                    <div class="postcard-likeNumberBox-likenumber">{{ info.group + '小组' }}</div>
+                    <div class="postcard-likeNumberBox-likenumber">{{ info.groupName + '小组' }}</div>
                 </div>
                 <!-- 帖子正文 -->
                 <PostCardText class="postcard-maintext" :info="info" :from="from" />
@@ -209,6 +209,9 @@ export default {
             else {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
+        },
+        showGroupFromBox(){
+            return !notShowFromGroup && info.groupName != ''
         },
     },
     mounted() {

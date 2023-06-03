@@ -1,6 +1,8 @@
-<!-- 帖子列表页面 -->
+<!-- 通用帖子列表 -->
 <!-- params:
         @postList: 帖子基本信息对象的列表
+        @title: 希望在上栏中展示的标题
+        @notShowSelectButton: 不显示"只看精品"
 -->
 <template>
     <div class="postlist-main-container">
@@ -8,18 +10,19 @@
         <!-- 顶部排序部分 -->
         <div class="postlist-sort-label-container">
             <div class="postlist-title">
-                讨论精选
+                {{ componentTitle }}
             </div>
             <PostSortLabel></PostSortLabel>
             <!-- 只看精品帖子 -->
-            <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true">
+            <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true"
+                v-if="!notShowSelectButton">
             </OnlySelectButton>
         </div>
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
             <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :from="'g'" :notShowTopped="true"
-                :notShowIcongroup="true"/>
+                :notShowIcongroup="true" />
         </div>
 
         <!-- 滚动至顶部 -->
@@ -39,7 +42,7 @@ import GroupCard from '@/components/group/GroupCard.vue';
 
 export default {
     name: 'GroupHomePostList',
-    props: ['postList'], //数据来源：组件GroupHomeView.vue
+    props: ['postList', 'title', 'notShowSelectButton'], //数据来源：组件GroupHomeView.vue
     components: {
         PostCard,
         PostSortLabel,
@@ -61,7 +64,9 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
-
+        componentTitle() {
+            return this.title ? this.title : '讨论精选'
+        },
         // 按照指定顺序筛选列表
         activePostList() {
             let list = this.postList.slice()
@@ -122,13 +127,13 @@ export default {
 </script>
 
 <style scoped>
-.postlist-title{
+.postlist-title {
     display: flex;
     flex-flow: row wrap;
     align-content: center;
     justify-items: center;
 
-    margin: 12px;
+    margin: 12px 12px 12px 36px;
     font-size: 24px;
     font-weight: 600;
     color: rgb(251, 138, 138);
@@ -148,14 +153,15 @@ export default {
     justify-items: flex-start;
     margin-bottom: 10px;
 }
+
 /* 只看精华帖 */
 .post-OnlyGoodpost-button {
     margin: 2px 7px 2px 7px;
 }
+
 /* 滚动至顶部 */
 .post-likefav-scrollbutton {
     position: fixed;
     bottom: 150px;
     right: 20px;
-}
-</style>
+}</style>

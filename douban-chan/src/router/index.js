@@ -23,7 +23,10 @@ import GroupPostList from "../views/Group/GroupPostList.vue";
 //帖子
 import Post from "../views/Post/Post.vue";
 import reviewView from "../views/Review/ReviewView.vue";
-
+//话题
+import TopicHomePostGroupList from '../views/Topic/TopicHomePostGroupList.vue';
+import TopicHomeTopicSquare from '../views/Topic/TopicHomeTopicSquare.vue';
+import TopicHomeTodaysHot from '../views/Topic/TopicHomeTodaysHot.vue';
 
 Vue.use(VueRouter);
 
@@ -43,8 +46,27 @@ const routes = [
   //话题版块主页
   {
     path: "/topicHome",
-    name: "topicHome",
     component: TopicHomeView,
+    children: [
+      //默认的二级路由 帖子小组列表
+      {
+        path: '',
+        name: "topicHome",
+        component: TopicHomePostGroupList,
+      },
+      //话题广场
+      {
+        path:'/topicHome/topicSquare',
+        name:'topicSquare',
+        component: TopicHomeTopicSquare
+      },
+      //热榜
+      {
+        path:'/topicHome/todaysHot',
+        name:'todaysHot',
+        component: TopicHomeTodaysHot
+      },
+    ]
   },
   //小组版块主页
   {

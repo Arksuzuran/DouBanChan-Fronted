@@ -33,7 +33,7 @@
     <ScrollToTopButton class="group-likefav-scrollbutton"></ScrollToTopButton>
   </div>
 </template>
-  
+
 <script>
 
 import GroupHomePostList from './GroupHomePostList.vue'
@@ -118,24 +118,27 @@ export default {
       return [
         {
           postId: 'p001',
-          lzId: '004',
-          lzName: "bochi",
-          lzImageUrl: require('../../assets/user-image-7.jpg'),
-          date: '2023-5-19 23:57',
-          title: "我发游戏，你来打分",
-          text: "0狗都不玩 1乏善可陈 2中规中矩 3值得一试 4不可多得的佳作 5神中神",
-          postImageUrlList: [require('../../assets/group-img-3.png'),
+          lzId: '004',    //发帖人id
+          lzName: "bochi",    //发帖人昵称
+          lzImageUrl: require('../../assets/user-image-7.jpg'),   //发帖人头像路径
+          date: '2023-5-19 23:57',    //发帖时间
+          title: "我发游戏，你来打分",    //帖子标题
+          text: "0狗都不玩 1勉强能玩 2中规中矩 3值得一试 4不可多得的佳作 5神中神",//帖子1楼内容
+          postImageUrlList: [require('../../assets/group-img-3.png'),//帖子1楼图片
           require('../../assets/group-img-4.png'),
           require('../../assets/group-img-5.jpg')],
-          topic: '游戏',
-          visits: 946126,
-          fav: 15612,
-          comments: 1692,
-          like: 214512,
-          dislike: 456,
-          isTopped: true,
-          isGoodPost: false,
-          group: 'Game' //来自的小组
+          topic: '游戏',//帖子所属的话题
+          topicId: 't001',//帖子所属的话题的id
+          visits: 946126,//帖子的浏览量
+          fav: 15612,//帖子的收藏数
+          comments: 1692,//帖子的评论数
+          like: 214512,//帖子的点赞数
+          dislike: 456,//帖子的点踩数
+          isTopped: true,//帖子在当前小组内是否置顶
+          isGoodPost: false,//帖子在当前小组内是否是精华帖
+          //如果该小组不来自于一个小组 那么下面的字段均填 ''
+          groupName: 'Game', //来自的小组的名称
+          groupId: 'ofokowfjdowjdowj',//来自的小组的id
         },
         {
           postId: 'p002',
@@ -147,6 +150,7 @@ export default {
           text: "压到真题了，主人奴隶问题：三个主人十个奴隶，在交易市场，主人可以通过窗口写入购买协议，奴隶可以查阅，请完成该问题的同步与互斥问题（基于异性主人奴隶问题的简化，无需性别互斥）",
           postImageUrlList: [require('../../assets/user-bg-3.jpg'), require('../../assets/group-img-2.jpg'),],
           topic: 'BUAA',
+          topicId: 't002',//帖子所属的话题的id
           visits: 5959261,
           fav: 20200,
           comments: 692,
@@ -154,7 +158,9 @@ export default {
           dislike: 59,
           isTopped: false,
           isGoodPost: true,
-          group: '北京航空航天大学' //来自的小组
+          //如果该小组不来自于一个小组 那么下面的字段均填 ''
+          groupName: 'BUAA', //来自的小组的名称
+          groupId: '111111',//来自的小组的id
         },
         {
           lzId: '002',
@@ -165,6 +171,7 @@ export default {
           text: "回来吧科比黑曼巴，我最骄傲的信仰，历历在目的球场，眼泪莫名在流淌，🤙依稀记得24🤙，🧟还有给力的八号🧟，把对手全都给打退，🚁就算坠机也不死🚁",
           postImageUrlList: [require('../../assets/group-img-6.jpg'), require('../../assets/group-img-7.jpg')],
           topic: '科比',
+          topicId: 't003',//帖子所属的话题的id
           visits: 59515,
           fav: 642,
           comments: 41,
@@ -172,7 +179,9 @@ export default {
           dislike: 0,
           isTopped: false,
           isGoodPost: false,
-          group: '牢大'       //来自的小组
+          //如果该小组不来自于一个小组 那么下面的字段均填 ''
+          groupName: '黑坤巴', //来自的小组的名称
+          groupId: 'laodalaoda',//来自的小组的id
         },
       ]
     },
@@ -181,29 +190,27 @@ export default {
     // 获得小组列表groupLIst
     getGroupListOnline() {
       return [
+        //一个大括号是一个对象，对应一个小组
         {
           groupId: 'g001',
-          groupHeadBgUrl: require('../../assets/user-image-7.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-1.jpg'),
-          groupName: "集美小组集美小组集美小组",
+          groupHeadBgUrl: require('../../assets/user-image-7.jpg'),//小组头图路径
+          groupAvatarImgUrl: require('../../assets/group-avatar-1.jpg'),//小组头像路径
+          groupName: "集美小组集美小组集美小组",//小组名称
+          //小组简介
           groupIntro: "家人们谁懂啊，咱就是说一整个无语住了，一把子大动作给到了，今天又是在逃公主的一天，九敏九敏真的太好哭了吧，下头男",
+          //小组标签
           tagList: ['生活', '文化'],
+          //小组帖子数量
           groupPostNumber: 321,
+          //小组关注者数量
           groupFollowNumber: 594,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
+          //小组是因为这个话题才被推荐上来的
+          //如果前端在请求话题主页的推荐小组列表 那么该字段需要填写
+          aboutTopic: { topicId: 't001', topicName: '游戏', topicAvatarUrl: require('../../assets/topic-avatar-1.jpg') },
+          //当前用户是否是管理员
+          userIsAdmin: true,
+          //当前用户是否是组员
+          userInGroup: true,
         },
         {
           groupId: 'g002',
@@ -214,32 +221,12 @@ export default {
           tagList: ['生活', '游戏', '文化'],
           groupPostNumber: 597,
           groupFollowNumber: 792,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: false,
-            },
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
+          aboutTopic: { topicId: 't001', topicName: '游戏', topicAvatarUrl: require('../../assets/topic-avatar-1.jpg') },
+          //当前用户是否是管理员
+          userIsAdmin: false,
+          //当前用户是否是组员
+          userInGroup: true,
+
         },
         {
           groupId: 'g003',
@@ -250,20 +237,12 @@ export default {
           tagList: ['游戏'],
           groupPostNumber: 1367,
           groupFollowNumber: 59521,
-          memberList: [
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: false,
-            },
-          ],
+          aboutTopic: { topicId: 't002', topicName: 'BUAA', topicAvatarUrl: require('../../assets/topic-avatar-2.jpg') },
+          //当前用户是否是管理员
+          userIsAdmin: false,
+          //当前用户是否是组员
+          userInGroup: false,
+
         },
       ]
     },
@@ -304,7 +283,7 @@ export default {
 
     // 根据用户是否选中了'我的小组' 来决定groupList组件的标题
     // 这里姑且以字符串来比较 因为后面大概率改id顺序
-    groupListComponentsTitle(){
+    groupListComponentsTitle() {
       return this.buttons[this.activeHeaderLabel].label == '我的小组' ? '我加入的小组' : '值得浏览的小组'
     },
 
@@ -350,6 +329,7 @@ export default {
 
 .grouphome-right-container {
   flex: 1;
+  margin: 0 35px;
 }
 
 
