@@ -2,21 +2,30 @@
     <div class="container">
         <form>
             <label>
-                <input type="radio" name="radio" checked="true">
+                <input type="radio" name="radio" checked="true" @click="selectOption('个人信息')">
                 <span>个人信息</span>
             </label>
             <label>
-                <input type="radio" name="radio">
+                <input type="radio" name="radio" @click="selectOption('修改头像')">
                 <span>修改头像</span>
             </label>
             <label>
-                <input type="radio" name="radio">
+                <input type="radio" name="radio" @click="selectOption('修改密码')">
                 <span>修改密码</span>
             </label>
         </form>
     </div>
 </template>
 
+<script>
+export default {
+    methods: {
+        selectOption(option) {
+            this.$emit('option-selected', option);
+        },
+    },
+};
+</script>
 <style scoped>
 .container form {
     display: flex;
