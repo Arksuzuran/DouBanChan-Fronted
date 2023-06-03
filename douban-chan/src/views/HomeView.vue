@@ -13,7 +13,7 @@
       <self-information></self-information>
       <!-- <choice-menu></choice-menu> -->
     </div>
-    <div class="test1">
+    <div class="test2">
       <upload-image></upload-image>
     </div>
     <br>
@@ -68,6 +68,11 @@ body {
 
 .test1 {
   margin-top: 100px;
+  /* margin-left: 100px; */
+}
+
+.test2 {
+  margin-top: 200px;
   /* margin-left: 100px; */
 }
 </style>
