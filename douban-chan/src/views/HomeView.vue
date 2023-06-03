@@ -13,6 +13,9 @@
       <self-information></self-information>
       <!-- <choice-menu></choice-menu> -->
     </div>
+    <div class="test1">
+      <upload-image></upload-image>
+    </div>
     <br>
     <br>
     <br>
@@ -34,6 +37,7 @@ import GroupShowCard from './GroupShowCard.vue';
 import Player from '../components/Player.vue';
 import SelfInformation from './SelfInformation.vue';
 import ChoiceMenu from './ChoiceMenu.vue';
+import UploadImage from '../components/UploadImage.vue'
 export default {
   name: 'HomeView',
   components: {
@@ -50,6 +54,7 @@ export default {
     Player,
     ChoiceMenu,
     SelfInformation,
+    UploadImage,
   }
 }
 </script>

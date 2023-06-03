@@ -75,11 +75,11 @@ export default {
     methods: {
         handleScroll() {
             const navbarWrapper = document.querySelector('.navbar-scroll');
-            if (window.pageYOffset > 130) {
+            if (window.pageYOffset > 180) {
                 navbarWrapper.classList.add('scrolled');
                 navbarWrapper.classList.remove('reset');
 
-            } else {
+            } else if (window.pageYOffset < 100) {
                 navbarWrapper.classList.remove('scrolled');
                 navbarWrapper.classList.add('reset');
             }
