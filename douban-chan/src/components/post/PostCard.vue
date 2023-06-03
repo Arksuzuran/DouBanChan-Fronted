@@ -284,15 +284,14 @@ export default {
 .postcard-likeNumberBox-like {
     /* 字体 */
     font-size: 16px;
-    
-    margin: 6px 0;
+    margin: 4px 0 0 0;
 }
 
 .postcard-likeNumberBox-likenumber {
     /* 字体 */
     font-size: 16px;
     font-weight: 600;
-    margin: 0 6px;
+    margin: 0 6px 6px 6px;
 }
 
 .postcard-maintext {
