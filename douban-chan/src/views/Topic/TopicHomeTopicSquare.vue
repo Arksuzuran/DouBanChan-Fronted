@@ -3,9 +3,9 @@
   <div class="topiclist-main-container">
 
     <!-- 顶部排序部分 -->
-    <div class="topiclist-sort-label-container">
+    <div class="topiclist-sort-label-container" :style="title? 'top: 64px;':''">
       <div class="topiclist-title">
-        推荐参与的话题
+        {{ title ? title : '推荐参与的话题' }}
       </div>
       <PostSortLabel></PostSortLabel>
     </div>
@@ -80,6 +80,7 @@ export default {
 
 <style scoped>
 .topiclist-main-container {
+  margin: 0 auto;
   max-width: 850px;
 }
 

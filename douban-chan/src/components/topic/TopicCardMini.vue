@@ -1,6 +1,6 @@
 <!-- 话题card -->
 <template>
-    <div class="card" :class="topiccardCardClass" @click="enterTopic">
+    <div class="card" @click="enterTopic">
         <div class="textBox">
             <div class="textTitle">
                 <div class="topiccard-no" :class="topiccardNoClass" v-if="!notInHotList">
@@ -18,7 +18,6 @@
             <div class="num">
                 <span class="span1">浏览:{{ topic.visit }}</span>
                 <span class="span2">讨论:{{ topic.post }}</span>
-                <span class="span1">发起时间:{{ topic.date }}</span>
             </div>
         </div>
         <img class="img" :src="topic.topicAvatarUrl" v-if="topic.topicAvatarUrl"/>
@@ -27,7 +26,7 @@
 
 <script>
 export default {
-    name: 'TopicCard',
+    name: 'TopicCardMini',
     props: ['topic', 'hotNo'],
     computed: {
         notInHotList(){
@@ -35,9 +34,6 @@ export default {
         },
         notHot(){
             return !this.hotNo || this.hotNo > 3
-        },
-        topiccardCardClass() {
-            return this.notHot ?  '' : 'card-hot'
         },
         topiccardIconClass() {
             return this.notHot ? '' : 'topiccard-no-icon-' + this.hotNo
@@ -68,7 +64,7 @@ export default {
     margin: 20px;
     /* max-width: 600px; */
     height: 125px;
-    background: #fce7e7;
+    background: #ffe7e7;
     border: 1px solid rgba(241, 232, 232, 0.8);
     box-shadow: 0px 2px 4px 0px rgba(227, 16, 16, 0.2);
     border-radius: 20px;
@@ -82,17 +78,8 @@ export default {
 }
 .card:hover {
     cursor: pointer;
-    background: #fcbebe;
+    background: #f8aeae;
     color: white;
-    transform: scale(1.03);
-}
-.card-hot{
-    background: #ffdbdb;
-}
-.card-hot:hover {
-    cursor: pointer;
-    background: #ffc8b1;
-    color: rgb(255, 254, 254);
     transform: scale(1.03);
 }
 .topiccard-no-icon {
@@ -121,7 +108,7 @@ export default {
 .topiccard-no {
     transform: skewx(-10deg);
     position: relative;
-    margin: 5px 15px 5px 5px;
+    margin: 2px 10px 2px 2px;
     width: 40px;
     height: 22px;
     border-radius: 3px;
@@ -156,12 +143,12 @@ export default {
 
 .img {
     position: absolute;
-    right: 20px;
+    right: 10px;
 
-    width: 95px;
-    height: 95px;
+    width: 90px;
+    height: 90px;
 
-    border-radius: 10px;
+    border-radius: 8px;
     background-size: cover;
     background-position: center;
     object-fit: cover;
@@ -173,7 +160,7 @@ export default {
 }
 
 .textBox {
-    max-width: 560px;
+    max-width: 320px;
     height: 90px;
     margin-left: 20px;
     color: rgb(184, 184, 184);
@@ -185,36 +172,40 @@ export default {
 }
 
 .textTitle {
-    max-width: 650px;
+    width: 200px;
     max-height: 30px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    
 }
 
 .topiccard-title {
     margin: 5px;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: rgb(0, 0, 0);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .num {
     margin-top: 2px;
     margin-bottom: -5px;
-    width: 350px;
+    width: 160px;
     max-height: 20px;
     display: flex;
     justify-content: space-between;
 }
 
 .span1 {
-    font-size: 13px;
+    font-size: 11px;
     align-self: flex-start;
 }
 
 .span2 {
-    font-size: 13px;
+    font-size: 11px;
     align-self: flex-start;
 }
 
@@ -225,10 +216,10 @@ export default {
     /* 文字过多的处理方式 */
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 600px;
+    max-width: 200px;
 }
 .topiccard-intro{
-    font-size: 14px;
+    font-size: 13px;
 }
 .container p {
     margin-top: 2px;

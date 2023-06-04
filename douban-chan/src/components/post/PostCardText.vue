@@ -3,9 +3,9 @@
     <div class="postcard-text-container" :class="{ 'flex-layout': imglistLengthEqual1() }">
         <div :class="{ 'div-wrapper': imglistLengthEqual1() }">
             <!-- 标题 无标题时则不显示 -->
-            <div class="postcard-text-title" @click="jumpToPostPage" v-if="info.title">{{ info.title }}</div>
+            <div class="postcard-text-title" :class="curClass()" @click="jumpToPostPage" v-if="info.title">{{ info.title }}</div>
             <!-- 正文 -->
-            <div class="postcard-text-text" @click="jumpToPostPage">{{ info.text }}</div>
+            <div class="postcard-text-text" :class="curClass()" @click="jumpToPostPage">{{ info.text }}</div>
         </div>
         <!-- 图片墙 -->
         <div class="postcard-text-imgbox" :class="{ 'flex-box': imglistLengthEqual1() }">
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-    props: ['info', 'from'],
+    props: ['info', 'normal'],
     methods: {
         imglistLengthEqual1() {
             return this.info.postImageUrlList && this.info.postImageUrlList.length === 1
@@ -26,6 +26,9 @@ export default {
         },
         boxClass() {
             return this.imglistLengthEqual1() ? 'postcard-text-imgbox-1' : 'postcard-text-imgbox-2'
+        },
+        curClass(){
+            return this.normal ? '' : 'postcard-cursor'
         },
         imgClass() {
             if(!this.info.postImageUrlList){
@@ -39,19 +42,32 @@ export default {
             }
         },
         // 跳转到帖子详情页
+        // 如果帖子属于一个小组 那么优先跳转到一个小组
         jumpToPostPage() {
-            console.log('被点击')
+            console.log('帖子card被点击')
+            if(this.normal){
+                return
+            }
             //从小组而来
-            if (this.from == 'g') {
-                console.log('从帖子列表跳转到帖子详情页')
+            if (this.info.groupId) {
+                // console.log('跳转到帖子详情页')
                 this.$router.push({
                     name: 'groupPost',
+                    params:{
+                        groupId: this.info.groupId,
+                        postId: this.info.postId,
+                    },
                 })
             }
-            //from非空 仍然跳转
-            else if(this.from){
-                //从话题或其他页面而来
-                console.log('从其他地方跳转到帖子详情页')
+            else{
+                // console.log('从其他地方跳转到帖子详情页')
+                this.$router.push({
+                    name: 'topicPost',
+                    params:{
+                        topicId: this.info.topicId,
+                        postId: this.info.postId,
+                    },
+                })
             }
         },
     },
@@ -93,8 +109,7 @@ export default {
     line-height: 30px;
     margin: 10px;
 }
-.postcard-text-title:hover,
-.postcard-text-text:hover{
+.postcard-cursor{
     cursor: pointer;
 }
 /* 图片box的位置 */

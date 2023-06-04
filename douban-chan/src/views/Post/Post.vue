@@ -38,81 +38,6 @@
         <LikeFavButtonGroup :info="postInfo" class="post-likefav-buttongroup"></LikeFavButtonGroup>
         <!-- 滚动至顶部 -->
         <ScrollToTopButton class="post-likefav-scrollbutton"></ScrollToTopButton>
-
-        <!-- 内容填充 -->
-        <!-- <div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-            <div>1</div>
-        </div> -->
     </div>
 </template>
 
@@ -126,6 +51,7 @@ import PostReplyBar from '@/components/post/PostReplyBar.vue';
 import LikeFavButtonGroup from '@/components/post/button/LikeFavButtonGroup.vue';
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
 
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'Post',
     components: {
@@ -155,16 +81,18 @@ export default {
             newReply.floor = this.floorList.length + 1
             this.floorList.push(newReply)
         },
+        //获取帖子列表 或者一个完整的帖子
+        ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostOnline']),
     },
     computed: {
-
+        ...mapGetters('postAbout', ['postInfo']),
         //筛选出当前的列表内容和顺序
         activeFloorList() {
-            let list = this.floorList
+            let list = this.postInfo.floorList
 
             //只看楼主
             if (this.onlyLz) {
-                list = this.floorList.filter(item => {
+                list = list.filter(item => {
                     return item.userId == this.postInfo.lzId
                 })
             }
@@ -173,7 +101,7 @@ export default {
                 list = list.slice(1)
                 list.sort((a, b) => {
                     return b.like - a.like
-                }).unshift(this.floorList[0])
+                }).unshift(this.postInfo.floorList[0])
             }
             //时间排序 时间小的在前面
             else if (this.activeLabel === 2) {
@@ -191,238 +119,25 @@ export default {
             onlyLz: false,
             // 当前排序方式 1热度 2时间
             activeLabel: 1,
-
-            postInfo: {
-                postId: 'p001',
-                lzId: '004',
-                lzName: "bochi",
-                lzImageUrl: require('../../assets/user-image-7.jpg'),
-                date: '2023-5-19 23:06',
-                title: "我发游戏，你来打分",
-                text: "0狗都不玩 1勉强能玩 2中规中矩 3值得一试 4不可多得的佳作 5神中神",
-                postImageUrlList: [require('../../assets/group-img-3.png'),
-                require('../../assets/group-img-4.png'),
-                require('../../assets/group-img-5.jpg')],
-                topic: '游戏',
-                visits: 946126,
-                fav: 15612,
-                comments: 1692,
-                like: 12366,
-                dislike: 456,
-                isTopped: true,
-                isGoodPost: false,
-            },
-            floorList: [
-                {
-                    textId: 'f001',
-                    floor: 1,
-                    userId: '004',
-                    userName: "bochi",
-                    userImageUrl: require('../../assets/user-image-7.jpg'),
-                    date: '2023-5-19 23:06',
-                    text: "0狗都不玩 1勉强能玩 2中规中矩 3值得一试 4不可多得的佳作 5神中神",
-                    imageUrlList: [require('../../assets/group-img-3.png'),
-                    require('../../assets/group-img-4.png'),
-                    require('../../assets/group-img-5.jpg')],
-                    comments: 3,
-                    like: 1452,
-                    dislike: 45,
-                    childFloorList: [
-                        {
-                            textId: 'fr003',
-                            userId: '003',
-                            userName: "_Karasu_",
-                            userImageUrl: require('../../assets/user-image-6.jpg'),
-                            date: '2023-5-22 12:08',
-                            text: "“你是哪个省的?”男孩沉思他当然知道省的意义。但思绪在飞速演算，省作为人类文明的单位又存在了多久呢?从罗马帝国的行省到今日的联邦和省市划分，站在人类历史望去，省的存在只是短暂的一瞬，当万年后的人类建立银河帝国时，省还会存在吗?从卡米特星云到室女座超星系团，当人类文明沿着群星，逐步建立了庞大的人类帝国时，追寻起源已经没有什么意义，只有作为生物的繁衍纽带－母子关系还能够证明银河公民的身份吧。“妈妈生的。”",
-                            like: 1595,
-                            dislike: 0,
-                        },
-                        {
-                            textId: 'fr001',
-                            userId: '001',
-                            userName: "羽毛笔",
-                            userImageUrl: require('../../assets/user-image-1.jpg'),
-                            date: '2023-5-19 23:07',
-                            text: "“太好啦！太好啦！”听妈妈说，我家的电脑可以上网了。我情不自禁地欢呼起来。电脑网络这个新鲜玩意儿，到底是怎样的呢？爸爸告诉我，电脑网络如同一个遍布全球的蜘蛛网，把每个国家、每座城市甚至每个家庭都连在了一起。进入网络，就好像跨上了信息高速路。可以迅速找到所需要的各种信息，可以用电子信箱和全世界的小朋友建立联系，还可以进行网上购物。有了网络，五湖四海的人随时可以交流，咱们的地球就变成了一个小村庄。网络真的这么神奇？我带着好奇心，迫不及待地叫妈妈打开电脑，进入一个卡通网站，不一会儿，孙悟空出现在电脑屏幕上。我目不转睛地盯着屏幕，米老鼠、唐老鸭、花木兰、黑猫警长，都笑眯眯地看着我，还伴着音乐做着各种有趣的动作。“真神了！”我不由得赞叹起来。妈妈还带我访问了其他一些网站，里面的内容太丰富了：有体育新闻，有动物天地，有科技博览，还有音乐欣赏……真是应有尽有。我感到地球一下子变小了，知识的大门向我敞开了。妈妈还教我发电子邮件。我试着给远在国外的表姐发了一个贺卡。站在一旁的爸爸对我说：“过去寄一封信，对方要好几天才能收到，多慢啊！现在发一个电子邮件，对方几秒钟就能收到，真快啊！”妈妈说：“是呀，发电子邮件还能节约纸张、保护环境呢！”我恋恋不舍地下了网，心思还在那新奇的网络世界里！爸爸说：“今天用到的，只是网络功能的一点点，网络还有很多很多用处呢！”我听了更加喜欢这个新朋友了。",
-                            like: 56,
-                            dislike: 1,
-                        },
-                        {
-                            textId: 'fr002',
-                            userId: '002',
-                            userName: "Chino",
-                            userImageUrl: require('../../assets/user-image-8.jpg'),
-                            date: '2023-5-19 23:08',
-                            text: "打个郊县",
-                            like: 6,
-                            dislike: 1,
-                        },
-                    ],
-                },
-                {
-                    textId: 'f000',
-                    floor: 2,
-                    userId: '003',
-                    userName: "_Karasu_",
-                    userImageUrl: require('../../assets/user-image-6.jpg'),
-                    date: '2023-5-19 23:07',
-                    text: "长官，我们把二楼拿下来了",
-                    imageUrlList: [require('../../assets/post-img-8.jpg'),
-                    require('../../assets/post-img-9.jpg')],
-                    comments: 2,
-                    like: 142,
-                    dislike: 0,
-                    childFloorList: [
-                        {
-                            textId: 'fr004',
-                            userId: '001',
-                            userName: "羽毛笔",
-                            userImageUrl: require('../../assets/user-image-1.jpg'),
-                            date: '2023-5-19 23:08',
-                            text: "好，奖励艾草",
-                            like: 51,
-                            dislike: 0,
-                        },
-                    ],
-                },
-                {
-                    textId: 'f002',
-                    floor: 3,
-                    userId: '004',
-                    userName: "bochi",
-                    userImageUrl: require('../../assets/user-image-7.jpg'),
-                    date: '2023-5-19 23:10',
-                    text: "1.明日方舟",
-                    imageUrlList: [require('../../assets/post-img-3.jpg'),
-                    require('../../assets/post-img-4.jpg'),
-                    require('../../assets/post-img-5.jpg')],
-                    comments: 2,
-                    like: 4201,
-                    dislike: 461,
-                    childFloorList: [
-                        {
-                            textId: 'fr004',
-                            userId: '001',
-                            userName: "羽毛笔",
-                            userImageUrl: require('../../assets/user-image-1.jpg'),
-                            date: '2023-5-19 23:07',
-                            text: "5，这个真的是我跌",
-                            like: 975,
-                            dislike: 15,
-                        },
-                        {
-                            textId: 'fr005',
-                            userId: '002',
-                            userName: "Chino",
-                            userImageUrl: require('../../assets/user-image-8.jpg'),
-                            date: '2023-5-19 23:08',
-                            text: "1，感觉不如原神",
-                            like: 529,
-                            dislike: 47,
-                        },
-                    ],
-                },
-                {
-                    textId: 'f003',
-                    floor: 4,
-                    userId: '004',
-                    userName: "bochi",
-                    userImageUrl: require('../../assets/user-image-7.jpg'),
-                    date: '2023-5-19 23:30',
-                    text: "2.原神。呦西 鉴于你在上网赞扬原神，经本院初步审理，你的行为爱国。米哈游第一警视厅颁发奖金500万円拒领取赏款就处以圣遗物全融刑，发放政治权利终身并且你的手机通讯录联系人都会受到5-10w不等的爱国奖金。请你收到本短信本短信后务必尽快领取奖金。不然本院将于明日中午，安排自卫队对你住所进行装修。",
-                    imageUrlList: [require('../../assets/post-img-6.jpg'),
-                    require('../../assets/post-img-7.jpg')],
-                    comments: 2,
-                    like: 6431,
-                    dislike: 457,
-                    childFloorList: [
-                        {
-                            textId: 'fr006',
-                            userId: '001',
-                            userName: "羽毛笔",
-                            userImageUrl: require('../../assets/user-image-1.jpg'),
-                            date: '2023-5-19 23:07',
-                            text: "5，最喜欢的游戏",
-                            like: 123,
-                            dislike: 0,
-                        },
-                        {
-                            textId: 'fr007',
-                            userId: '002',
-                            userName: "Chino",
-                            userImageUrl: require('../../assets/user-image-8.jpg'),
-                            date: '2023-5-19 23:08',
-                            text: "5，曾经有教育家做了一个实验，让中国孩子和日本孩子探索有瘴气的山洞。日本小孩从小玩《塞尔达传说:王国之泪》，一进洞就点燃火把，结果爆炸至死。而聪明的中国孩子因为玩过《原神》，立马就从背包里掏出发光的流明石来照明，最终顺利通关。",
-                            like: 695,
-                            dislike: 9,
-                        },
-                        {
-                            textId: 'fr008',
-                            userId: '003',
-                            userName: "待兼诗歌剧",
-                            userImageUrl: require('../../assets/user-image-9.jpg'),
-                            date: '2023-5-22 3:38',
-                            text: "客观来讲3.5吧，能玩。最新通知:五一劳动节期间，要求所有人将电脑上的Steam、Origin、 Epic等游戏平台卸载，所有的PS、Xbox、Switch 全部就地销毁，并于五一假期前 下载并安装米哈游自主研发的全新开放世界冒险游戏《原神》，已下载的全部更新到最新版本。要求:1.充值大月卡，自愿充值，应冲尽冲:2.等级升到60级，自愿升级，应升尽升;3.假期期间至少180抽，自愿抽卡，应抽尽抽。收到请回复。",
-                            like: 361,
-                            dislike: 1,
-                        },
-                    ],
-                },
-                {
-                    textId: 'f004',
-                    floor: 5,
-                    userId: '002',
-                    userName: "Chino",
-                    userImageUrl: require('../../assets/user-image-8.jpg'),
-                    date: '2023-5-19 23:19',
-                    text: "第一章《天生废材的我误入了超级大国》第二章《好客的大学》第三章《三美女陪同倒贴测》第四章《高额奖学金随便送》第五章《生好多孩子送不完》第六章《黑龙也是龙》番外《该滚的是你们吧》",
-                    imageUrlList: [require('../../assets/favlist-2.jpg'),
-                    require('../../assets/favlist-3.png'),
-                    require('../../assets/user-image-3.jpg')],
-                    comments: 2,
-                    like: 4231,
-                    dislike: 54,
-                    childFloorList: [
-                        {
-                            textId: 'fr003',
-                            userId: '003',
-                            userName: "_Karasu_",
-                            userImageUrl: require('../../assets/user-image-6.jpg'),
-                            date: '2023-5-22 12:08',
-                            text: "终章《发生交火，我无法呼吸？！》",
-                            like: 11255,
-                            dislike: 4,
-                        },
-                        {
-                            textId: 'fr008',
-                            userId: '003',
-                            userName: "待兼诗歌剧",
-                            userImageUrl: require('../../assets/user-image-9.jpg'),
-                            date: '2023-5-22 3:38',
-                            text: "谴责肖万→理解肖万→同情肖万→敬佩肖万→感激肖万→肖万，黑膝铠甲，合体。",
-                            like: 745,
-                            dislike: 41,
-                        },
-                    ],
-                },
-            ]
         }
     },
     mounted() {
+        let id = this.$route.params.postId
+        console.log('已收到路由传递的帖子id', id)
+        // 从后端获取数据
+        this.getPostOnline(id)
+
         //监听“只看楼主”改变的事件
         this.$bus.$on('setOnlyLz', (onlyLz) => {
             this.onlyLz = onlyLz
             console.log('是否筛选楼主发言已修改', onlyLz)
         })
-        console.log('已经挂载setOnlyLz事件的监听')
 
         // 监听PostSortLabel的改变排序方式事件，重新加载postList
         this.$bus.$on('sortChanged', (index) => {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
         })
-        console.log('PostCardList已挂载事件sortChanged监听');
 
         // 监听CommentReplyInputBox的创建回复事件，在事件回调中向服务器发送请求
         this.$bus.$on('commentReplyCreated', (newReply, textId) => {
@@ -438,6 +153,8 @@ export default {
         //卸载监听
         this.$bus.$off('setOnlyLz')
         this.$bus.$off('sortChanged')
+        this.$bus.$off('commentReplyCreated')
+        this.$bus.$off('postReplyCreated')
     },
 }
 </script>

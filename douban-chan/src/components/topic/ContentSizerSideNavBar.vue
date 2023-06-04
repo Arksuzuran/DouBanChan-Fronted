@@ -30,7 +30,6 @@ export default {
     methods: {
         // 处理二级导航选择事件 当前选中的是哪个标签
         handleSelect(index) {
-            console.log(index)
             this.activeLeftLabel = index
             this.$bus.$emit('leftNavChanged', index);
         },

@@ -18,7 +18,7 @@
                 <div class="postfloor-LZBox-LZ">楼主</div>
             </div>
             <!-- 帖子正文 -->
-            <PostCardText class="postfloor-maintext" :info="textInfo" />
+            <PostCardText class="postfloor-maintext" :info="textInfo" :normal="true"/>
 
             <!-- 赞与踩 回复按钮-->
             <div class="postfloor-like-container">

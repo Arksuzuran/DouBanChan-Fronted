@@ -24,10 +24,9 @@
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" placeholder="请选择话题"
-                                @select="handleSelect" style="width: 100%;"></el-autocomplete>
+                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" :placeholder="topicPlaceHolder"
+                                @select="handleSelect" style="width: 100%;" :disabled="topicLocked"></el-autocomplete>
                         </el-form-item>
-
 
                         <!-- 正文输入框 -->
                         <el-form-item label="帖子正文" :label-width="formLabelWidth">
@@ -36,7 +35,7 @@
                             </el-input>
                         </el-form-item>
 
-                        <el-form-item label="上传帖子图片" :label-width="formLabelWidth">
+                        <el-form-item label="上传帖子图片" :label-width="formLabelWidth + 80">
                             <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
                         </el-form-item>
                     </el-form>
@@ -107,6 +106,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 
 export default {
+    props:['topicInfo'],
     name: 'PostCreateBar',
     components:{
         PictureChooser,
@@ -148,6 +148,12 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        topicLocked(){
+            return this.topicInfo ? true : false
+        },
+        topicPlaceHolder(){
+            return this.topicInfo ? this.topicInfo.topicName : '请选择话题'
+        }
     },
     methods: {
         // 点击我要发帖按钮
@@ -382,6 +388,7 @@ export default {
         // }
     },
     mounted() {
+        console.log(this.topicInfo)
         this.topicList = this.loadAll();
     },
 }

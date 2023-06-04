@@ -6,7 +6,7 @@
             <span class="postcard-label">置顶</span>
         </div>
         <!-- 加精标记 -->
-        <div class="postcard-quality-label" v-if="info.isGoodPost">
+        <div class="postcard-quality-label" v-if="info.isGoodPost && !notShowGood">
             <i class="el-icon-medal" style="font-size: 20px;"></i>
             <span class="postcard-label">精华</span>
         </div>
@@ -14,11 +14,11 @@
         <div class="postcard-main-container">
 
             <!-- 发帖人头像 昵称 时间 -->
-            <PostCardUserInfo class="postcard-userinfo-container" :info="lzInfo" :from="from" />
+            <PostCardUserInfo class="postcard-userinfo-container" :info="lzInfo" />
 
             <!-- 来自小组 和 举报按钮 -->
             <div class="postcard-buttongroup">
-                <PostTopicButton :info="{ topic: info.topic }"></PostTopicButton>
+                <PostTopicButton :info="info"></PostTopicButton>
                 <PostReportButton></PostReportButton>
             </div>
 
@@ -35,7 +35,7 @@
                     <div class="postcard-likeNumberBox-likenumber">{{ info.groupName + '小组' }}</div>
                 </div>
                 <!-- 帖子正文 -->
-                <PostCardText class="postcard-maintext" :info="info" :from="from" />
+                <PostCardText class="postcard-maintext" :info="info" />
             </div>
 
             <!-- 收藏 评论 点赞 点踩 -->
@@ -73,7 +73,7 @@ import PostReportButton from './button/PostReportButton.vue';
 import PostTopicButton from './button/PostTopicButton.vue';
 
 export default {
-    props: ['info', 'from', 'notShowTopped', 'notShowIcongroup', 'notShowFromGroup'],
+    props: ['info', 'notShowTopped', 'notShowGood', 'notShowIcongroup', 'notShowFromGroup'],
     data() {
         return {
             // 要传递给PostCardUserInfo组件的信息
@@ -98,6 +98,11 @@ export default {
         PostCardUserInfo,
         PostTopicButton,
         PostReportButton,
+    },
+    computed:{
+        showGroupFromBox(){
+            return !this.notShowFromGroup && this.info.groupName
+        },
     },
     methods: {
         // 限制字符串长度为length
@@ -209,9 +214,6 @@ export default {
             else {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
-        },
-        showGroupFromBox(){
-            return !notShowFromGroup && info.groupName != ''
         },
     },
     mounted() {

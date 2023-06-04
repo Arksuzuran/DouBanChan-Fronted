@@ -9,7 +9,7 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :from="'g'" :notShowFromGroup="true"/>
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"/>
         </div>
 
         <!-- 发帖上拉框 -->

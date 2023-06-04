@@ -5,7 +5,7 @@
 -->
 <template>
     <div class="groupcard-container">
-        <div class="groupcard-topic-container">
+        <div class="groupcard-topic-container" @click="jumpToTopic">
             <i class="fa-sharp fa-solid fa-fire groupcard-topic-title"></i>
             <img class="groupcard-topic-img" :src="group.aboutTopic.topicAvatarUrl" />
             <div class="groupcard-topic-name">{{ '#' + group.aboutTopic.topicName }}</div>
@@ -66,27 +66,6 @@ export default {
         groupName() {
             return this.cutStrByLength(this.group.groupName, 12)
         },
-        // // 判断用户是否加入了小组
-        // userInGroup() {
-        //     for (let member of this.group.memberList) {
-        //         if (member.userId === this.userId) {
-        //             return true
-        //         }
-        //     }
-        //     return false
-        // },
-        // // 判断用户是否是管理员
-        // userIsAdmin() {
-        //     for (let member of this.group.memberList) {
-        //         if (member.userId === this.userId) {
-        //             if (member.isAdmin === true) {
-        //                 return true
-        //             }
-        //             return false
-        //         }
-        //     }
-        //     return false
-        // },
     },
     methods: {
         cutStrByLength(str, length) {
@@ -98,16 +77,28 @@ export default {
         },
         handleEnterGroupPage() {
             this.$router.push({
-                name: 'group'
+                name: 'group',
+                params:{
+                    groupId: this.group.groupId
+                },
             })
         },
         handleJoinGroup() {
             this.$router.push({
-                name: 'group'
+                name: 'group',
+                params:{
+                    groupId: this.group.groupId
+                },
             })
         },
-
-
+        jumpToTopic(){
+            this.$router.push({
+                name: 'topic',
+                params:{
+                    topicId: this.group.aboutTopic.topicId
+                },
+            })
+        },
     },
 }
 </script>

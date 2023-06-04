@@ -27,6 +27,8 @@ import reviewView from "../views/Review/ReviewView.vue";
 import TopicHomePostGroupList from '../views/Topic/TopicHomePostGroupList.vue';
 import TopicHomeTopicSquare from '../views/Topic/TopicHomeTopicSquare.vue';
 import TopicHomeTodaysHot from '../views/Topic/TopicHomeTodaysHot.vue';
+import TopicPage from '../views/Topic/TopicPage.vue';
+import TopicPostList from '../views/Topic/TopicPostList.vue';
 
 Vue.use(VueRouter);
 
@@ -68,6 +70,21 @@ const routes = [
       },
     ]
   },
+  //某话题的主页
+  {
+    path: "/topic",
+    name: "topic",
+    component: TopicPage,
+    children: [
+      // 帖子的页面
+      {
+        path:'/topic/post',
+        name:'topicPost',
+        component: Post
+      },
+      //
+    ]
+  },
   //小组版块主页
   {
     path: "/groupHome",
@@ -97,7 +114,12 @@ const routes = [
         name:'groupPost',
         component: Post
       },
-      //
+      //groupTopicList
+      {
+        path:'/group/postList',
+        name:'groupTopicList',
+        component: TopicHomeTopicSquare
+      },
     ]
   },
   //影视详情页面
@@ -176,6 +198,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
+  scrollBehavior: () => ({ y: 0 }), //自动滚动到顶端
   routes,
 });
 

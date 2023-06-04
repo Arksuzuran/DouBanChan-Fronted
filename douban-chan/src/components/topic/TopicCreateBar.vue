@@ -170,8 +170,6 @@ export default {
                     },
                 ],
             };
-            // 通过事件总线触发自定义事件，并传递新话题作为参数
-            this.$bus.$emit('groupCreated', newGroup);
             // 清空内容
             this.avatarFileList = []
             this.headimgFileList = []

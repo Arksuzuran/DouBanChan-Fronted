@@ -34,7 +34,8 @@
                 <!-- 小组右侧关注按钮和申请管理员按钮 -->
                 <div class="group-header-button-group">
                     <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出' : '关注' }}</button>
-                    <button :class="applyButtonClass" @click="applyForAdmin">{{ groupInfo.userIsAdmin ? '解除管理员' : '申请管理员' }}</button>
+                    <button :class="applyButtonClass" @click="applyForAdmin">{{ groupInfo.userIsAdmin ? '解除管理员' : '申请管理员'
+                    }}</button>
                 </div>
             </div>
 
@@ -44,13 +45,12 @@
                 <el-menu-item index="groupPostList">看帖</el-menu-item>
                 <el-menu-item index="groupGoodPostList">精华</el-menu-item>
                 <el-menu-item index="groupTopicList">小组话题</el-menu-item>
-                <el-menu-item index="groupIntro">小组简介</el-menu-item>
             </el-menu>
 
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="group-content-container">
-                <router-view :postList="inPostList"></router-view>
+                <router-view :postList="inPostList" :topicList="topicList" title="小组参与的话题"></router-view>
             </div>
         </div>
     </div>
@@ -67,106 +67,6 @@ export default {
     data() {
         return {
             activeIndex: 'groupPostList',
-            groupInfo: {
-                groupHeadBgUrl: require("../../assets/user-bg-2.jpg"),
-                groupAvatarImgUrl: require("../../assets/group-avatar-1.jpg"),
-                groupName: '我是小组名称',
-                groupIntro: '我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介。',
-                groupFollowNumber: 165949,
-                groupPostNumber: 49526148,
-                userInGroup: true,
-                userIsAdmin: false,
-                //小组标签
-                tagList: ['生活', '文化'],
-                //小组成员列表
-                memberList: [
-                    {
-                        userId: '001',
-                        userName: "羽毛笔",
-                        userImageUrl: require('../../assets/user-image-1.jpg'),
-                        isAdmin: true,
-                    },
-                    {
-                        userId: '004',
-                        userName: "bochi",
-                        userImageUrl: require('../../assets/user-image-7.jpg'),
-                        isAdmin: false,
-                    },
-                ],
-            },
-
-
-            // 帖子列表
-            // 帖子列表信息
-            postList: [
-                {
-                    postId: 'p001',
-                    lzId: '004',    //发帖人id
-                    lzName: "bochi",    //发帖人昵称
-                    lzImageUrl: require('../../assets/user-image-7.jpg'),   //发帖人头像路径
-                    date: '2023-5-19 23:57',    //发帖时间
-                    title: "我发游戏，你来打分",    //帖子标题
-                    text: "0狗都不玩 1勉强能玩 2中规中矩 3值得一试 4不可多得的佳作 5神中神",//帖子1楼内容
-                    postImageUrlList: [require('../../assets/group-img-3.png'),//帖子1楼图片
-                    require('../../assets/group-img-4.png'),
-                    require('../../assets/group-img-5.jpg')],
-                    topic: '游戏',//帖子所属的话题
-                    topicId: 't001',//帖子所属的话题的id
-                    visits: 946126,//帖子的浏览量
-                    fav: 15612,//帖子的收藏数
-                    comments: 1692,//帖子的评论数
-                    like: 214512,//帖子的点赞数
-                    dislike: 456,//帖子的点踩数
-                    isTopped: true,//帖子在当前小组内是否置顶
-                    isGoodPost: false,//帖子在当前小组内是否是精华帖
-                    //如果该帖子不来自于一个小组 那么下面的字段均填 ''
-                    groupName: 'Game', //来自的小组的名称
-                    groupId: 'ofokowfjdowjdowj',//来自的小组的id
-                },
-                {
-                    postId: 'p002',
-                    lzId: '001',
-                    lzName: "羽毛笔",
-                    lzImageUrl: require('../../assets/user-image-1.jpg'),
-                    date: '2023-5-19 23:11',
-                    title: "理性讨论 软件工程基础和OS哪一个更精品",
-                    text: "压到真题了，主人奴隶问题：三个主人十个奴隶，在交易市场，主人可以通过窗口写入购买协议，奴隶可以查阅，请完成该问题的同步与互斥问题（基于异性主人奴隶问题的简化，无需性别互斥）",
-                    postImageUrlList: [require('../../assets/user-bg-3.jpg'), require('../../assets/group-img-2.jpg'),],
-                    topic: 'BUAA',
-                    topicId: 't002',//帖子所属的话题的id
-                    visits: 5959261,
-                    fav: 20200,
-                    comments: 692,
-                    like: 59412,
-                    dislike: 59,
-                    isTopped: false,
-                    isGoodPost: true,
-                    //如果该小组不来自于一个小组 那么下面的字段均填 ''
-                    groupName: 'BUAA', //来自的小组的名称
-                    groupId: '111111',//来自的小组的id
-                },
-                {
-                    lzId: '002',
-                    lzName: "Chino",
-                    lzImageUrl: require('../../assets/user-image-8.jpg'),
-                    date: '2023-5-02 22:47',
-                    title: "黑坤巴精神",
-                    text: "回来吧科比黑曼巴，我最骄傲的信仰，历历在目的球场，眼泪莫名在流淌，🤙依稀记得24🤙，🧟还有给力的八号🧟，把对手全都给打退，🚁就算坠机也不死🚁",
-                    postImageUrlList: [require('../../assets/group-img-6.jpg'), require('../../assets/group-img-7.jpg')],
-                    topic: '科比',
-                    topicId: 't003',//帖子所属的话题的id
-                    visits: 59515,
-                    fav: 642,
-                    comments: 41,
-                    like: 595,
-                    dislike: 0,
-                    isTopped: false,
-                    isGoodPost: false,
-                    //如果该小组不来自于一个小组 那么下面的字段均填 ''
-                    groupName: '黑坤巴', //来自的小组的名称
-                    groupId: 'laodalaoda',//来自的小组的id
-                },
-            ],
         }
     },
     methods: {
@@ -183,6 +83,9 @@ export default {
             if (this.activeIndex == 'groupPostList') {
                 this.$router.push({
                     name: 'group',
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
             // 精华帖
@@ -190,14 +93,21 @@ export default {
                 console.log('试图访问精华帖，当前精华帖列表：', this.getGoodPostList())
                 this.$router.push({
                     name: 'group',
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
             else {
                 this.$router.push({
                     name: index,
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
         },
+
         // 返回精华帖列表
         getGoodPostList() {
             let goodPostList = []
@@ -207,12 +117,22 @@ export default {
                 }
             }
             return goodPostList
-        }
+        },
+        //获取话题列表
+        ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline']),
+        //获取帖子列表
+        ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+        //获取小组列表    
+        ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline', 'getGroupInfoOnline']),
     },
     computed: {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+
+        ...mapGetters('postAbout', ['postList']),
+        ...mapGetters('topicAbout', ['topicList']),
+        ...mapGetters('groupAbout', ['groupInfo']),
 
         joinButtonClass() {
             return this.groupInfo.userJoined ? 'group-header-button-selected' : 'group-header-button-unselected';
@@ -232,63 +152,6 @@ export default {
                 return []
             }
         },
-        //     'g_id': self.g_id,
-        //     'g_name': self.g_name,
-        //     'g_description': self.g_description,
-        //     'g_create_time': self.g_create_time.__str__(),
-        //     'g_last_modify_time': self.g_last_modify_time.__str__(),
-        //     'g_users_num': self.g_users_num
-        // }
-        //     if self.g_profile_photo is not None:
-        //     re['g_profile_photo'] = self.g_profile_photo.p_content.url
-        // 从后端获取小组信息
-        getGroupInfoOnline() {
-            this.$axios({
-                method: "post",
-                data: qs.stringify({
-                    g_id: 1
-                }),
-                url: "/media/query_single/",
-                headers: { "content-type": "application/x-www-form-urlencoded" },
-            })
-                .then((res) => {
-                    this.item = res.data.media;
-                    if (this.item.m_profile_photo !== "") {
-                        this.item.m_profile_photo = this.$axios.defaults.baseURL + this.item.m_profile_photo;		//这里是对图片的url进行拼接，地址是ip地址+端口号+接收到的url，html中就可以直接使用该url
-                        console.log(this.item.m_profile_photo)
-                    }
-                })
-                .catch((err) => {
-                    this.$message({
-                        type: "error",
-                        message: "网络出错QAQ",
-                    });
-                });
-        },
-        getPostListOnline() {
-
-        },
-        sendData() {
-            this.$axios({
-                method: "post",
-                data: qs.stringify({
-                    username: 'adk',
-                    password1: "111",
-                    password2: "111"
-                }),
-                url: "/user/register/",
-                headers: { "content-type": "application/x-www-form-urlencoded" },
-            })
-                .then((res) => {
-                    this.item = res.data;
-                })
-                .catch((err) => {
-                    this.$message({
-                        type: "error",
-                        message: "网络出错QAQ",
-                    });
-                });
-        }
     },
     mounted() {
         // 监听PostCreateBar的创建帖子事件，在事件回调中将新帖子添加到列表
@@ -296,11 +159,13 @@ export default {
             this.postList.push(newPost);
             console.log('用户发帖成功：', newPost)
         });
-        console.log('GroupPage已挂载事件postCreated监听');
 
+        let id = this.$route.params.groupId
         // 从后端获取数据
-        this.getGroupInfoOnline()
-
+        this.getPostListByGroupIdOnline(id)
+        this.getTopicListByGroupIdOnline(id)
+        this.getGroupInfoOnline(id)
+        console.log('已收到路由传递的小组id', id)
     },
 }
 </script>
