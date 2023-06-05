@@ -10,7 +10,7 @@
                     </span>
                 </button>
             </div>
-            <div class="image-container">
+            <div class="image-container" @click="toDetailPage(ChildId)">
                 <img :src="ChildImage" class="image">
             </div>
             <div class="content">
@@ -129,6 +129,7 @@
 
 export default {
     props: {
+        ChildId: Number,
         ChildName: String,
         ChildRate: Number,
         ChildYear: Number,
@@ -179,6 +180,9 @@ export default {
                 document.body.style.overflow = 'auto'; // 恢复滚动条
             document.removeEventListener('scroll', this.disableScroll); // 移除禁用滚动事件
         },
+        toDetailPage(videoId) {
+            this.$router.push({name: 'videoDetail', params: {id: videoId}})
+        }
     },
     computed: {
         starSize() {
@@ -199,6 +203,7 @@ export default {
     position: relative;
     border: none;
     background-color: #002333;
+    cursor: pointer;
 }
 
 .card-name {

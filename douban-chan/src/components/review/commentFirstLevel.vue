@@ -14,14 +14,14 @@
                 <!-- <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>{{ info.like }}
                 <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>{{ info.dislike }} -->
             </div>
-            <div class="reply-button" @click="changeReplying">
+            <!-- <div class="reply-button" @click="changeReplying">
                 回复
-            </div>
+            </div> -->
         </div>
-        <commentSecondLevel @reply="handleReply" v-for="(item,index) in commentSeconds" :key="index" :info="item"></commentSecondLevel>
+        <!-- <commentSecondLevel @reply="handleReply" v-for="(item,index) in commentSeconds" :key="index" :info="item"></commentSecondLevel> -->
         <!-- 回复区，如果点击回复则显示 -->
-        <CommentReplyInputBox v-if="isReplying" :textId="item.id" :targetUserName="this.replyName">
-        </CommentReplyInputBox>
+        <!-- <CommentReplyInputBox v-if="isReplying" :textId="item.id" :targetUserName="this.replyName">
+        </CommentReplyInputBox> -->
         <!-- 分隔线 -->
         <div class="div-line"></div>
     </div>

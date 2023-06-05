@@ -16,14 +16,19 @@ import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
 
+//影视
 import VideoDetail from "../views/Video/VideoDetail.vue"
+import VideoRankBoard from "../views/Video/VideoRankBoard.vue"
+import VideoCategory from "../views/Video/VideoCategory.vue"
+import VideoDefault from "../views/Video/VideoDefault.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
 //帖子
 import Post from "../views/Post/Post.vue";
 import reviewView from "../views/Review/ReviewView.vue";
-
+//写影评
+import WriteReview from "../views/Review/WriteReview.vue"
 
 Vue.use(VueRouter);
 
@@ -54,9 +59,30 @@ const routes = [
   },
   //影视主页
   {
-    path: "/videoHome",
+    path: "/video",
     name: "videoHome",
-    component: VideoHomeView
+    component: VideoHomeView,
+    children: [
+      {
+        path: 'home',
+        name: 'videoDefault',
+        component: VideoDefault
+      },
+      {
+        path: "rankboard",
+        name: "rankBoard",
+        component: VideoRankBoard
+      },
+      {
+        path: "category",
+        name: "videoCategory",
+        component: VideoCategory
+      },
+      {
+        path: '',
+        redirect: 'home' // 设置空路由路径的重定向到默认子路由
+      }
+    ]
   },
   //某小组的主页
   {
@@ -80,13 +106,19 @@ const routes = [
   },
   //影视详情页面
   {
-    path: "/videoDetail",
+    path: "/video/detail/:id",
     name: "videoDetail",
     component: VideoDetail,
   },
+  //写影评页面
+  {
+    path: "/video/detail/:id/write_review",
+    name: "writeReview",
+    component: WriteReview,
+  },
   //评论详情页面
   {
-    path: "/review",
+    path: "/video/review/:id",
     name: "review",
     component: reviewView,
   },
