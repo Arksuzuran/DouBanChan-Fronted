@@ -24,9 +24,22 @@ export default {
 }
 </script>
 
-<style>
-.avatar-uploader .el-upload {
+<style scoped>
+.avatar-uploader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 178px;
     border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    margin-left: 120px;
+}
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9 !important;
     border-radius: 6px;
     cursor: pointer;
     position: relative;

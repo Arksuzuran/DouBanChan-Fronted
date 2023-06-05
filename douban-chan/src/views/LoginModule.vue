@@ -11,7 +11,7 @@
                 </div>
                 <div v-if="notHideButtons" class="login-module-input">
                     <el-input v-model="inputAccount" autocomplete="off" name="text" class="input"
-                        prefix-icon="el-icon-user-solid" placeholder="请输入账号">
+                        prefix-icon="el-icon-user-solid" placeholder="请输入用户名">
                     </el-input>
                     <br>
                     <br>
@@ -50,25 +50,26 @@
                         <!--分页器-->
                         <div class="swiper-pagination" slot="pagination"></div>
                     </swiper>
-                    <!-- 注册界面 -->
                 </div>
             </div>
+            <!-- 注册界面 -->
             <div :class="['login-module-right-enroll', { 'notTransparent': isNotTransparent, 'toHighIndex': toHighIndex }]">
-                <div class="login-module-logo" style="margin-top: -30px;">
+                <div class="login-module-logo" style="margin-top: -50px;">
                     <div class="login-module-logo-image"></div>
                 </div>
                 <div class="login-module-backToLogin">
                     <el-button type="text" @click="backToLogin"><i class="fa-solid fa-arrow-left"></i> 回到登录</el-button>
                 </div>
-                <div class="login-module-input" style="margin-top: -30px;">
+                <div class="login-module-input" style="margin-top: -55px;">
                     <el-input v-model="inputEnrollAccount" prefix-icon="el-icon-user-solid" placeholder="请输入用户名">
                     </el-input>
-                    <br>
-                    <br>
+                    <div style="height: 10px;"></div>
+                    <el-input v-model="inputEnrollEmail" prefix-icon="el-icon-message" placeholder="请输入邮箱">
+                    </el-input>
+                    <div style="height: 10px;"></div>
                     <el-input v-model="inputEnrollPassword_1" prefix-icon="el-icon-lock" placeholder="请输入密码" show-password>
                     </el-input>
-                    <br>
-                    <br>
+                    <div style="height: 10px;"></div>
                     <el-input v-model="inputEnrollPassword_2" prefix-icon="el-icon-lock" placeholder="请确认密码" show-password>
                     </el-input>
                 </div>
@@ -99,6 +100,7 @@ export default ({
             inputEnrollAccount: '',
             inputEnrollPassword_1: '',
             inputEnrollPassword_2: '',
+            inputEnrollEmail: '',
             accounts: [
                 { account: '20375337', password: '20375337' },
                 { account: 'CR666', password: 'sb' },
@@ -458,7 +460,7 @@ export default ({
     position: absolute;
     width: 250px;
     height: 150px;
-    top: 340px;
+    top: 350px;
     left: 45px;
 }
 
@@ -599,7 +601,7 @@ export default ({
 
 .login-module-button-right-enroll {
     position: relative;
-    top: 380px;
+    top: 390px;
     left: 90px;
     width: 180px;
     height: 40px;

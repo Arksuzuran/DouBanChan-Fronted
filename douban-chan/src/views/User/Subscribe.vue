@@ -1,103 +1,132 @@
-//用户主页, 订阅页面
 <template>
-    <div>
-        <el-container>
-            <el-header>
-                <h2>我的订阅</h2>
-            </el-header>
-            <el-main>
-                <div class="favlist-container">
-            <DetailedWorksCard v-for="(works, index) in worksList" :key="index" :info="works" />
+    <div class="sub-list-block">
+        <div style="margin-top: 5px;"></div>
+        <div class="sub-list">
+            <span class="sub-list-text">我的订阅</span>
+            <div class="switch-for-list">
+                <div class="radio-inputs">
+                    <label class="radio">
+                        <input type="radio" name="radio" checked="">
+                        <span class="name">全部</span>
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="radio">
+                        <span class="name">影视</span>
+                    </label>
+
+                    <label class="radio">
+                        <input type="radio" name="radio">
+                        <span class="name">图书</span>
+                    </label>
+                </div>
+            </div>
+            <div class="sub-list-for-switch">
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+                <CollectionCard></CollectionCard>
+            </div>
         </div>
-            </el-main>
-        </el-container>
     </div>
 </template>
-  
-<script>
-import DetailedWorksCard from "../../components/DetailedWorksCard.vue";
-export default {
-    data() {
-        return {
-            worksList: [
-                {
-                    id: "001",
-                    imgSrc: require("../../assets/favlist-1.jpg"),
-                    name: "干物妹小埋",
-                    intro: "低能废宅妹妹小埋的日常",
-                    type: "番剧/日常",
-                    length: "24话",
-                    stars: "8.5",
-                },
-                {
-                    id: "002",
-                    imgSrc: require("../../assets/favlist-2.jpg"),
-                    name: "Pink Lable",
-                    intro: "这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介。",
-                    type: "插画集/软色情",
-                    length: "108P",
-                    stars: "8.5",
-                },
-                {
-                    id: "003",
-                    imgSrc: require("../../assets/favlist-3.png"),
-                    name: "少女与战车",
-                    intro: "这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介。",
-                    type: "番剧/爱情",
-                    length: "48话",
-                    stars: "8.0",
-                },
-                {
-                    id: "004",
-                    imgSrc: require("../../assets/favlist-4.webp"),
-                    name: "学园孤岛",
-                    intro: "巡之丘学园生活社成员的丈枪由纪，将与顾问老师佐仓惠、社长若狭悠里及随身带著圆锹的恵飞须泽胡桃...",
-                    type: "番剧/恐怖",
-                    length: "12话",
-                    stars: "9.6",
-                },
-                {
-                    id: "005",
-                    imgSrc: require("../../assets/favlist-5.webp"),
-                    name: "LoveLive!爱与演唱会",
-                    intro: "这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介。",
-                    type: "电影/爱情",
-                    length: "120分钟",
-                    stars: "3.5",
-                },
-                {
-                    id: "006",
-                    imgSrc: require("../../assets/favlist-5.webp"),
-                    name: "作品",
-                    intro: "这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介，这是作品的简介。",
-                    type: "电影/爱情",
-                    length: "120分钟",
-                    stars: "8.5",
-                },
-            ]
-        }
-    },
-    components: {
-        DetailedWorksCard,
-    },
 
+<script>
+import CollectionCard from '../../components/CollectionCard.vue';
+export default {
+    components: {
+        CollectionCard,
+    },
 }
 </script>
-  
-<style>
-h2 {
-    margin: 20px;
-    text-align:left;
-    color: #333333;
+
+<style scoped>
+.sub-list-block {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
 }
-.el-container {
-  margin-top: 10px;
+
+.sub-list-block>div {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
-.favlist-container {
-    width: 94%;
-    margin: 0 auto;
+
+.sub-list {
+    width: 95%;
+    margin-left: 1.9%;
+    background-color: transparent;
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+}
+
+.sub-list-text {
+    text-align: left;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.radio-inputs {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0 0 0px 1px rgba(100, 100, 100, 0.06);
+    padding: 0.25rem;
+    width: 300px;
+    font-size: 14px;
+}
+
+.radio-inputs .radio {
+    flex: 1 1 auto;
+    text-align: center;
+}
+
+.radio-inputs .radio input {
+    display: none;
+}
+
+.radio-inputs .radio .name {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: none;
+    padding: .5rem 0;
+    color: rgba(51, 65, 85, 1);
+    transition: all .15s ease-in-out;
+}
+
+.radio-inputs .radio input:checked+.name {
+    background-color: #ffeded;
+    font-weight: 600;
+}
+
+.switch-for-list {
+    position: absolute;
+    margin-left: 150px;
+    margin-top: -5px;
+}
+
+.sub-list-for-switch {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 在一行中放置两列 */
+    gap: 15px;
 }
 </style>

@@ -6,15 +6,21 @@
             <span class="green"></span>
         </div>
         <div class="img">
+            <img :src="group.image" class="image">
         </div>
-        <h1>刘慈欣</h1>
-        <p>
-            小组成员: 28323 人<br>
-            该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿
-        </p>
+        <h1>{{ group.name }}</h1>
+        <div>
+            <span style="color: black;">小组成员: {{ group.number }} 人</span><br>
+            <span class="group-text">{{ group.text }}</span>
+        </div>
     </div>
 </template>
 
+<script>
+export default ({
+    props: ['group'],
+})
+</script>
 <style scoped>
 .card {
     width: 190px;
@@ -79,9 +85,27 @@
 .img {
     width: 3.0em;
     height: 3.0em;
-    background-image: url('../assets/conroy_img/qq.jpg');
     background-size: cover;
     border-radius: 7px;
     margin: auto;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.group-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    margin-top: 5px;
+    color: rgb(29, 29, 29);
+    font-size: 12px;
 }
 </style>

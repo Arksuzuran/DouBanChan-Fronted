@@ -21,12 +21,17 @@
 
         <!-- 二级导航菜单 -->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="userpageHome">主页</el-menu-item>
-          <el-menu-item index="userpageFavlist">收藏</el-menu-item>
-          <el-menu-item index="userpageSubscribe">订阅</el-menu-item>
-          <el-menu-item index="userpageGroup">小组</el-menu-item>
-          <el-menu-item index="userpagePost">我的帖子</el-menu-item>
-          <el-menu-item index="userpageMessage">消息</el-menu-item>
+          <el-menu-item index="userpageHome"><i class="fa-solid fa-house" style="color: #ffab66;"></i> 主页</el-menu-item>
+          <el-menu-item index="userpageFavlist"><i class="fa-solid fa-heart" style="color: #ff3e29;"></i>
+            收藏</el-menu-item>
+          <el-menu-item index="userpageSubscribe"><i class="fa-solid fa-bookmark" style="color: #ff9e9e;"></i>
+            订阅</el-menu-item>
+          <el-menu-item index="userpageGroup"><i class="fa-solid fa-user-group" style="color: #8ac2ff;"></i>
+            小组</el-menu-item>
+          <el-menu-item index="userpagePost"><i class="fa-solid fa-comment" style="color: #70ff7a;"></i>
+            我的帖子</el-menu-item>
+          <el-menu-item index="userpageMessage"><i class="fa-solid fa-message" style="color: #e08aff;"></i>
+            消息</el-menu-item>
         </el-menu>
 
         <!-- 二级主页 -->
@@ -47,30 +52,38 @@ export default {
     return {
       //Header
       //头图设置
-      userHeadUrl: require("../assets/user-bg-4.jpg"),
+      userHeadUrl: require("../assets/conroy_img/OM.jpg"),
       //用户签名
       userSignature: "你好，我是羽毛笔。",
-
-      //二级导航栏当前选中的菜单项
-      activeIndex: '',
     };
-  },
-  computed: {
-    //头像路径与用户名
-    ...mapState('userAbout', ['userName', 'userImgUrl']),
   },
   methods: {
     //选中二级导航栏
     handleSelect(index) {
-      //选中不同的菜单项时才更新
-      if (this.activeIndex != index) {
-        this.$router.push({
-          name: index,
-        })
-      }
-      //更新当前菜单项
-      this.activeIndex = index
+      this.$router.push({
+        name: index,
+      })
     },
+  },
+  computed: {
+    //头像路径与用户名
+    ...mapState('userAbout', ['userName', 'userImgUrl']),
+    activeIndex() {
+      const currentRoute = this.$route.path;
+      if (currentRoute === '/userHome/home') {
+        return 'userpageHome';
+      } else if (currentRoute === '/userHome/favlist') {
+        return 'userpageFavlist';
+      } else if (currentRoute === '/userHome/subscribe') {
+        return 'userpageSubscribe';
+      } else if (currentRoute === '/userHome/group') {
+        return 'userpageGroup';
+      } else if (currentRoute === '/userHome/post') {
+        return 'userpagePost';
+      } else if (currentRoute === '/userHome/message') {
+        return 'userpageMessage';
+      }
+    }
   },
   components: {
 
@@ -88,7 +101,7 @@ export default {
 }
 
 .body-container {
-  background-color: #ffffff;
+  background-color: transparent;
 }
 
 .el-menu-demo {
@@ -99,7 +112,7 @@ export default {
   position: relative;
   border-radius: 5px;
   width: 100%;
-  height: 500px;
+  height: 250px;
 }
 
 .header-background-image {
@@ -113,32 +126,34 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: left;
-  padding: 20px;
+  padding: 5px;
   box-sizing: border-box;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
 }
 
 .header-user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .header-user-details {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  height: 50px;
 }
 
 .header-user-nickname-wrapper {
   display: flex;
-  align-items: center;
-  margin-right: 10px;
-  background-color: rgba(255, 255, 255, 0.5);
+  margin-right: 80px;
+  background-color: rgba(255, 255, 255, 0.3);
   /* 调整昵称背景色透明度 */
   border-radius: 5px;
   /* 添加圆角 */
@@ -150,12 +165,11 @@ export default {
   margin: 0;
   font-size: 20px;
   font-weight: bold;
-  color: #fff;
+  color: #000000;
 }
 
 .header-user-signature {
-  margin: 0 0 0 10px;
   font-size: 16px;
-  color: #fff;
+  color: #170f0f;
 }
 </style>

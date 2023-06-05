@@ -9,7 +9,7 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :from="'g'" :notShowFromGroup="true"/>
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :from="'g'" :notShowFromGroup="true" />
         </div>
 
         <!-- 发帖上拉框 -->
@@ -30,7 +30,7 @@ import PostCreateBar from '../../components/post/PostCreateBar.vue';
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
 
 export default {
-    props:['postList'], //数据来源：组件GroupPost.vue
+    props: ['postList'], //数据来源：组件GroupPost.vue
     components: {
         PostCard,
         PostSortLabel,
@@ -43,7 +43,7 @@ export default {
         }
     },
     methods: {
-        
+
     },
     computed: {
         //头像路径与用户名
@@ -56,10 +56,10 @@ export default {
             //热度排序 点赞数大的在前面。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
                 list.sort((a, b) => {
-                    if((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)){
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
                         return b.like - a.like
                     }
-                    else{
+                    else {
                         return a.isTopped ? -1 : 1
                     }
                 })
@@ -67,10 +67,10 @@ export default {
             //时间排序 时间小的在前面。特别地，置顶帖子优先
             else if (this.activeLabel === 2) {
                 list.sort((a, b) => {
-                    if((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)){
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
                         return (a.date < b.date) ? -1 : 1
                     }
-                    else{
+                    else {
                         return a.isTopped ? -1 : 1
                     }
                 })
@@ -111,8 +111,9 @@ export default {
     justify-items: flex-start;
     margin: 10px;
 }
+
 /* 滚动至顶部 */
-.post-likefav-scrollbutton{
+.post-likefav-scrollbutton {
     position: fixed;
     bottom: 150px;
     right: 20px;

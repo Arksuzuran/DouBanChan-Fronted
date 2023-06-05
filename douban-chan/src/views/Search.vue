@@ -29,8 +29,8 @@
     --input-border-color: #808080;
     --input-border-hover-color: #999999;
     --input-bg-color: #333333;
-    --search-max-width: 250px;
-    --search-min-width: 150px;
+    --search-max-width: 400px;
+    --search-min-width: 300px;
     --border-radius: 5px;
     --transition-cubic-bezier: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
