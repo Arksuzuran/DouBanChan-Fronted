@@ -10,14 +10,18 @@
 
 <script>
 export default {
-    props:['info'],
+    props: ['info'],
     name: 'PostReportButton',
     methods: {
         // 跳转至相应话题
         jumpToTopic() {
-            // this.$router.push({
-            //         name: 'groupPostList',
-            // })
+            this.$router.push({
+                name: 'topicPost',
+                params: {
+                    topicId: this.info.topicId,
+                    postId: this.info.postId,
+                },
+            })
         },
         // 鼠标进入和离开按钮的动画
         mouseenterTopicButton() {
@@ -41,7 +45,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* 话题按钮 */
 .postcard-button-topic {
     /* 尺寸 */
@@ -60,6 +63,7 @@ export default {
     /* 手型 */
     cursor: pointer;
 }
+
 .postcard-button-topic:hover {
     background-color: rgba(155, 190, 252, 1);
 }

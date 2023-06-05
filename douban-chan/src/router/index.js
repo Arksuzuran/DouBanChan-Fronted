@@ -27,7 +27,12 @@ import GroupPostList from "../views/Group/GroupPostList.vue";
 //帖子
 import Post from "../views/Post/Post.vue";
 import reviewView from "../views/Review/ReviewView.vue";
-//写影评
+//话题
+import TopicHomePostGroupList from '../views/Topic/TopicHomePostGroupList.vue';
+import TopicHomeTopicSquare from '../views/Topic/TopicHomeTopicSquare.vue';
+import TopicHomeTodaysHot from '../views/Topic/TopicHomeTodaysHot.vue';
+import TopicPage from '../views/Topic/TopicPage.vue';
+import TopicPostList from '../views/Topic/TopicPostList.vue';//写影评
 import WriteReview from "../views/Review/WriteReview.vue"
 
 Vue.use(VueRouter);
@@ -48,8 +53,42 @@ const routes = [
   //话题版块主页
   {
     path: "/topicHome",
-    name: "topicHome",
     component: TopicHomeView,
+    children: [
+      //默认的二级路由 帖子小组列表
+      {
+        path: '',
+        name: "topicHome",
+        component: TopicHomePostGroupList,
+      },
+      //话题广场
+      {
+        path:'/topicHome/topicSquare',
+        name:'topicSquare',
+        component: TopicHomeTopicSquare
+      },
+      //热榜
+      {
+        path:'/topicHome/todaysHot',
+        name:'todaysHot',
+        component: TopicHomeTodaysHot
+      },
+    ]
+  },
+  //某话题的主页
+  {
+    path: "/topic",
+    name: "topic",
+    component: TopicPage,
+    children: [
+      // 帖子的页面
+      {
+        path:'/topic/post',
+        name:'topicPost',
+        component: Post
+      },
+      //
+    ]
   },
   //小组版块主页
   {
@@ -101,7 +140,18 @@ const routes = [
         name:'groupPost',
         component: Post
       },
-      //
+      //groupTopicList
+      {
+        path:'/group/postList',
+        name:'groupTopicList',
+        component: TopicHomeTopicSquare
+      },
+      // 成员列表页面
+      // {
+      //   path:'/group/memberList',
+      //   name:'groupMemberList',
+      //   component: TopicHomeTopicSquare
+      // },
     ]
   },
   //影视详情页面
@@ -186,6 +236,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
+  scrollBehavior: () => ({ y: 0 }), //自动滚动到顶端
   routes,
 });
 

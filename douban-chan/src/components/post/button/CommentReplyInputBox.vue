@@ -4,7 +4,7 @@
     <!-- 底部的回复框 -->
     <div class="reply-input-container" v-if="isLogin">
         <img :src="userImgUrl" class="reply-user-img">
-        <textarea v-model="text" :placeholder="inputPlaceholder" rows="6"></textarea>
+        <textarea v-model="text" :placeholder="replyHeaderStr" rows="6"></textarea>
         <div class="reply-button" @click="submit">
             发表
         </div>
@@ -13,8 +13,9 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { nanoid } from 'nanoid'
 export default {
-    props: ['textId', 'targetUserName'],
+    props: ['textId', 'targetUserName', 'floor2'],
     name: 'CommentReplyButton',
     data() {
         return {
@@ -26,11 +27,13 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
-        inputPlaceholder() {
-            return '回复@' + this.targetUserName + '： '
+        replyHeaderStr() {
+            return '回复 @' + this.targetUserName + '：  '
         }
     },
     methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         handleFocus() {
             this.isFocused = true;
         },
@@ -40,7 +43,7 @@ export default {
         // 提交
         submit() {
             let newReply = {
-                textId: 1001,
+                textId: nanoid(),
                 userId: this.userId,
                 userName: this.userName,
                 userImageUrl: this.userImgUrl,
@@ -48,12 +51,19 @@ export default {
                 text: this.text,
                 like: 0,
                 dislike: 0,
+                userLike: false,
+                userDislike: false,
             }
+            // 回复楼中楼 额外字符串
+            if (this.floor2) {
+                newReply.text = this.replyHeaderStr + newReply.text
+            }
+            this.replyTextOnline(this.textId, newReply)
 
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
-            this.$bus.$emit('commentReplyCreated', newReply, this.textId);
+            this.$bus.$emit('commentReplyCreated', this.textId);
 
-            console.log('用户回复楼层，文本：', this.text);
+            console.log('用户回复楼层', newReply);
             this.text = ''
         },
         // 获取当前时间
@@ -97,8 +107,9 @@ export default {
 
     display: flex;
     align-items: center;
-    justify-content: flex-start
-        /* z-index: 10; */
+    justify-content: flex-start;
+    /* z-index: 10; */
+    animation: slide-down 0.5s ease;
 }
 
 .reply-user-img {
@@ -146,5 +157,17 @@ textarea:focus {
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>

@@ -24,10 +24,10 @@
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" placeholder="请选择话题"
-                                @select="handleSelect" style="width: 100%;"></el-autocomplete>
+                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync"
+                                :placeholder="topicPlaceHolder" @select="handleSelect" style="width: 100%;"
+                                :disabled="topicLocked"></el-autocomplete>
                         </el-form-item>
-
 
                         <!-- 正文输入框 -->
                         <el-form-item label="帖子正文" :label-width="formLabelWidth">
@@ -36,7 +36,7 @@
                             </el-input>
                         </el-form-item>
 
-                        <el-form-item label="上传帖子图片" :label-width="formLabelWidth">
+                        <el-form-item label="上传帖子图片" :label-width="formLabelWidth + 80">
                             <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
                         </el-form-item>
                     </el-form>
@@ -47,8 +47,6 @@
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 上传图片 -->
-                    
-
                     <!-- <template>
                         <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
                             :on-change="handleUpload" :on-success="handleUpload" :file-list="fileList" :limit="9"
@@ -101,19 +99,19 @@
 
 <script>
 import PictureChooser from './PictureChooser.vue'
-
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 
 export default {
+    props: ['groupInfo', 'topicInfo'],
     name: 'PostCreateBar',
-    components:{
+    components: {
         PictureChooser,
     },
     data() {
         return {
-            
+
             // 控制是否打开发帖表单
             dialog: false,
             // 控制是否正在提交数据
@@ -122,6 +120,7 @@ export default {
             form: {
                 title: '',
                 topic: '',
+                topicId: '',
                 imgUrlList: [],
                 text: '',
             },
@@ -132,7 +131,7 @@ export default {
             topicList: [],
             timeout: null,
 
-            
+
             // 图片的list
             fileList: [],
             // // 图片发送相关
@@ -148,8 +147,22 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        topicLocked() {
+            return this.topicInfo ? true : false
+        },
+        topicPlaceHolder() {
+            return this.topicInfo ? this.topicInfo.topicName : '请选择话题'
+        },
+        groupId1() {
+            return this.groupInfo ? this.groupInfo.groupId : ''
+        },
+        groupName1() {
+            return this.groupInfo ? this.groupInfo.groupName : ''
+        },
     },
     methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 点击我要发帖按钮
         handleStartPost() {
             this.dialog = true
@@ -191,7 +204,8 @@ export default {
                 title: this.form.title,
                 text: this.form.text,
                 postImageUrlList: this.form.imgUrlList,
-                topic: this.form.topic,
+                topic: this.form.topicName,
+                topicId: this.form.topicId, //帖子所属的话题的id
                 visits: 1,
                 fav: 0,
                 comments: 0,
@@ -199,9 +213,42 @@ export default {
                 dislike: 0,
                 isTopped: false,
                 isGoodPost: false,
+                userIsAdmin: false, //当前用户是否是帖子所属小组的管理员
+                userIsLz: true, //当前用户是否是发帖人
+                userLike: false,
+                userDislike: false,
+                userFav: false,
+                //如果该小组不来自于一个小组 那么下面的字段均填 ''
+                groupName: this.groupName1, //来自的小组的名称
+                groupId: this.groupId1,
+                floorList: [
+                    {
+                        textId: 'f001',
+                        floor: 1,
+                        userId: this.userId,
+                        userName: this.userName,
+                        userImageUrl: this.userImgUrl,
+                        date: this.getTimeNow(),
+                        text: this.form.text,
+                        imageUrlList: this.form.text,
+                        comments: 0,
+                        like: 0,
+                        dislike: 0,
+                        userLike: false,
+                        userDislike: false,
+                        childFloorList: [],
+                    }
+                ]
             };
+            if (this.topicInfo) {
+                this.createTopicPostOnline(newPost)
+            }
+            else {
+                this.createTopicPostOnline(newPost)
+            }
+            console.log('用户发帖',newPost)
             // 通过事件总线触发自定义事件，并传递新帖子作为参数
-            this.$bus.$emit('postCreated', newPost);
+            // this.$bus.$emit('postCreated', newPost);
             // 清空内容
             this.fileList = []
             this.form.title = ''
@@ -213,54 +260,15 @@ export default {
         //加载全部话题
         loadAll() {
             return [
-                { "value": "三全鲜食（北新泾店）", "address": "长宁区新渔路144号" },
-                { "value": "Hot honey 首尔炸鸡（仙霞路）", "address": "上海市长宁区淞虹路661号" },
-                { "value": "新旺角茶餐厅", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-                { "value": "泷千家(天山西路店)", "address": "天山西路438号" },
-                { "value": "胖仙女纸杯蛋糕（上海凌空店）", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-                { "value": "贡茶", "address": "上海市长宁区金钟路633号" },
-                { "value": "豪大大香鸡排超级奶爸", "address": "上海市嘉定区曹安公路曹安路1685号" },
-                { "value": "茶芝兰（奶茶，手抓饼）", "address": "上海市普陀区同普路1435号" },
-                { "value": "十二泷町", "address": "上海市北翟路1444弄81号B幢-107" },
-                { "value": "星移浓缩咖啡", "address": "上海市嘉定区新郁路817号" },
-                { "value": "阿姨奶茶/豪大大", "address": "嘉定区曹安路1611号" },
-                { "value": "新麦甜四季甜品炸鸡", "address": "嘉定区曹安公路2383弄55号" },
-                { "value": "Monica摩托主题咖啡店", "address": "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F" },
-                { "value": "浮生若茶（凌空soho店）", "address": "上海长宁区金钟路968号9号楼地下一层" },
-                { "value": "NONO JUICE  鲜榨果汁", "address": "上海市长宁区天山西路119号" },
-                { "value": "CoCo都可(北新泾店）", "address": "上海市长宁区仙霞西路" },
-                { "value": "快乐柠檬（神州智慧店）", "address": "上海市长宁区天山西路567号1层R117号店铺" },
-                { "value": "Merci Paul cafe", "address": "上海市普陀区光复西路丹巴路28弄6号楼819" },
-                { "value": "猫山王（西郊百联店）", "address": "上海市长宁区仙霞西路88号第一层G05-F01-1-306" },
-                { "value": "枪会山", "address": "上海市普陀区棕榈路" },
-                { "value": "纵食", "address": "元丰天山花园(东门) 双流路267号" },
-                { "value": "钱记", "address": "上海市长宁区天山西路" },
-                { "value": "壹杯加", "address": "上海市长宁区通协路" },
-                { "value": "唦哇嘀咖", "address": "上海市长宁区新泾镇金钟路999号2幢（B幢）第01层第1-02A单元" },
-                { "value": "爱茜茜里(西郊百联)", "address": "长宁区仙霞西路88号1305室" },
-                { "value": "爱茜茜里(近铁广场)", "address": "上海市普陀区真北路818号近铁城市广场北区地下二楼N-B2-O2-C商铺" },
-                { "value": "鲜果榨汁（金沙江路和美广店）", "address": "普陀区金沙江路2239号金沙和美广场B1-10-6" },
-                { "value": "开心丽果（缤谷店）", "address": "上海市长宁区威宁路天山路341号" },
-                { "value": "超级鸡车（丰庄路店）", "address": "上海市嘉定区丰庄路240号" },
-                { "value": "妙生活果园（北新泾店）", "address": "长宁区新渔路144号" },
-                { "value": "香宜度麻辣香锅", "address": "长宁区淞虹路148号" },
-                { "value": "凡仔汉堡（老真北路店）", "address": "上海市普陀区老真北路160号" },
-                { "value": "港式小铺", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                { "value": "蜀香源麻辣香锅（剑河路店）", "address": "剑河路443-1" },
-                { "value": "北京饺子馆", "address": "长宁区北新泾街道天山西路490-1号" },
-                { "value": "饭典*新简餐（凌空SOHO店）", "address": "上海市长宁区金钟路968号9号楼地下一层9-83室" },
-                { "value": "焦耳·川式快餐（金钟路店）", "address": "上海市金钟路633号地下一层甲部" },
-                { "value": "动力鸡车", "address": "长宁区仙霞西路299弄3号101B" },
-                { "value": "浏阳蒸菜", "address": "天山西路430号" },
-                { "value": "四海游龙（天山西路店）", "address": "上海市长宁区天山西路" },
-                { "value": "樱花食堂（凌空店）", "address": "上海市长宁区金钟路968号15楼15-105室" },
-                { "value": "壹分米客家传统调制米粉(天山店)", "address": "天山西路428号" },
-                { "value": "福荣祥烧腊（平溪路店）", "address": "上海市长宁区协和路福泉路255弄57-73号" },
-                { "value": "速记黄焖鸡米饭", "address": "上海市长宁区北新泾街道金钟路180号1层01号摊位" },
-                { "value": "红辣椒麻辣烫", "address": "上海市长宁区天山西路492号" },
-                { "value": "(小杨生煎)西郊百联餐厅", "address": "长宁区仙霞西路88号百联2楼" },
-                { "value": "阳阳麻辣烫", "address": "天山西路389号" },
-                { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
+                { "value": "三全鲜食（北新泾店）", "topicId": "长宁区新渔路144号" },
+                { "value": "Hot honey 首尔炸鸡（仙霞路）", "topicId": "上海市长宁区淞虹路661号" },
+                { "value": "新旺角茶餐厅", "topicId": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
+                { "value": "泷千家(天山西路店)", "topicId": "天山西路438号" },
+                { "value": "胖仙女纸杯蛋糕（上海凌空店）", "topicId": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
+                { "value": "贡茶", "topicId": "上海市长宁区金钟路633号" },
+                { "value": "豪大大香鸡排超级奶爸", "topicId": "上海市嘉定区曹安公路曹安路1685号" },
+                { "value": "茶芝兰（奶茶，手抓饼）", "topicId": "上海市普陀区同普路1435号" },
+                { "value": "十二泷町", "topicId": "上海市北翟路1444弄81号B幢-107" },
             ];
         },
         //从服务器按照输入的queryString搜索话题
@@ -281,8 +289,9 @@ export default {
         },
         // 选中某话题时
         handleSelect(item) {
-            this.form.topic = item.value
-            console.log(item.value);
+            this.form.topicName = item.value
+            this.form.topicId = item.topicId
+            console.log(item.topicId);
         },
         // 获取当前时间
         getTimeNow() {
@@ -382,7 +391,13 @@ export default {
         // }
     },
     mounted() {
+        console.log(this.topicInfo)
         this.topicList = this.loadAll();
+
+        if (this.topicInfo) {
+            this.form.topicName = this.topicInfo.value
+            this.form.topicId = this.topicInfo.topicId
+        }
     },
 }
 </script>
@@ -467,4 +482,5 @@ export default {
     background-color: rgb(255, 56, 56);
     color: rgb(255, 255, 255);
     cursor: pointer;
-}</style>
+}
+</style>

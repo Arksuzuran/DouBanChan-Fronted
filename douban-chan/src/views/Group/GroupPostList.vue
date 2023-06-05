@@ -9,16 +9,8 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :from="'g'" :notShowFromGroup="true" />
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"/>
         </div>
-
-        <!-- 发帖上拉框 -->
-        <div v-if="isLogin">
-            <PostCreateBar></PostCreateBar>
-        </div>
-
-        <!-- 滚动至顶部 -->
-        <ScrollToTopButton class="post-likefav-scrollbutton"></ScrollToTopButton>
     </div>
 </template>
 
@@ -117,5 +109,9 @@ export default {
     position: fixed;
     bottom: 150px;
     right: 20px;
+}
+
+.postlist-container{
+    margin: 0 30px;
 }
 </style>

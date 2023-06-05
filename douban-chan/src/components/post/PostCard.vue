@@ -6,7 +6,7 @@
             <span class="postcard-label">置顶</span>
         </div>
         <!-- 加精标记 -->
-        <div class="postcard-quality-label" v-if="info.isGoodPost">
+        <div class="postcard-quality-label" v-if="info.isGoodPost && !notShowGood">
             <i class="el-icon-medal" style="font-size: 20px;"></i>
             <span class="postcard-label">精华</span>
         </div>
@@ -14,11 +14,12 @@
         <div class="postcard-main-container">
 
             <!-- 发帖人头像 昵称 时间 -->
-            <PostCardUserInfo class="postcard-userinfo-container" :info="lzInfo" :from="from" />
+            <PostCardUserInfo class="postcard-userinfo-container" :info="lzInfo" />
 
             <!-- 来自小组 和 举报按钮 -->
-            <div class="postcard-buttongroup">
-                <PostTopicButton :info="{ topic: info.topic }"></PostTopicButton>
+            <div class="postcard-buttongroup"> 
+                <PostTopicButton :info="info"></PostTopicButton>
+                <PostOperateButton :info="info"  v-if="info.userIsAdmin || info.userIsLz"></PostOperateButton>
                 <PostReportButton></PostReportButton>
             </div>
 
@@ -30,25 +31,21 @@
                     <div class="postcard-likeNumberBox-likenumber">{{ likeNumber }}</div>
                 </div>
                 <!-- 来自某某小组 -->
-                <div class="postcard-groupFromBox" v-if="!notShowFromGroup && info.group != ''">
+                <div class="postcard-groupFromBox" v-if="showGroupFromBox" @click="jumpToGroup">
                     <div class="postcard-likeNumberBox-like">来自</div>
-                    <div class="postcard-likeNumberBox-likenumber">{{ info.group + '小组' }}</div>
+                    <div class="postcard-likeNumberBox-likenumber">{{ info.groupName + '小组' }}</div>
                 </div>
                 <!-- 帖子正文 -->
-                <PostCardText class="postcard-maintext" :info="info" :from="from" />
+                <PostCardText class="postcard-maintext" :info="info" />
             </div>
 
             <!-- 收藏 评论 点赞 点踩 -->
             <div class="postcard-dataicon-group" v-if="!notShowIcongroup">
-                <!-- <div class="postcard-dataicon-wrapper">
-                    <i class="fa-sharp fa-solid fa-eye postcard-icon"></i>
-                    <span class="postcard-data-font">{{ info.visits }}</span>
-                </div> -->
                 <div class="postcard-dataicon-wrapper" @click="handleFav">
                     <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
                     <span class="postcard-data-font">{{ favNumber }}</span>
                 </div>
-                <div class="postcard-dataicon-wrapper" @click="handleComment">
+                <div class="postcard-dataicon-wrapper">
                     <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
                     <span class="postcard-data-font">{{ commentNumber }}</span>
                 </div>
@@ -71,9 +68,10 @@ import PostCardText from './PostCardText.vue';
 import PostCardUserInfo from './PostCardUserInfo.vue';
 import PostReportButton from './button/PostReportButton.vue';
 import PostTopicButton from './button/PostTopicButton.vue';
+import PostOperateButton from './button/PostOperateButton.vue';
 
 export default {
-    props: ['info', 'from', 'notShowTopped', 'notShowIcongroup', 'notShowFromGroup'],
+    props: ['info', 'notShowTopped', 'notShowGood', 'notShowIcongroup', 'notShowFromGroup'],
     data() {
         return {
             // 要传递给PostCardUserInfo组件的信息
@@ -98,6 +96,12 @@ export default {
         PostCardUserInfo,
         PostTopicButton,
         PostReportButton,
+        PostOperateButton,
+    },
+    computed:{
+        showGroupFromBox(){
+            return !this.notShowFromGroup && this.info.groupName
+        },
     },
     methods: {
         // 限制字符串长度为length
@@ -210,6 +214,14 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
+        jumpToGroup(){
+            this.$router.push({
+                name:'group',
+                params:{
+                    groupId: this.info.groupId
+                },
+            })
+        },
     },
     mounted() {
         // this.favNumber = this.info.fav
@@ -279,6 +291,7 @@ export default {
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
 
+    cursor: pointer;
 }
 
 .postcard-likeNumberBox-like {
@@ -326,8 +339,7 @@ export default {
 .postcard-dataicon-group {
     margin: 0 auto;
     width: 85%;
-    height: 40px;
-    padding-bottom: 10px;
+    height: 38px;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -337,7 +349,7 @@ export default {
 /* 图标的颜色 */
 .postcard-icon {
     font-size: 22px;
-    color: rgb(97, 97, 97);
+    color: rgb(97, 97, 97, 0.8);
     margin: 15px;
     cursor: pointer;
 }
@@ -359,14 +371,19 @@ export default {
 }
 
 .postcard-dataicon-wrapper {
-    margin-bottom: 10px;
+    height: 30px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .postcard-data-font {
     margin-bottom: 3px;
     font-size: 16px;
     font-weight: 500;
-    color: rgb(35, 35, 35);
+    color: rgb(97, 97, 97, 0.8);
 }
 
 /* 按钮组 */

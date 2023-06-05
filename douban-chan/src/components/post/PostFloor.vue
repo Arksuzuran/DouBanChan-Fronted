@@ -18,7 +18,7 @@
                 <div class="postfloor-LZBox-LZ">楼主</div>
             </div>
             <!-- 帖子正文 -->
-            <PostCardText class="postfloor-maintext" :info="textInfo" />
+            <PostCardText class="postfloor-maintext" :info="textInfo" :normal="true"/>
 
             <!-- 赞与踩 回复按钮-->
             <div class="postfloor-like-container">
@@ -83,7 +83,7 @@ export default {
             // 用户是否正在回复评论
             isReplying: false,
             // 允许直接展示的最多楼中楼层数
-            maxCommentsNum: 1,
+            maxCommentsNum: 2,
         }
     },
     computed: {
@@ -153,7 +153,11 @@ export default {
         // },
     },
     mounted() {
-
+        this.$bus.$on('commentReplyCreated', (textId) => {
+            if(textId == this.info.textId){
+                this.isReplying = !this.isReplying
+            }
+        })
     },
 }
 </script>

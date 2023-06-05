@@ -18,11 +18,11 @@
     <div class="grouphome-main-container">
       <!-- 左部推荐的帖子 -->
       <div class="grouphome-left-container">
-        <GroupHomePostList :postList="inPostList"></GroupHomePostList>
+        <GroupHomePostList :postList="postList"></GroupHomePostList>
       </div>
       <!-- 右部值得加入的小组 -->
       <div class="grouphome-right-container">
-        <GroupList :groupList="inGroupList" :usersOwnGroup="usersGrouplabelChoosen"></GroupList>
+        <GroupList :groupList="groupList" :title="groupListComponentsTitle"></GroupList>
       </div>
     </div>
 
@@ -33,7 +33,7 @@
     <ScrollToTopButton class="group-likefav-scrollbutton"></ScrollToTopButton>
   </div>
 </template>
-  
+
 <script>
 
 import GroupHomePostList from './GroupHomePostList.vue'
@@ -59,21 +59,22 @@ export default {
     return {
       // 顶部筛选标签
       activeHeaderLabel: 0,
+      tag: '',
       // 按钮展示信息
       buttons: [
-        { id: 0, label: '精选' },
-        { id: 1, label: '生活' },
-        { id: 2, label: '文化', },
-        { id: 3, label: '影视' },
-        { id: 4, label: '图书' },
-        { id: 5, label: '游戏' },
-        { id: 6, label: '我的小组' },
+        { id: 0, label: '精选', tag: '' },
+        { id: 1, label: '生活', tag: '生活' },
+        { id: 2, label: '文化', tag: '文化' },
+        { id: 3, label: '影视', tag: '影视' },
+        { id: 4, label: '图书', tag: '图书' },
+        { id: 5, label: '学习', tag: '学习' },
+        { id: 6, label: '美食', tag: '美食' },
+        { id: 7, label: '摄影', tag: '摄影' },
+        { id: 8, label: '时尚', tag: '时尚' },
+        { id: 9, label: '游戏', tag: '游戏' },
+        { id: 10, label: '二刺螈', tag: '二刺螈' },
+        { id: 11, label: '我的话题', tag: '我的话题' },
       ],
-
-      // 帖子列表
-      postList: [],
-      // 小组列表
-      groupList: [],
     }
   },
   methods: {
@@ -89,7 +90,17 @@ export default {
       else {
         this.activeHeaderLabel = index
       }
+      this.tag = this.buttons[index].tag
+      this.updateData()
     },
+
+    //重要！
+    // 根据当前导航栏选择状态来更新数据
+    updateData() {
+      this.getPostListOnline(this.tag)
+      this.getGroupListOnline(this.tag)
+    },
+
     // 更新被选中标签的属性
     getActiveButtonClass(index) {
       if (this.activeHeaderLabel === index) {
@@ -97,232 +108,35 @@ export default {
       }
       return ''
     },
-    // 返回精华帖列表
-    getGoodPostList() {
-      let goodPostList = []
-      for (let post of this.postList) {
-        if (post.isGoodPost) {
-          goodPostList.push(post)
-        }
-      }
-      return goodPostList
-    },
-
-    // 在此与后端交互
-    // 在此与后端交互
-    // 在此与后端交互
-
-    // 命名规则：与后端交互相关的函数都带有Online
-    // 获得帖子列表postLIst
-    getPostListOnline() {
-      return [
-        {
-          postId: 'p001',
-          lzId: '004',
-          lzName: "bochi",
-          lzImageUrl: require('../../assets/user-image-7.jpg'),
-          date: '2023-5-19 23:57',
-          title: "我发游戏，你来打分",
-          text: "0狗都不玩 1乏善可陈 2中规中矩 3值得一试 4不可多得的佳作 5神中神",
-          postImageUrlList: [require('../../assets/group-img-3.png'),
-          require('../../assets/group-img-4.png'),
-          require('../../assets/group-img-5.jpg')],
-          topic: '游戏',
-          visits: 946126,
-          fav: 15612,
-          comments: 1692,
-          like: 214512,
-          dislike: 456,
-          isTopped: true,
-          isGoodPost: false,
-          group: 'Game' //来自的小组
-        },
-        {
-          postId: 'p002',
-          lzId: '001',
-          lzName: "羽毛笔",
-          lzImageUrl: require('../../assets/user-image-1.jpg'),
-          date: '2023-5-19 23:11',
-          title: "理性讨论 软件工程基础和OS哪一个更精品",
-          text: "压到真题了，主人奴隶问题：三个主人十个奴隶，在交易市场，主人可以通过窗口写入购买协议，奴隶可以查阅，请完成该问题的同步与互斥问题（基于异性主人奴隶问题的简化，无需性别互斥）",
-          postImageUrlList: [require('../../assets/user-bg-3.jpg'), require('../../assets/group-img-2.jpg'),],
-          topic: 'BUAA',
-          visits: 5959261,
-          fav: 20200,
-          comments: 692,
-          like: 59412,
-          dislike: 59,
-          isTopped: false,
-          isGoodPost: true,
-          group: '北京航空航天大学' //来自的小组
-        },
-        {
-          lzId: '002',
-          lzName: "Chino",
-          lzImageUrl: require('../../assets/user-image-8.jpg'),
-          date: '2023-5-02 22:47',
-          title: "黑坤巴精神",
-          text: "回来吧科比黑曼巴，我最骄傲的信仰，历历在目的球场，眼泪莫名在流淌，🤙依稀记得24🤙，🧟还有给力的八号🧟，把对手全都给打退，🚁就算坠机也不死🚁",
-          postImageUrlList: [require('../../assets/group-img-6.jpg'), require('../../assets/group-img-7.jpg')],
-          topic: '科比',
-          visits: 59515,
-          fav: 642,
-          comments: 41,
-          like: 595,
-          dislike: 0,
-          isTopped: false,
-          isGoodPost: false,
-          group: '牢大'       //来自的小组
-        },
-      ]
-    },
-
-    // 命名规则：与后端交互相关的函数都带有Online
-    // 获得小组列表groupLIst
-    getGroupListOnline() {
-      return [
-        {
-          groupId: 'g001',
-          groupHeadBgUrl: require('../../assets/user-image-7.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-1.jpg'),
-          groupName: "集美小组集美小组集美小组",
-          groupIntro: "家人们谁懂啊，咱就是说一整个无语住了，一把子大动作给到了，今天又是在逃公主的一天，九敏九敏真的太好哭了吧，下头男",
-          tagList: ['生活', '文化'],
-          groupPostNumber: 321,
-          groupFollowNumber: 594,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-        {
-          groupId: 'g002',
-          groupHeadBgUrl: require('../../assets/user-bg-4.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-2.jpg'),
-          groupName: "coding小组",
-          groupIntro: "编程爱好者聚集地",
-          tagList: ['生活', '游戏', '文化'],
-          groupPostNumber: 597,
-          groupFollowNumber: 792,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: false,
-            },
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-        {
-          groupId: 'g003',
-          groupHeadBgUrl: require('../../assets/group-img-8.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-3.jpg'),
-          groupName: "蔚蓝档案小组",
-          groupIntro: "联邦理事会宣布对此事件负责",
-          tagList: ['游戏'],
-          groupPostNumber: 1367,
-          groupFollowNumber: 59521,
-          memberList: [
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-      ]
-    },
+    //获取帖子列表
+    ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+    //获取小组列表    
+    ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
   },
   computed: {
-    // 要传递的小组列表
-    inGroupList() {
-      // 筛选我的小组
-      // 该功能应该由后端实现 此处只是假筛选
-      if (this.activeHeaderLabel == 6) {
-        let list = []
-        for (let group of this.groupList) {
-          for (let member of group.memberList) {
-            if (member.userId === this.userId) {
-              list.push(group)
-              break
-            }
-          }
-        }
-        return list
-      }
-      else {
-        return this.groupList
-      }
-    },
-
-
-    //要传递的帖子列表
-    inPostList() {
-      if (this.activeHeaderLabel == 0) {
-        return this.postList.slice()
-      }
-      else if (this.activeHeaderLabel == 1) {
-        return this.getGoodPostList()
-      }
-      return []
-    },
-    // 用户是否选中了'我的小组'
-    // 用户是否选择‘我的小组’标签
+    // 根据用户是否选中了'我的小组' 来决定groupList组件的标题
     // 这里姑且以字符串来比较 因为后面大概率改id顺序
-    usersGrouplabelChoosen() {
-      return this.buttons[this.activeHeaderLabel].label == '我的小组'
+    groupListComponentsTitle() {
+      return this.buttons[this.activeHeaderLabel].label == '我的小组' ? '我加入的小组' : '值得浏览的小组'
     },
 
     //头像路径与用户名
     //引入vuex的userAbout模块里的 state变量
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    ...mapGetters('postAbout', ['postList']),
+    ...mapGetters('groupAbout', ['groupList']),
   },
 
   mounted() {
     // 获取数据
-    this.postList = this.getPostListOnline()
-    this.groupList = this.getGroupListOnline()
+    this.updateData()
 
     // 监听GroupCreateBar的创建小组事件，在事件回调中将新小组添加到列表
     this.$bus.$on('groupCreated', (newGroup) => {
-      this.groupList.push(newGroup);
+      // this.groupList.push(newGroup);
       console.log('用户创建小组成功：', newGroup)
     });
+    console.log(this.groupList)
   },
 
 }
@@ -350,6 +164,7 @@ export default {
 
 .grouphome-right-container {
   flex: 1;
+  margin: 0 35px;
 }
 
 
@@ -371,7 +186,7 @@ export default {
 
 /* 顶部二级导航栏容器 */
 .grouphome-header-container {
-  padding: 0 11%;
+  padding: 0 9%;
   position: sticky;
   top: 65px;
   z-index: 11;
@@ -387,7 +202,7 @@ export default {
 
 /* 页面顶栏处标题 */
 .grouphome-header-title {
-  margin: 0 40px;
+  margin: 0 30px;
   font-size: 36px;
   font-weight: 700;
   color: rgba(255, 133, 133, 0.9);
@@ -398,12 +213,12 @@ export default {
 /* === removing default button style ===*/
 /* 按钮基本样式 */
 .grouphome-header-btn {
-  margin: 0 10px;
+  margin: 0 8px;
 
   font-size: 18px;
   background: transparent;
   border: none;
-  padding: 12px 18px;
+  padding: 10px 14px;
   color: rgba(255, 133, 133, 0.9);
   text-transform: uppercase;
   position: relative;

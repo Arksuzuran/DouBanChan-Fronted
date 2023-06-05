@@ -5,36 +5,38 @@
             <!-- 小组简介头栏 -->
             <div class="group-header-container">
                 <!-- 背景头图 -->
-                <img :src="groupHeadBgUrl" class="header-background-image" />
+                <img :src="groupInfo.groupHeadBgUrl" class="header-background-image" />
 
                 <!-- 小组头像 -->
-                <img :src="groupAvatarImgUrl" class="group-header-avatar" />
+                <img :src="groupInfo.groupAvatarImgUrl" class="group-header-avatar" />
 
                 <!-- 小组名称 -->
                 <div class="group-header-name header-blur-container">
-                    {{ groupName }}
+                    {{ groupInfo.groupName }}
                 </div>
 
                 <!-- 小组下部信息 -->
                 <div class="group-header-intro-container header-blur-container"></div>
                 <!-- 小组简介 -->
                 <div class="group-header-intro header-blur-container">
-                    <div class="group-header-introbox">{{ groupIntro }}</div>
+                    <div class="group-header-introbox">{{ groupInfo.groupIntro }}</div>
                 </div>
 
                 <!-- 小组帖子数 -->
                 <div class="group-header-postn header-blur-container">
-                    {{ '帖子 | ' + groupPostNumber }}
+                    {{ '帖子 | ' + groupInfo.groupPostNumber }}
                 </div>
                 <!-- 小组关注数 -->
                 <div class="group-header-follown header-blur-container">
-                    {{ '关注 | ' + groupFollowNumber }}
+                    {{ '关注 | ' + groupInfo.groupFollowNumber }}
                 </div>
 
                 <!-- 小组右侧关注按钮和申请管理员按钮 -->
                 <div class="group-header-button-group">
-                    <button :class="joinButtonClass" @click="joinGroup">{{ userJoined ? '退出' : '关注' }}</button>
-                    <button :class="applyButtonClass" @click="applyForAdmin">{{ userIsAdmin ? '解除管理员' : '申请管理员' }}</button>
+                    <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出小组' : '加入小组'
+                    }}</button>
+                    <button :class="applyButtonClass" @click="applyForAdmin">{{ groupInfo.userIsAdmin ? '解除管理员' : '申请管理员'
+                    }}</button>
                 </div>
             </div>
 
@@ -44,108 +46,95 @@
                 <el-menu-item index="groupPostList">看帖</el-menu-item>
                 <el-menu-item index="groupGoodPostList">精华</el-menu-item>
                 <el-menu-item index="groupTopicList">小组话题</el-menu-item>
-                <el-menu-item index="groupIntro">小组简介</el-menu-item>
+                <!-- <el-menu-item index="groupMemberList">小组成员</el-menu-item> -->
             </el-menu>
 
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="group-content-container">
-                <router-view :postList="inPostList"></router-view>
+                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题"></router-view>
             </div>
         </div>
+        <!-- 发帖上拉框 -->
+        <div v-if="isLogin && showPostCreateBar">
+            <PostCreateBar :groupInfo="groupInfo"></PostCreateBar>
+        </div>
+
+        <!-- 滚动至顶部 -->
+        <ScrollToTopButton class="scrollbutton" v-if="showPostCreateBar"></ScrollToTopButton>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import PostCreateBar from '@/components/post/PostCreateBar.vue';
+import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
 
 export default {
     name: 'GroupPage',
     components: {
-
+        PostCreateBar,
+        ScrollToTopButton,
     },
     data() {
         return {
-            groupHeadBgUrl: require("../../assets/user-bg-2.jpg"),
-            groupAvatarImgUrl: require("../../assets/group-avatar-1.jpg"),
-            groupName: '我是小组名称',
-            groupIntro: '我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介。',
-            groupFollowNumber: 165949,
-            groupPostNumber: 49526148,
-            userJoined: false,
-            userIsAdmin: false,
             activeIndex: 'groupPostList',
-
-            // 帖子列表
-            // 帖子列表信息
-            postList: [
-                {
-                    postId: 'p001',
-                    lzId: '004',
-                    lzName: "bochi",
-                    lzImageUrl: require('../../assets/user-image-7.jpg'),
-                    date: '2023-5-19 23:57',
-                    title: "我发游戏，你来打分",
-                    text: "0狗都不玩 1勉强能玩 2中规中矩 3值得一试 4不可多得的佳作 5神中神",
-                    postImageUrlList: [require('../../assets/group-img-3.png'),
-                    require('../../assets/group-img-4.png'),
-                    require('../../assets/group-img-5.jpg')],
-                    topic: '游戏',
-                    visits: 946126,
-                    fav: 15612,
-                    comments: 1692,
-                    like: 214512,
-                    dislike: 456,
-                    isTopped: true,
-                    isGoodPost: false,
-                    group: 'Game' //来自的小组
-                },
-                {
-                    postId: 'p002',
-                    lzId: '001',
-                    lzName: "羽毛笔",
-                    lzImageUrl: require('../../assets/user-image-1.jpg'),
-                    date: '2023-5-19 23:11',
-                    title: "理性讨论 软件工程基础和OS哪一个更精品",
-                    text: "压到真题了，主人奴隶问题：三个主人十个奴隶，在交易市场，主人可以通过窗口写入购买协议，奴隶可以查阅，请完成该问题的同步与互斥问题（基于异性主人奴隶问题的简化，无需性别互斥）",
-                    postImageUrlList: [require('../../assets/user-bg-3.jpg'), require('../../assets/group-img-2.jpg'),],
-                    topic: 'BUAA',
-                    visits: 5959261,
-                    fav: 20200,
-                    comments: 692,
-                    like: 59412,
-                    dislike: 59,
-                    isTopped: false,
-                    isGoodPost: true,
-                    group: '北京航空航天大学' //来自的小组
-                },
-                {
-                    lzId: '002',
-                    lzName: "Chino",
-                    lzImageUrl: require('../../assets/user-image-8.jpg'),
-                    date: '2023-5-02 22:47',
-                    title: "黑坤巴精神",
-                    text: "回来吧科比黑曼巴，我最骄傲的信仰，历历在目的球场，眼泪莫名在流淌，🤙依稀记得24🤙，🧟还有给力的八号🧟，把对手全都给打退，🚁就算坠机也不死🚁",
-                    postImageUrlList: [require('../../assets/group-img-6.jpg'), require('../../assets/group-img-7.jpg')],
-                    topic: '科比',
-                    visits: 59515,
-                    fav: 642,
-                    comments: 41,
-                    like: 595,
-                    dislike: 0,
-                    isTopped: false,
-                    isGoodPost: false,
-                    group: '牢大'       //来自的小组
-                },
-            ],
         }
     },
     methods: {
         joinGroup() {
-            this.userJoined = !this.userJoined
+            if (!this.groupInfo.userInGroup) {
+                this.$confirm('是否确定加入小组?加入小组后即可在小组内发表帖子。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已成功加入小组!');
+                    this.groupInfo.userInGroup = !this.groupInfo.userInGroup
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            else{
+                this.$confirm('是否确定退出小组？您仍然可以再次加入该小组', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已退出小组');
+                    this.groupInfo.userInGroup = !this.groupInfo.userInGroup
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            
         },
         applyForAdmin() {
-            this.userIsAdmin = !this.userIsAdmin
+            if (!this.groupInfo.userIsAdmin) {
+                this.$confirm('是否确定申请小组管理员?您的申请需要等待小组管理员同意。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('请求已提交!');
+                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            else{
+                this.$confirm('是否确定卸任小组管理员?该操作无法撤回。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('操作成功');
+                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            
         },
         //选中二级导航栏
         handleSelect(index) {
@@ -154,6 +143,9 @@ export default {
             if (this.activeIndex == 'groupPostList') {
                 this.$router.push({
                     name: 'group',
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
             // 精华帖
@@ -161,14 +153,21 @@ export default {
                 console.log('试图访问精华帖，当前精华帖列表：', this.getGoodPostList())
                 this.$router.push({
                     name: 'group',
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
             else {
                 this.$router.push({
                     name: index,
+                    params: {
+                        groupId: this.groupInfo.groupId
+                    },
                 })
             }
         },
+
         // 返回精华帖列表
         getGoodPostList() {
             let goodPostList = []
@@ -178,18 +177,31 @@ export default {
                 }
             }
             return goodPostList
-        }
+        },
+        //获取话题列表
+        ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline']),
+        //获取帖子列表
+        ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+        //获取小组列表    
+        ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline', 'getGroupInfoOnline']),
     },
     computed: {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
 
+        ...mapGetters('postAbout', ['postList']),
+        ...mapGetters('topicAbout', ['topicList']),
+        ...mapGetters('groupAbout', ['groupInfo']),
+        showPostCreateBar(){
+            console.log(this.$route)
+            return this.$route.name == 'group' || this.$route.name == 'groupTopicList'
+        },
         joinButtonClass() {
-            return this.userJoined ? 'group-header-button-selected' : 'group-header-button-unselected';
+            return this.groupInfo.userJoined ? 'group-header-button-selected' : 'group-header-button-unselected';
         },
         applyButtonClass() {
-            return this.userIsAdmin ? 'group-header-button-selected' : 'group-header-button-unselected';
+            return this.groupInfo.userIsAdmin ? 'group-header-button-selected' : 'group-header-button-unselected';
         },
         //要传递的帖子列表
         inPostList() {
@@ -210,7 +222,13 @@ export default {
             this.postList.push(newPost);
             console.log('用户发帖成功：', newPost)
         });
-        console.log('GroupPage已挂载事件postCreated监听');
+
+        let id = this.$route.params.groupId
+        // 从后端获取数据
+        this.getPostListByGroupIdOnline(id)
+        this.getTopicListByGroupIdOnline(id)
+        this.getGroupInfoOnline(id)
+        console.log('已收到路由传递的小组id', id)
     },
 }
 </script>
@@ -304,7 +322,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     position: absolute;
-    width: 85%;
+    width: 88%;
     left: 190px;
     bottom: 12px;
     border-radius: 5px;
@@ -326,11 +344,12 @@ export default {
 .group-header-follown {
     /* 位置 */
     position: absolute;
-    right: 20px;
-    bottom: 21px;
+    right: 40px;
+    bottom: 20px;
     border-radius: 5px;
     /* 高度 */
-    height: 24px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -344,10 +363,11 @@ export default {
 /* 小组帖子数 */
 .group-header-postn {
     position: absolute;
-    right: 140px;
-    bottom: 21px;
+    right: 150px;
+    bottom: 20px;
     border-radius: 5px;
-    height: 24px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -367,14 +387,15 @@ export default {
 
     /* 在父元素的位置 */
     position: absolute;
-    right: 15px;
+    right: 26px;
     bottom: 100px;
     border-radius: 5px;
-    height: 24px;
+    height: 34px;
 }
 
 
 .group-header-button-selected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgb(254, 224, 224, 0.8);
     border: 2px solid rgba(252, 231, 231, 0.7);
@@ -383,14 +404,16 @@ export default {
     padding: 7px;
     margin: 10px;
     /* 字体 */
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     color: rgba(49, 49, 49, 0.9);
     /* 手型 */
     cursor: pointer;
+    transition: .5s ease;
 }
 
 .group-header-button-unselected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgba(252, 236, 236, 0.6);
     border: 2px solid rgba(252, 231, 231, 0.7);
@@ -399,11 +422,12 @@ export default {
     padding: 7px;
     margin: 10px;
     /* 字体 */
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     color: rgba(49, 49, 49, 0.9);
     /* 手型 */
     cursor: pointer;
+    transition: .5s ease;
 }
 
 .group-header-button-unselected:hover,
@@ -416,5 +440,11 @@ export default {
     background-color: rgb(255, 255, 255);
     margin: 0 auto;
     margin-top: 20px;
+}
+/* 滚动至顶部 */
+.scrollbutton{
+    position: fixed;
+    bottom: 150px;
+    right: 20px;
 }
 </style>

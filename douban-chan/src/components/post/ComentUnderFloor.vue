@@ -17,11 +17,18 @@
 
             <div class="footer-container">
                 <div>{{ info.date }}</div>
-                <div>
-                    <LikeButtonGroup :info="likeInfo" :small="true"/>
-                    <!-- <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>{{ info.like }}
+                <LikeButtonGroup :info="likeInfo" :small="true" />
+                <!-- <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>{{ info.like }}
                     <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>{{ info.dislike }} -->
+
+                <div class="postfloor-reply-button" @click="changeReplying">
+                    回复
                 </div>
+            </div>
+            <div class="postfloor-comment-container">
+                <!-- 撰写评论的区域 -->
+                <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName" :floor2="true">
+                </CommentReplyInputBox>
             </div>
         </div>
     </div>
@@ -29,19 +36,23 @@
 
 <script>
 import LikeButtonGroup from './button/LikeButtonGroup.vue';
+import CommentReplyInputBox from './button/CommentReplyInputBox.vue';
+
 export default {
     name: 'CommentUnderFloor',
-    components:{
+    components: {
         LikeButtonGroup,
+        CommentReplyInputBox,
     },
     props: ['info'],
     data() {
         return {
-
+            // 用户是否正在回复评论
+            isReplying: false,
         }
     },
-    computed:{
-        likeInfo(){
+    computed: {
+        likeInfo() {
             return {
                 like: this.info.like,
                 dislike: this.info.dislike,
@@ -56,12 +67,24 @@ export default {
                 name: 'userHome',
             })
         },
+        // 改变用户对当层楼的回复状态
+        changeReplying() {
+            this.isReplying = !this.isReplying
+        },
+    },
+    mounted() {
+        this.$bus.$on('commentReplyCreated', (textId) => {
+            if(textId == this.info.textId){
+                this.isReplying = !this.isReplying
+            }
+        })
     },
 }
 </script>
 
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
+
 .main-container {
     max-width: 1000px;
     margin: 10px 20px 0 20px;
@@ -84,10 +107,12 @@ export default {
     height: 1px;
     background-color: rgb(255, 232, 232);
 }
-.height-taker{
+
+.height-taker {
     height: 5px;
     /* background-color: rgb(255, 60, 60); */
 }
+
 .user-img {
     width: 30px;
     height: 30px;
@@ -117,6 +142,7 @@ export default {
     font-size: 16px;
     margin-left: 36px;
 }
+
 /* 赞和踩的图标 */
 .postcard-icon {
     font-size: 18px;
@@ -124,6 +150,7 @@ export default {
     margin: 15px 5px 15px 20px;
     cursor: pointer;
 }
+
 .footer-container {
     margin: 5px;
     font-size: 16px;
@@ -131,4 +158,24 @@ export default {
     flex-flow: row wrap;
     align-items: center;
     justify-content: flex-start;
-}</style>
+}
+
+/* 回复按钮 */
+.postfloor-reply-button {
+    margin: 0 0 3px 20px;
+    height: 25px;
+    width: 50px;
+    background-color: rgb(255, 235, 235);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 252, 252, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* 未折叠的评论的容器 */
+.postfloor-comment-container {
+    margin: 10px 0 10px 10px;
+}
+</style>

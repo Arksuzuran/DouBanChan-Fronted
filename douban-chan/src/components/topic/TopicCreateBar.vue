@@ -1,40 +1,41 @@
-<!-- 创建小组的框 -->
-<!-- 页面右下方 固定的小组创建入口 -->
+<!-- 创建话题的框 -->
+<!-- 页面右下方 固定的话题创建入口 -->
 <template>
     <div>
-        <!-- 右下角固定的小组创建窗 -->
+        <!-- 右下角固定的话题创建窗 -->
         <div class="postbar-container">
             <img :src="userImgUrl" class="postbar-user-image" />
-            <button class="postbar-button" @click="handleStartPost">创建小组</button>
+            <button class="postbar-button" @click="handleStartPost">创建话题</button>
         </div>
-        <!-- 从下向上的小组创建栏 -->
+        <!-- 从下向上的话题创建栏 -->
         <el-drawer :before-close="handleClose" :visible.sync="dialog" direction="btt" custom-class="demo-drawer" size="75%"
             ref="drawer">
             <!-- 容器 -->
             <div class="form-container">
-                <div class="form-title">创建小组</div>
+                <div class="form-title">创建话题</div>
                 <div class="form-main">
                     <!-- 表单区 -->
                     <el-form :model="form">
                         <!-- 名称输入框 -->
-                        <el-form-item label="小组名称" :label-width="formLabelWidth">
+                        <el-form-item label="话题名称" :label-width="formLabelWidth">
                             <el-input type="text" maxlength="50" show-word-limit v-model="form.name" autocomplete="off"
-                                placeholder="请输入小组名称">
+                                placeholder="请输入话题名称">
                             </el-input>
                         </el-form-item>
 
                         <!-- 标签选择框 -->
                         <el-form-item label="选择标签" :label-width="formLabelWidth">
                             <el-select v-model="form.tag" placeholder="请选择标签" style="width: 100%;">
-                                <el-option v-for="tag in tagList" :key="tag.value" :label="tag.value" :value="tag.value">
+                                <el-option v-for="tag in tagList" :key="tag.value" :label="tag.value"
+                                    :value="tag.value" >
                                 </el-option>
                             </el-select>
                             <!-- <el-autocomplete v-model="form.tag" :fetch-suggestions="querySearchAsync" placeholder="请选择标签"
-                                @select="handleSelect" style="width: 100%;"></el-autocomplete> -->
+                                @select="handleSelect" ></el-autocomplete> -->
                         </el-form-item>
 
                         <!-- 正文输入框 -->
-                        <el-form-item label="小组简介" :label-width="formLabelWidth">
+                        <el-form-item label="话题简介" :label-width="formLabelWidth">
                             <el-input type="textarea" v-model="form.intro" :autosize="{ minRows: 8, maxRows: 8 }"
                                 :rows="20">
                             </el-input>
@@ -46,14 +47,14 @@
                         <!-- 这里需要根据后端修改! -->
                         <!-- 这里需要根据后端修改! -->
                         <!-- 上传图片 -->
-                        <!-- 上传小组封面 -->
-                        <el-form-item label="上传小组封面" :label-width="formLabelWidth">
+                        <!-- 上传话题封面 -->
+                        <el-form-item label="上传话题封面" :label-width="formLabelWidth">
                             <PictureChooser :imgUrlList="form.avatarUrlList" :fileList="avatarFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
 
-                        <!-- 上传小组头图 -->
-                        <el-form-item label="上传小组头图" :label-width="formLabelWidth">
+                        <!-- 上传话题头图 -->
+                        <el-form-item label="上传话题头图" :label-width="formLabelWidth">
                             <PictureChooser :imgUrlList="form.headimgUrlList" :fileList="headimgFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
@@ -84,7 +85,7 @@ import { nanoid } from 'nanoid'
 import PictureChooser from '../post/PictureChooser.vue'
 
 export default {
-    name: 'GroupCreateBar',
+    name: 'TopicCreateBar',
     components: {
         PictureChooser,
     },
@@ -98,7 +99,7 @@ export default {
             // 表单收集的数据
             form: {
                 name: '',
-                tag: '',
+                "value": '',
                 avatarUrlList: [],
                 headimgUrlList: [],
                 intro: '',
@@ -122,7 +123,6 @@ export default {
             ],
             timeout: null,
 
-
             // 封面的list
             avatarFileList: [],
             // 头图的list
@@ -135,8 +135,8 @@ export default {
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     },
     methods: {
-        //小组相关  
-        ...mapActions('groupAbout', ['createGroupOnline', 'joinGroupOnline', 'applyAdminOnline']),
+        //话题相关
+        ...mapActions('topicAbout', ['createTopicOnline', 'joinTopicOnline']),
         // 点击我要发帖按钮
         handleStartPost() {
             this.dialog = true
@@ -148,7 +148,7 @@ export default {
             }
             this.$confirm('确定要提交表单吗？')
                 .then(_ => {
-                    this.createGroup();
+                    this.createTopic();
                     this.loading = true;
                     this.timer = setTimeout(() => {
                         done();
@@ -167,33 +167,23 @@ export default {
             clearTimeout(this.timer);
         },
         // 创建帖子
-        createGroup() {
-
+        createTopic() {
             //构造对象
-            let newGroup = {
-                groupId: nanoid(),
-                groupHeadBgUrl: this.form.headimgUrlList[0],
-                groupAvatarImgUrl: this.form.avatarUrlList[0],
-                groupName: this.form.name,
-                groupIntro: this.form.intro,
+            let newTopic = {
+                topicId: nanoid(),
+                topicHeadBgUrl: this.form.headimgUrlList[0],
+                topicAvatarImgUrl: this.form.avatarUrlList[0],
+                topicName: this.form.name,
+                topicIntro: this.form.intro,
+                follow: 1,
+                post: 0,
+                date: this.getTimeNow(),    //发帖时间
+                userInTopic: true,
+                //话题标签
                 tag: this.form.tag,
-                groupPostNumber: 0,
-                groupFollowNumber: 1,
-                userInGroup: true,
-                userIsAdmin: true,
-                memberList: [
-                    {
-                        userId: this.userId,
-                        userName: this.userName,
-                        userImageUrl: this.userImageUrl,
-                        isAdmin: true,
-                    },
-                ],
             };
-            this.createGroupOnline(newGroup)
+            this.createTopicOnline(newTopic)
 
-            // // 通过事件总线触发自定义事件，并传递新小组作为参数
-            // this.$bus.$emit('groupCreated', newGroup);
             // 清空内容
             this.avatarFileList = []
             this.headimgFileList = []
