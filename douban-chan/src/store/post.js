@@ -43,9 +43,13 @@ export default {
         //
         //上传数据
         //
-        //创建帖子
-        createPostOnline(context, newPost) {
-            console.log("创建帖子", newPost);
+        //在小组内创建帖子
+        createGroupPostOnline(context, newPost) {
+            console.log("小组创建帖子", newPost);
+        },
+        //在话题内创建帖子
+        createTopicPostOnline(context, newPost) {
+            console.log("话题创建帖子", newPost);
         },
         //回复帖子
         replyPostOnline(context, postId, newReply) {
@@ -83,6 +87,14 @@ export default {
         //回复文本
         replyTextOnline(context, textId, newReply) {
             console.log("回复text", textId, newReply);
+        },
+        //点赞文本
+        likeTextOnline(context, textId, userId) {
+            console.log("点赞帖子", textId, userId);
+        },
+        //点踩文本
+        dislikeTextOnline(context, textId, userId) {
+            console.log("点踩帖子", textId, userId);
         },
         //举报文本
         reportTextOnline(context, textId, report) {

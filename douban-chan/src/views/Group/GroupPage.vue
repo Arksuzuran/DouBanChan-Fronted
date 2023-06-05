@@ -56,12 +56,12 @@
             </div>
         </div>
         <!-- 发帖上拉框 -->
-        <div v-if="isLogin">
+        <div v-if="isLogin && showPostCreateBar">
             <PostCreateBar :groupInfo="groupInfo"></PostCreateBar>
         </div>
 
         <!-- 滚动至顶部 -->
-        <ScrollToTopButton class="scrollbutton"></ScrollToTopButton>
+        <ScrollToTopButton class="scrollbutton" v-if="showPostCreateBar"></ScrollToTopButton>
     </div>
 </template>
 
@@ -193,7 +193,10 @@ export default {
         ...mapGetters('postAbout', ['postList']),
         ...mapGetters('topicAbout', ['topicList']),
         ...mapGetters('groupAbout', ['groupInfo']),
-
+        showPostCreateBar(){
+            console.log(this.$route)
+            return this.$route.name == 'group' || this.$route.name == 'groupTopicList'
+        },
         joinButtonClass() {
             return this.groupInfo.userJoined ? 'group-header-button-selected' : 'group-header-button-unselected';
         },

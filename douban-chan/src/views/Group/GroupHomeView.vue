@@ -68,7 +68,12 @@ export default {
         { id: 3, label: '影视', tag: '影视' },
         { id: 4, label: '图书', tag: '图书' },
         { id: 5, label: '学习', tag: '学习' },
-        { id: 6, label: '我的小组', tag: '我的'},
+        { id: 6, label: '美食', tag: '美食' },
+        { id: 7, label: '摄影', tag: '摄影' },
+        { id: 8, label: '时尚', tag: '时尚' },
+        { id: 9, label: '游戏', tag: '游戏' },
+        { id: 10, label: '二刺螈', tag: '二刺螈' },
+        { id: 11, label: '我的话题', tag: '我的话题' },
       ],
     }
   },
@@ -181,7 +186,7 @@ export default {
 
 /* 顶部二级导航栏容器 */
 .grouphome-header-container {
-  padding: 0 11%;
+  padding: 0 9%;
   position: sticky;
   top: 65px;
   z-index: 11;
@@ -197,7 +202,7 @@ export default {
 
 /* 页面顶栏处标题 */
 .grouphome-header-title {
-  margin: 0 40px;
+  margin: 0 30px;
   font-size: 36px;
   font-weight: 700;
   color: rgba(255, 133, 133, 0.9);
@@ -208,12 +213,12 @@ export default {
 /* === removing default button style ===*/
 /* 按钮基本样式 */
 .grouphome-header-btn {
-  margin: 0 10px;
+  margin: 0 8px;
 
   font-size: 18px;
   background: transparent;
   border: none;
-  padding: 12px 18px;
+  padding: 10px 14px;
   color: rgba(255, 133, 133, 0.9);
   text-transform: uppercase;
   position: relative;

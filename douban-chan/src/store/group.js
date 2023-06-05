@@ -36,7 +36,7 @@ export default {
         //上传数据
         //
         //创建小组
-        createPostOnline(context, newGroup){
+        createGroupOnline(context, newGroup){
             console.log("创建小组", newGroup);
         },
         //加入小组
@@ -49,7 +49,7 @@ export default {
             }
         },
         //申请管理员
-        likePostOnline(context, groupId, userId, apply){
+        applyAdminOnline(context, groupId, userId, apply){
             if(apply){
                 console.log("申请成为管理员", groupId, userId);
             }
@@ -78,7 +78,7 @@ export default {
                 //小组简介
                 groupIntro: "家人们谁懂啊，咱就是说一整个无语住了，一把子大动作给到了，今天又是在逃公主的一天，九敏九敏真的太好哭了吧，下头男",
                 //小组标签
-                tagList: ['生活', '文化'],
+                tag: '生活',
                 //小组帖子数量
                 groupPostNumber: 321,
                 //小组关注者数量
@@ -97,7 +97,7 @@ export default {
                 groupAvatarImgUrl: require('../assets/group-avatar-2.jpg'),
                 groupName: "coding小组",
                 groupIntro: "编程爱好者聚集地. Hell, word!",
-                tagList: ['生活', '游戏', '文化'],
+                tag: '文化',
                 groupPostNumber: 597,
                 groupFollowNumber: 792,
                 aboutTopic: { topicId: 't001', topicName: '游戏', topicAvatarUrl: require('../assets/topic-avatar-1.jpg') },
@@ -112,7 +112,7 @@ export default {
                 groupAvatarImgUrl: require('../assets/group-avatar-3.jpg'),
                 groupName: "蔚蓝档案小组",
                 groupIntro: "在阿拜多斯，你可以不活，但不能没有活",
-                tagList: ['游戏'],
+                tag: '游戏',
                 groupPostNumber: 1367,
                 groupFollowNumber: 59521,
                 aboutTopic: { topicId: 't002', topicName: 'BUAA', topicAvatarUrl: require('../assets/topic-avatar-2.jpg') },
@@ -134,7 +134,7 @@ export default {
             userInGroup: true,
             userIsAdmin: false,
             //小组标签
-            tagList: ['生活', '文化'],
+            tag: '生活',
             //小组成员列表
             memberList: [
                 {

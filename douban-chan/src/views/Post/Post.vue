@@ -140,14 +140,14 @@ export default {
         })
 
         // 监听CommentReplyInputBox的创建回复事件，在事件回调中向服务器发送请求
-        this.$bus.$on('commentReplyCreated', (newReply, textId) => {
-            this.insertCommentIntoFloor(newReply, textId)
-        })
+        // this.$bus.$on('commentReplyCreated', (newReply, textId) => {
+        //     this.insertCommentIntoFloor(newReply, textId)
+        // })
 
         // 监听PostReplyInputBox的创建回复事件，在事件回调中向服务器发送请求
-        this.$bus.$on('postReplyCreated', (newReply) => {
-            this.insertFloorIntoFloor(newReply)
-        })
+        // this.$bus.$on('postReplyCreated', (newReply) => {
+        //     this.insertFloorIntoFloor(newReply)
+        // })
     },
     beforeDestroy() {
         //卸载监听

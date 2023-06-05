@@ -191,10 +191,10 @@ export default {
   mounted() {
     this.updateData()
     // 监听GroupCreateBar的创建小组事件，在事件回调中将新小组添加到列表
-    this.$bus.$on('groupCreated', (newGroup) => {
-      this.groupList.push(newGroup);
-      console.log('用户创建小组成功：', newGroup)
-    });
+    // this.$bus.$on('groupCreated', (newGroup) => {
+    //   this.groupList.push(newGroup);
+    //   console.log('用户创建小组成功：', newGroup)
+    // });
     // 二级导航栏选中
     this.$bus.$on('leftNavChanged', (index) => {
       this.handleSelect2(index)

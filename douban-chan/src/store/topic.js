@@ -44,7 +44,7 @@ export default {
             console.log("创建话题", newTopic);
         },
         //加入话题
-        joinGroupOnline(context, topicId, userId, join){
+        joinTopicOnline(context, topicId, userId, join){
             if(join){
                 console.log("加入话题", topicId, userId);
             }
@@ -163,10 +163,10 @@ export default {
             topicIntro: '是所有哺乳类动物，特别是灵长类动物学习生存的第一步。它是一种基于物质需求满足之上的，在一些特定时间、空间范围内遵循某种特定规则的，追求精神世界需求满足的社会行为方式.',
             follow: 75971,
             post: 9591,
-            date: '2023-5-19 23:57',    //发帖时间
+            date: '2023-5-19 23:57',   //发帖时间
             userInTopic: true,
             //话题标签
-            tagList: ['生活', '文化'],
+            tag: '游戏',
         }
     },
     getters: {

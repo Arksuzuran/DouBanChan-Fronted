@@ -27,7 +27,7 @@
             </div>
             <div class="postfloor-comment-container">
                 <!-- 撰写评论的区域 -->
-                <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName">
+                <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName" :floor2="true">
                 </CommentReplyInputBox>
             </div>
         </div>
@@ -46,7 +46,7 @@ export default {
     },
     props: ['info'],
     data() {
-        return {    
+        return {
             // 用户是否正在回复评论
             isReplying: false,
         }
@@ -71,6 +71,13 @@ export default {
         changeReplying() {
             this.isReplying = !this.isReplying
         },
+    },
+    mounted() {
+        this.$bus.$on('commentReplyCreated', (textId) => {
+            if(textId == this.info.textId){
+                this.isReplying = !this.isReplying
+            }
+        })
     },
 }
 </script>
@@ -166,6 +173,7 @@ export default {
     justify-content: center;
     cursor: pointer;
 }
+
 /* 未折叠的评论的容器 */
 .postfloor-comment-container {
     margin: 10px 0 10px 10px;

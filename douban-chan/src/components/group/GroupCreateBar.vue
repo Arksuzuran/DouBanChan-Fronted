@@ -25,10 +25,13 @@
 
                         <!-- 标签选择框 -->
                         <el-form-item label="选择标签" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.tags" :fetch-suggestions="querySearchAsync" placeholder="请选择标签"
-                                @select="handleSelect" style="width: 100%;"></el-autocomplete>
+                            <el-select v-model="form.tag" placeholder="请选择标签" style="width: 100%;">
+                                <el-option v-for="tag in tagList" :key="tag.value" :label="tag.value" :value="tag.value">
+                                </el-option>
+                            </el-select>
+                            <!-- <el-autocomplete v-model="form.tag" :fetch-suggestions="querySearchAsync" placeholder="请选择标签"
+                                @select="handleSelect" style="width: 100%;"></el-autocomplete> -->
                         </el-form-item>
-
 
                         <!-- 正文输入框 -->
                         <el-form-item label="小组简介" :label-width="formLabelWidth">
@@ -95,7 +98,7 @@ export default {
             // 表单收集的数据
             form: {
                 name: '',
-                tags: '',
+                tag: '',
                 avatarUrlList: [],
                 headimgUrlList: [],
                 intro: '',
@@ -104,7 +107,19 @@ export default {
             timer: null,
 
             // 话题选择框的数据
-            tagList: [],
+            tagList: [
+                { value: "生活" },
+                { value: "文化" },
+                { value: "影视" },
+                { value: "图书" },
+                { value: "学习" },
+                { value: "美食" },
+                { value: "摄影" },
+                { value: "时尚" },
+                { value: "游戏" },
+                { value: "二刺猿" },
+                { value: "无" }
+            ],
             timeout: null,
 
 
@@ -120,6 +135,8 @@ export default {
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     },
     methods: {
+        //小组相关  
+        ...mapActions('groupAbout', ['createGroupOnline', 'joinGroupOnline', 'applyAdminOnline']),
         // 点击我要发帖按钮
         handleStartPost() {
             this.dialog = true
@@ -151,6 +168,7 @@ export default {
         },
         // 创建帖子
         createGroup() {
+
             //构造对象
             let newGroup = {
                 groupId: nanoid(),
@@ -158,9 +176,11 @@ export default {
                 groupAvatarImgUrl: this.form.avatarUrlList[0],
                 groupName: this.form.name,
                 groupIntro: this.form.intro,
-                tagList: [this.form.tags],
+                tag: this.form.tag,
                 groupPostNumber: 0,
                 groupFollowNumber: 1,
+                userInGroup: true,
+                userIsAdmin: true,
                 memberList: [
                     {
                         userId: this.userId,
@@ -170,49 +190,18 @@ export default {
                     },
                 ],
             };
-            // 通过事件总线触发自定义事件，并传递新小组作为参数
-            this.$bus.$emit('groupCreated', newGroup);
+            this.createGroupOnline(newGroup)
+
+            // // 通过事件总线触发自定义事件，并传递新小组作为参数
+            // this.$bus.$emit('groupCreated', newGroup);
             // 清空内容
             this.avatarFileList = []
             this.headimgFileList = []
             this.form.name = ''
-            this.form.tags = ''
+            this.form.tag = ''
             this.form.avatarUrlList = []
             this.form.headimgUrlList = []
             this.form.intro = ''
-        },
-
-        //加载全部话题
-        loadAll() {
-            return [
-                { "value": "生活", "address": "长宁区新渔路144号" },
-                { "value": "文化", "address": "上海市长宁区淞虹路661号" },
-                { "value": "影视", "address": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-                { "value": "图书", "address": "天山西路438号" },
-                { "value": "游戏", "address": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-                { "value": "无", "address": "上海市长宁区金钟路633号" },
-            ];
-        },
-        //从服务器按照输入的queryString搜索tag
-        querySearchAsync(queryString, cb) {
-            var tagList = this.tagList;
-            var results = queryString ? tagList.filter(this.createStateFilter(queryString)) : tagList;
-
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                cb(results);
-            }, 100 * Math.random());
-        },
-        // 搜索算法 目前是只匹配开头字符串
-        createStateFilter(queryString) {
-            return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        // 选中某标签时
-        handleSelect(item) {
-            this.form.tags = item.value
-            console.log(item.value);
         },
         // 获取当前时间
         getTimeNow() {
@@ -244,9 +233,6 @@ export default {
             }
             return year + "-" + month + "-" + day + " " + hour + sign2 + minutes + sign2 + seconds;
         },
-    },
-    mounted() {
-        this.tagList = this.loadAll();
     },
 }
 </script>
