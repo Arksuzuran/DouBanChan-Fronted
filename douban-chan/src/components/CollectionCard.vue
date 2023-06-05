@@ -2,14 +2,15 @@
     <div class="collection-card-big-block">
         <div class="collection-card-block">
             <div class="collection-card-image-container">
-                <img :src="require(`../assets/conroy_img/${image}`)" class="collection-card-image">
+                <img :src="collectionCard.image" class="collection-card-image">
             </div>
             <span class="collection-card-good">
-                <span class="collection-card-rate">95%</span> 好评 <i class="fa-solid fa-thumbs-up"></i></span>
+                <span class="collection-card-rate">{{ collectionCard.rate }}</span> 好评 <i
+                    class="fa-solid fa-thumbs-up"></i></span>
             <div class="collection-card-info">
-                <span class="collection-card-name">斗破苍穹</span>
-                <span class="collection-card-star">萧炎 美杜莎 萧薰儿</span>
-                <span class="collection-card-word">三十年河东三十年河西，莫欺少年穷！</span>
+                <span class="collection-card-name">{{ collectionCard.name }}</span>
+                <span class="collection-card-star">{{ collectionCard.star }}</span>
+                <span class="collection-card-word">{{ collectionCard.text }}</span>
             </div>
         </div>
     </div>
@@ -17,6 +18,7 @@
 
 <script>
 export default {
+    props: ['collectionCard'],
     data() {
         return {
             image: 'doupo.png'
@@ -34,7 +36,7 @@ export default {
     /* 垂直居中对齐 */
     width: 300px;
     height: 120px;
-    background-color: #002333;
+    background-color: rgb(94, 101, 133);
     border-radius: 5px;
     border: transparent;
     z-index: 10;

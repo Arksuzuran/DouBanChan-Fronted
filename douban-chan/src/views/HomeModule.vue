@@ -1,21 +1,21 @@
 <template>
     <div class="home-module-container-new">
         <div class="home-module-scroll-movie-new">
-            <el-carousel :interval="4000" arrow="never" trigger="hover" :style="{ height: '480px', width: '800px' }">
+            <el-carousel :interval="4000" arrow="never" trigger="hover" :style="{ height: '480px', width: '850px' }">
                 <el-carousel-item v-for="item in 6" :key="item">
-                    <ScrollingScreenCard></ScrollingScreenCard>
+                    <ScrollingScreenCard :scrollCard="scrollCards[item - 1]"></ScrollingScreenCard>
                 </el-carousel-item>
             </el-carousel>
         </div>
         <div class="home-module-collection-book">
             <span class="home-module-collection-book-list"><i class="fa-brands fa-hotjar" style="color: #ff7032;">
                 </i> 书香之选</span>
-            <div class="home-module-collection-book-check">
+            <div class="home-module-collection-book-check" @click="refresh()">
                 <RefreshButton></RefreshButton>
             </div>
             <div class="home-module-collection-book-show">
-                <div v-for="card in 3" class="home-module-collection-book-card">
-                    <CollectionCard></CollectionCard>
+                <div v-for="card in  3 " class="home-module-collection-book-card">
+                    <CollectionCard :collectionCard="getCollectionCard(card)"></CollectionCard>
                 </div>
             </div>
         </div>
@@ -29,100 +29,96 @@ import RefreshButton from './RefreshButton.vue';
 export default {
     data() {
         return {
-            images: [
-                '1.jpg',
-                "2.jpg",
-                "3.jpg",
-                "4.jpg",
-                "5.jpg",
-                "6.jpg",
-            ],
-            images_random: [
-                "1.jpg",
-                "2.jpg",
-                "3.jpg",
-                "4.jpg"
-            ],
-            movieList: [
+            index_card: 0,
+            scrollCards: [
                 {
-                    name: "电影1",
-                    img: "1.jpg",
-                    score: 7.5,
-                    desc: "电影1的描述",
+                    id: 1,
+                    cardImage: require(`../assets/conroy_img/snake.jpg`),
+                    miniImage: require(`../assets/conroy_img/doupo.png`),
+                    name: '斗破苍穹',
+                    text: '三十年河东三十年河西，莫欺少年穷！',
                 },
                 {
-                    name: "电影2",
-                    img: "2.jpg",
-                    score: 8.1,
-                    desc: "电影2的描述",
+                    id: 2,
+                    cardImage: require(`../assets/conroy_img/login-back.jpg`),
+                    miniImage: require(`../assets/conroy_img/xw.jpg`),
+                    name: '芭比娃娃',
+                    text: '我，迷人吗？',
                 },
                 {
-                    name: "电影3",
-                    img: "3.jpg",
-                    score: 9.0,
-                    desc: "电影3的描述",
+                    id: 3,
+                    cardImage: require(`../assets/conroy_img/shadowdie2.jpg`),
+                    miniImage: require(`../assets/conroy_img/shadowdie.jpg`),
+                    name: '只狼 影逝二度',
+                    text: '不死斩，斩灭不死！',
                 },
                 {
-                    name: "电影4",
-                    img: "4.jpg",
-                    score: 6.8,
-                    desc: "电影4的描述",
+                    id: 4,
+                    cardImage: require(`../assets/conroy_img/OM.jpg`),
+                    miniImage: require(`../assets/conroy_img/image.jpg`),
+                    name: '偶像梦想祭',
+                    text: '浓度很高，but this is for u！',
                 },
                 {
-                    name: "电影5",
-                    img: "5.jpg",
-                    score: 7.2,
-                    desc: "电影5的描述",
+                    id: 5,
+                    cardImage: require(`../assets/conroy_img/snake.jpg`),
+                    miniImage: require(`../assets/conroy_img/doupo.png`),
+                    name: '斗破苍穹',
+                    text: '三十年河东三十年河西，莫欺少年穷！',
                 },
                 {
-                    name: "电影6",
-                    img: "6.jpg",
-                    score: 8.4,
-                    desc: "电影6的描述",
-                },
-                {
-                    name: "电影7",
-                    img: "1.jpg",
-                    score: 7.9,
-                    desc: "电影7的描述",
-                },
-                {
-                    name: "电影8",
-                    img: "2.jpg",
-                    score: 8.7,
-                    desc: "电影8的描述",
+                    id: 6,
+                    cardImage: require(`../assets/conroy_img/snake.jpg`),
+                    miniImage: require(`../assets/conroy_img/doupo.png`),
+                    name: '斗破苍穹',
+                    text: '三十年河东三十年河西，莫欺少年穷！',
                 },
             ],
-            displayedMovieList: [{
-                name: "电影1",
-                img: "1.jpg",
-                score: 7.5,
-                desc: "电影1的描述",
-            },
-            {
-                name: "电影2",
-                img: "2.jpg",
-                score: 8.1,
-                desc: "电影2的描述",
-            },
-            {
-                name: "电影3",
-                img: "3.jpg",
-                score: 9.0,
-                desc: "电影3的描述",
-            },
-            {
-                name: "电影4",
-                img: "4.jpg",
-                score: 6.8,
-                desc: "电影4的描述",
-            },],
-            pageSize: 4,
-            currentPage: 1,
-            maxPage: 2,
+            collectionCards: [
+                {
+                    id: 1,
+                    image: require(`../assets/conroy_img/doupo.png`),
+                    rate: '95%',
+                    name: '斗破苍穹',
+                    star: '萧炎 萧薰儿 美杜莎',
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                },
+                {
+                    id: 2,
+                    image: require(`../assets/conroy_img/login-back.jpg`),
+                    rate: '90%',
+                    name: '芭比娃娃',
+                    text: '我，迷人吗？',
+                    star: '粉色女郎',
+                },
+                {
+                    id: 3,
+                    image: require(`../assets/conroy_img/shadowdie.jpg`),
+                    rate: '97%',
+                    name: '只狼 影逝二度',
+                    star: '弦一郎',
+                    text: '不死斩，斩灭不死！',
+                },
+                {
+                    id: 4,
+                    image: require(`../assets/conroy_img/image.jpg`),
+                    rate: '98%',
+                    name: '偶像梦想祭',
+                    text: '浓度很高，but this is for u！',
+                    star: '朔间零',
+                },
+            ],
         };
     },
     methods: {
+        refresh() {
+            this.index_card += 3;
+        },
+        getCollectionCard(card) {
+            // 根据索引获取特定的元素
+            const index = (this.index_card + card) % this.collectionCards.length;
+            return this.collectionCards[index];
+        },
         hoverMovie(movie) {
             movie.isHover = !movie.isHover;
         },
@@ -142,7 +138,7 @@ export default {
 }
 </script>
 
-<style>
+<style >
 @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@500&family=Zhi+Mang+Xing&display=swap');
 
 
@@ -158,6 +154,7 @@ export default {
 }
 
 .home-module-container-new {
+    cursor: pointer;
     width: 85%;
     margin-left: 7.5%;
     border: none;

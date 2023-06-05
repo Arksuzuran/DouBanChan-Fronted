@@ -1,7 +1,7 @@
 <template>
     <div class="menu-wrapper navbar-scroll">
         <div class="logo-wrapper">
-            <img height="40px" src="https://tdesign.gtimg.com/site/baseLogo-light.png" alt="logo" />
+            <img height="40px" src="https://cdn.worldvectorlogo.com/logos/barbie-brand-1.svg" alt="logo" />
         </div>
         <div class="menu-items">
             <div v-for="item in menuItems" :key="item.value" class="menu-item" :class="{ active: item.value === menuValue }"
@@ -10,7 +10,7 @@
             </div>
         </div>
         <!-- 搜索 -->
-        <div>
+        <div class="menu-search">
             <Search></Search>
         </div>
         <!-- 头像 -->
@@ -65,11 +65,15 @@ export default {
                 { label: '小组', value: 'item4', index: "groupHome" },
                 { label: '话题', value: 'item5', index: "topicHome" },
             ],
-            menuValue: 'item1',
             restaurants: [],
             state: '',
             isLogin: false,
             circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+            homePath: ['/'],
+            videoPath: ['videoHome', 'videoDetail', 'review'],
+            bookPath: ['bookHome'],
+            groupPath: ['groupHome', 'group', 'group/post'],
+            topicPath: ['topicHome',],
         };
     },
     methods: {
@@ -109,18 +113,17 @@ export default {
         gotoUserHome() {
             // 在这里根据需求更换circleUrl的值
             if (this.isLogin) {
-                this.$router.push('/userHome')
+                this.$router.push('/userHome/home')
             }
         },
         handleMenuClick(value) {
+            // 路由跳转
             const selectedItem = this.menuItems.find(item => item.value === value);
-            if (this.menuValue != value) {
+            if (selectedItem) {
                 this.$router.push({
                     path: '/' + selectedItem.index,
-                })
+                });
             }
-            this.menuValue = value;
-            // 处理菜单点击事件
         },
         querySearch(queryString, cb) {
             var restaurants = this.restaurants;
@@ -185,14 +188,24 @@ export default {
                 { "value": "南拳妈妈龙虾盖浇饭", "address": "普陀区金沙江路1699号鑫乐惠美食广场A13" }
             ];
         },
-        handleSelect(item) {
-            console.log(item);
-        },
-        handleIconClick(ev) {
-            console.log(ev);
-        },
     },
     computed: {
+        menuValue() {
+            const currentRoute = this.$route.name;
+            if (this.$route.path === "/") {
+                return 'item1';
+            } else if (this.videoPath.includes(currentRoute)) {
+                return 'item2';
+            } else if (this.bookPath.includes(currentRoute)) {
+                return 'item3';
+            } else if (this.groupPath.includes(currentRoute)) {
+                return 'item4';
+            } else if (this.topicPath.includes(currentRoute)) {
+                return 'item5';
+            } else {
+                return '';
+            }
+        }
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         //像一般的计算属性一样使用即可 例如：console.log(this.userName)
@@ -200,7 +213,7 @@ export default {
     },
     mounted() {
         this.restaurants = this.loadAll();
-        window.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll)
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
@@ -211,13 +224,13 @@ export default {
 <style scoped>
 @keyframes navbarAnimation {
     from {
-        height: 120px;
+        height: 100px;
         border-radius: 0px;
         background-image: url('../assets/conroy_img/backImage.png');
     }
 
     to {
-        height: 75px;
+        height: 70px;
         border-radius: 10px;
         background-color: #f2f2f2;
         background-image: none;
@@ -231,14 +244,14 @@ export default {
 
 @keyframes navbarResetAnimation {
     from {
-        height: 75px;
+        height: 70px;
         border-radius: 10px;
         background-color: #f2f2f2;
         background-image: none;
     }
 
     to {
-        height: 120px;
+        height: 100px;
         border-radius: 0px;
         background-image: url('../assets/conroy_img/backImage.png');
     }
@@ -257,6 +270,10 @@ export default {
 
 .cartoon {
     margin-left: 30px;
+}
+
+.menu-search {
+    margin-left: 75px;
 }
 
 .NavBar-individual-block {
@@ -278,7 +295,7 @@ export default {
 
 .NavBar-block {
     position: relative;
-    margin-left: 17%;
+    margin-left: 16.5%;
     z-index: 50;
 }
 
@@ -289,7 +306,7 @@ export default {
 
 .menu-wrapper {
     width: 100%;
-    height: 120px;
+    height: 100px;
     display: flex;
     align-items: center;
     background-image: url('../assets/conroy_img/backImage.png');
@@ -298,25 +315,25 @@ export default {
 }
 
 .logo-wrapper {
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .menu-items {
-    margin-left: 20px;
+    margin-left: 45px;
     display: flex;
 }
 
 .menu-item {
-    padding: 15px 40px;
+    padding: 15px 30px;
     font-size: 20px;
     cursor: pointer;
-    border-radius: 30px;
+    border-radius: 20px;
     color: rgb(104, 104, 104);
     transition: background-color 0.3s;
 }
 
 .menu-item.active {
-    background-color: #e07523;
+    background-color: #734623;
     color: #fff;
 }
 

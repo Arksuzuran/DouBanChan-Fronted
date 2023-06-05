@@ -2,27 +2,30 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" class="card">
             <div class="flag">
-                <button class="favorite-button">
+                <button class="favorite-button" @click="mark = !mark">
                     <span class="fa-layers fa-fw" style="background:transparent position: absolute; top: 0px; left: 0px;">
-                        <i class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
-                        <i class="fa-duotone fa-plus fa-xs"
+                        <i v-if="!mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
+                        <i v-if="!mark" class="fa-duotone fa-plus fa-xs"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-55%, -300%); color: #ffffff; font-size: 30px;"></i>
+                        <i v-if="mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
+                        <i v-if="mark" class="fa-solid fa-check fa-xs"
+                            style="position: absolute; top: 50%; left: 55%; transform: translate(-55%, -300%); color: #000000; font-size: 24px;"></i>
                     </span>
                 </button>
             </div>
             <div class="image-container">
-                <img :src="ChildImage" class="image">
+                <img :src="movie.image" class="image">
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ ChildRate
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ movie.rate
                 }}</span>
                 <button class="star-button" @click="showRate">
                     <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
             <div style="margin-top: -15px;text-align: left;margin-left: 10px;">
-                <span class="card-name" style="display: inline-block;">{{ ChildName }}</span>
+                <span class="card-name" style="display: inline-block;">{{ movie.name }}</span>
             </div>
             <el-button type="info" plain
                 style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; float: left;width: 180px; font-weight: bold;">
@@ -45,25 +48,25 @@
             <div class="modal-overlay" @click="closeModal"></div> <!-- 遮罩层 -->
             <div class="modal-content">
                 <div>
-                    <img :src="ChildImage" class="image-modal">
+                    <img :src="movie.image" class="image-modal">
                 </div>
-                <button class="modal-name">{{ ChildName }} <i class="
-                    el-icon-arrow-right custom-icon-arrow"></i></button>
+                <button class="modal-name">{{ movie.name }}</button>
                 <button class="close-button" @click="closeModal"><i class="fa-solid fa-xmark"></i></button>
                 <div class="modal-detail">
                     <div class="modal-info-1">
-                        <span class="info-value-1"><i class="fa-solid fa-calendar-days"></i> {{ ChildYear }} &nbsp<i
-                                class="fa-solid fa-clock"></i> {{ ChildTime }} &nbsp<i class="fa-solid fa-location-dot"></i>
-                            {{ ChildFrom }}</span>
+                        <span class="info-value-1"><i class="fa-solid fa-calendar-days"></i> {{ movie.year }} &nbsp<i
+                                class="fa-solid fa-clock"></i> {{ movie.time }} &nbsp<i
+                                class="fa-solid fa-location-dot"></i>
+                            {{ movie.from }}</span>
                     </div>
                     <div class="modal-info-2">
                         <span class="info-value-2"><i class="fa-solid fa-film"> </i>
-                            {{ ChildType }}</span>
+                            {{ movie.type }}</span>
                     </div>
                 </div>
                 <div class="modal-rate">
                     <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ ChildRate }}</span>
+                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ movie.rate }}</span>
                     <span
                         style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 2px;color: rgba(0, 0, 0, 0.5);">/10</span>
                     <button class="modal-rating" @click="showRate"><i class="fa-solid fa-star" style="color: #dcdde0;"></i>
@@ -71,17 +74,17 @@
                 </div>
                 <div class="modal-introduction">
                     <span class="modal-introduction-text">
-                        {{ ChildText }}
+                        {{ movie.text }}
                     </span>
                 </div>
                 <div class="modal-people-d">
                     <span>
-                        导演：<span class="modal-people-d-text">{{ ChildDir }}</span>
+                        导演：<span class="modal-people-d-text">{{ movie.dir }}</span>
                     </span>
                 </div>
                 <div class="modal-people-s">
                     <span>
-                        主演：<span class="modal-people-s-text">{{ ChildStar }}</span>
+                        主演：<span class="modal-people-s-text">{{ movie.star }}</span>
                     </span>
                 </div>
                 <el-button type="info" plain
@@ -112,7 +115,7 @@
                     </div>
                     <div class="rate-block">
                         <span class="rate-this">RATE THIS</span>
-                        <span class="rate-name">{{ ChildName }}</span>
+                        <span class="rate-name">{{ movie.name }}</span>
                         <!-- <span class="demonstration">区分颜色</span> -->
                         <el-rate style="margin-top: 3%;" v-model="value" :colors="colors" :max="10">
                         </el-rate>
@@ -128,23 +131,10 @@
 <script>
 
 export default {
-    props: {
-        ChildName: String,
-        ChildRate: Number,
-        ChildYear: Number,
-        ChildTime: String,
-        ChildFrom: String,
-        ChildType: String,
-        ChildDir: String,
-        ChildStar: String,
-        ChildText: String,
-        ChildImage: {
-            type: String,
-            required: true,
-        }
-    },
+    props: ['movie'],
     data() {
         return {
+            mark: false,
             isModalVisible: false, // 控制弹窗的显示与隐藏
             isRateVisible: false,
             value: 0,

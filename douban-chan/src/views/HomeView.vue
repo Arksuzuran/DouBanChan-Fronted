@@ -1,20 +1,14 @@
 <template>
   <div>
-    <!-- <nav-bar-back-ground></nav-bar-back-ground> -->
     <home-module></home-module>
     <film-module></film-module>
     <book-module></book-module>
-    <!-- <nav-bar-cartoon></nav-bar-cartoon> -->
-    <!-- <individual-mini-card></individual-mini-card> -->
-    <!-- <universal-card></universal-card> -->
-    <!-- <login-module></login-module> -->
     <topic-group-module></topic-group-module>
     <div class="test1">
       <self-information></self-information>
-      <!-- <choice-menu></choice-menu> -->
     </div>
     <div class="test2">
-      <upload-image></upload-image>
+      <subscribe-card></subscribe-card>
     </div>
     <br>
     <br>
@@ -27,34 +21,31 @@
 import HomeModule from './HomeModule.vue';
 import FilmModule from './FilmModule.vue';
 import BookModule from './BookModule.vue';
-import NavBar from '../components/NavBar.vue';
-import NavBarBackGround from '../components/NavBarBackGround.vue';
-import LoginModule from './LoginModule.vue';
-import IndividualMiniCard from './IndividualMiniCard.vue';
-import NavBarCartoon from '../components/NavBarCartoon.vue';
 import TopicGroupModule from './TopicGroupModule.vue';
-import GroupShowCard from './GroupShowCard.vue';
-import Player from '../components/Player.vue';
 import SelfInformation from './SelfInformation.vue';
-import ChoiceMenu from './ChoiceMenu.vue';
-import UploadImage from '../components/UploadImage.vue'
+import SubscribeCard from '../components/SubscribeCard.vue';
 export default {
   name: 'HomeView',
   components: {
     HomeModule,
     FilmModule,
     BookModule,
-    NavBar,
-    NavBarBackGround,
-    LoginModule,
-    IndividualMiniCard,
-    NavBarCartoon,
     TopicGroupModule,
-    GroupShowCard,
-    Player,
-    ChoiceMenu,
     SelfInformation,
-    UploadImage,
+    SubscribeCard,
+  },
+  data() {
+    return {
+      messages: [
+        {
+          id: 1,
+          imagePath: require('../assets/conroy_img/qq.jpg'),
+          name: '秋子夜',
+          time: '2023年6月4日 17:51',
+          comment: '江南第一深情吴一凡邀请你共进晚餐,希望你不要不识抬举.',
+        },
+      ],
+    }
   }
 }
 </script>
@@ -73,6 +64,6 @@ body {
 
 .test2 {
   margin-top: 200px;
-  /* margin-left: 100px; */
+  margin-left: 100px;
 }
 </style>

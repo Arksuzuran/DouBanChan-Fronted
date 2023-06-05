@@ -1,10 +1,10 @@
 <template>
     <div class="scrolling-screen-card-block">
         <div class="scrolling-screen-card-image-container">
-            <img :src="require(`../assets/conroy_img/${image}`)" class="scrolling-screen-card-image">
+            <img :src="scrollCard.cardImage" class="scrolling-screen-card-image">
         </div>
         <div class="scrolling-screen-mini-block">
-            <MiniCard></MiniCard>
+            <MiniCard :miniCard="scrollCard"></MiniCard>
         </div>
     </div>
 </template>
@@ -12,9 +12,9 @@
 <script>
 import MiniCard from '../components/MiniCard.vue';
 export default {
+    props: ['scrollCard'],
     data() {
         return {
-            image: 'snake.jpg'
         }
     },
     components: {
@@ -25,12 +25,12 @@ export default {
 
 <style>
 .scrolling-screen-card-block {
-    width: 800px;
+    width: 850px;
     height: 480px;
 }
 
 .scrolling-screen-card-image-container {
-    width: 800px;
+    width: 850px;
     height: 480px;
 }
 

@@ -16,9 +16,9 @@
                 </el-header>
                 <el-main>
                     <div class="topic-module-card-container">
-                        <div v-for="card in 5" class="topic-module-card-list">
-                            <topic-card></topic-card>
-                        </div>
+                        <topic-card v-for="topic in topics" :key="topic.id" :topic="topic"
+                            style="margin-bottom: 20px;"></topic-card>
+
                     </div>
                 </el-main>
             </el-container>
@@ -40,18 +40,14 @@
                 <el-main>
                     <div class="group-module-up">
                         <div class="group-module-up-1">
-                            <GroupShowCard></GroupShowCard>
-
-                            <GroupShowCard></GroupShowCard>
-
-                            <GroupShowCard></GroupShowCard>
+                            <GroupShowCard :group="groups[0]"></GroupShowCard>
+                            <GroupShowCard :group="groups[1]"></GroupShowCard>
+                            <GroupShowCard :group="groups[2]"></GroupShowCard>
                         </div>
                         <div class="group-module-up-2">
-                            <GroupShowCard></GroupShowCard>
-
-                            <GroupShowCard></GroupShowCard>
-
-                            <GroupShowCard></GroupShowCard>
+                            <GroupShowCard :group="groups[3]"></GroupShowCard>
+                            <GroupShowCard :group="groups[4]"></GroupShowCard>
+                            <GroupShowCard :group="groups[5]"></GroupShowCard>
                         </div>
                     </div>
                     <!-- <div class="group-module-cartoon">
@@ -83,6 +79,96 @@ export default ({
         GroupNewCartoon,
         GroupMiniCard,
     },
+    data() {
+        return {
+            topics: [
+                {
+                    id: 1,
+                    image: require(`../assets/conroy_img/doupo.png`),
+                    title: '#为什么到现在你都没有谈恋爱#',
+                    text: '可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？',
+                    read: '140万',
+                    discuss: '498',
+                },
+                {
+                    id: 2,
+                    image: require(`../assets/conroy_img/qq.jpg`),
+                    title: '#高铁站台为什么不能打伞#',
+                    text: '高铁站台为什么不能打伞🌂',
+                    read: '140万',
+                    discuss: '498',
+                },
+                {
+                    id: 3,
+                    image: require(`../assets/conroy_img/1.jpg`),
+                    title: '#为什么广东人这么爱吃却普遍都瘦#',
+                    text: '#为什么广东人这么爱吃却普遍都瘦##广东人每一顿饭不能离开什么#广东人一直以“会吃”而闻名。可是，向来“会吃”的广东人，都吃“达标”了吗？',
+                    read: '140万',
+                    discuss: '498',
+                },
+                {
+                    id: 4,
+                    image: require(`../assets/conroy_img/doupo.png`),
+                    title: '#为什么到现在你都没有谈恋爱#',
+                    text: '可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？',
+                    read: '140万',
+                    discuss: '498',
+                },
+                {
+                    id: 5,
+                    image: require(`../assets/conroy_img/doupo.png`),
+                    title: '#为什么到现在你都没有谈恋爱#',
+                    text: '可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？',
+                    read: '140万',
+                    discuss: '498',
+                },
+            ],
+            groups: [
+                {
+                    id: 1,
+                    name: '刘慈溪',
+                    image: require('../assets/conroy_img/qq.jpg'),
+                    number: '12323',
+                    text: '该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
+                },
+                {
+                    id: 2,
+                    name: 'CZX',
+                    image: require('../assets/conroy_img/czx.jpg'),
+                    number: '12323',
+                    text: '开打开打',
+                },
+                {
+                    id: 3,
+                    name: 'ADK',
+                    image: require('../assets/conroy_img/adk.jpg'),
+                    number: '22323',
+                    text: 'AAAAA神,GodA,你懂A的含金量吗,臣服于A吧',
+                },
+                {
+                    id: 4,
+                    name: '美女联盟',
+                    image: require('../assets/conroy_img/xw.jpg'),
+                    number: '38323',
+                    text: '老色批进来吧',
+                },
+                {
+                    id: 5,
+                    name: '秋子夜',
+                    image: require('../assets/conroy_img/image.jpg'),
+                    number: '28323',
+                    text: '混子选手罢了',
+                },
+                {
+                    id: 6,
+                    name: '刘慈溪',
+                    image: require('../assets/conroy_img/snake.jpg'),
+                    number: '28323',
+                    text: '该小组都是刘慈欣的铁杆粉丝,三体世界脑残粉嘿嘿嘿嘿',
+                },
+            ]
+        }
+    }
 })
 </script>
 <style scoped>
@@ -157,10 +243,6 @@ export default ({
     padding: 10px;
 }
 
-.topic-module-card-list {
-    margin-bottom: 20px;
-    /* 调整 card 之间的垂直间距 */
-}
 
 .group-module {
     position: absolute;

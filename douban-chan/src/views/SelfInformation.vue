@@ -180,6 +180,7 @@ export default ({
     border-radius: 30px;
     position: absolute;
     margin-left: 120px;
+    margin-top: 20px;
 }
 
 .coverImage {

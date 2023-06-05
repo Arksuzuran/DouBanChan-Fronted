@@ -3,23 +3,28 @@
 
         <div class="textBox">
             <div class="textContent">
-                <p class="h1">#为什么到现在你都没有谈恋爱#</p>
+                <p class="h1">{{ topic.title }}</p>
             </div>
             <div class="container">
-                <p class="text">可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？
-                    你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？可以讲一讲，你为什么到现在都没有谈恋爱吗？ 你为什么到现在都没有谈恋爱吗？</p>
+                <p class="text">{{ topic.text }}</p>
             </div>
             <div class="num">
-                <span class="span1">阅读:140万</span>
-                <span class="span2">讨论:498</span>
+                <span class="span1">阅读:{{ topic.read }}</span>
+                <span class="span2">讨论:{{ topic.discuss }}</span>
             </div>
 
         </div>
-        <div class="img"></div>
+        <div class="img">
+            <img :src="topic.image" class="image">
+        </div>
     </div>
 </template>
 
-<script></script>
+<script>
+export default ({
+    props: ['topic'],
+})
+</script>
 
 <style scoped>
 .card {
@@ -35,6 +40,13 @@
     transition: 0.5s ease-in-out;
 }
 
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
 .card:hover {
     cursor: pointer;
     transform: scale(1.03);
@@ -45,7 +57,6 @@
     height: 95px;
     margin-left: 10px;
     border-radius: 10px;
-    background-image: url('../assets/conroy_img/login-back.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -73,7 +84,7 @@
 }
 
 .num {
-    margin-top: 3px;
+    position: absolute;
     width: 180px;
     max-height: 20px;
     display: flex;
@@ -104,6 +115,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 450px;
+    height: 50px;
 }
 
 .container p {

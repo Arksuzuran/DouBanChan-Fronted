@@ -2,27 +2,30 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" class="book-card">
             <div class="flag">
-                <button class="favorite-button">
+                <button class="favorite-button" @click="mark = !mark">
                     <span class="fa-layers fa-fw" style="background:transparent position: absolute; top: 0px; left: 0px;">
-                        <i class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
-                        <i class="fa-duotone fa-plus fa-xs"
+                        <i v-if="!mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
+                        <i v-if="!mark" class="fa-duotone fa-plus fa-xs"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-55%, -300%); color: #ffffff; font-size: 30px;"></i>
+                        <i v-if="mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
+                        <i v-if="mark" class="fa-solid fa-check fa-xs"
+                            style="position: absolute; top: 50%; left: 55%; transform: translate(-55%, -300%); color: #000000; font-size: 24px;"></i>
                     </span>
                 </button>
             </div>
             <div class="image-container">
-                <img :src="ChildImage" class="image">
+                <img :src="book.image" class="image">
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ ChildRate
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ book.rate
                 }}</span>
                 <button class="star-button" @click="showRate">
                     <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
             <div style="margin-top: -8px;text-align: left;margin-left: 10px;">
-                <span class="card-name" style="display: inline-block;">{{ ChildName }}</span>
+                <span class="card-name" style="display: inline-block;">{{ book.name }}</span>
             </div>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
@@ -40,25 +43,24 @@
             <div class="modal-overlay" @click="closeModal"></div> <!-- 遮罩层 -->
             <div class="modal-content">
                 <div>
-                    <img :src="ChildImage" class="image-modal">
+                    <img :src="book.image" class="image-modal">
                 </div>
-                <button class="modal-name">{{ ChildName }} <i class="
-                    el-icon-arrow-right custom-icon-arrow"></i></button>
+                <button class="modal-name">{{ book.name }}</button>
                 <button class="close-button" @click="closeModal"><i class="fa-solid fa-xmark"></i></button>
                 <div class="modal-detail">
                     <div class="modal-info-1">
-                        <span class="info-value-1"><i class="el-icon-date"></i> {{ ChildYear }} &nbsp<i
-                                class="el-icon-document"> </i> {{ ChildPage }} &nbsp<i class="el-icon-location-outline">
+                        <span class="info-value-1"><i class="el-icon-date"></i> {{ book.year }} &nbsp<i
+                                class="el-icon-document"> </i> {{ book.page }} &nbsp<i class="el-icon-location-outline">
                             </i>
-                            {{ ChildFrom }}</span>
+                            {{ book.from }}</span>
                     </div>
                     <div class="modal-info-2">
-                        <span class="info-value-2"><i class="fa-solid fa-book"> </i> {{ ChildType }}</span>
+                        <span class="info-value-2"><i class="fa-solid fa-book"> </i> {{ book.type }}</span>
                     </div>
                 </div>
                 <div class="modal-rate">
                     <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ ChildRate }}</span>
+                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ book.rate }}</span>
                     <span
                         style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 2px;color: rgba(0, 0, 0, 0.5);">/10</span>
                     <button class="modal-rating" @click="showRate"><i class="fa-solid fa-star" style="color: #dcdde0;"></i>
@@ -66,17 +68,17 @@
                 </div>
                 <div class="modal-introduction">
                     <span class="modal-introduction-text">
-                        {{ ChildText }}
+                        {{ book.text }}
                     </span>
                 </div>
                 <div class="modal-people-d">
                     <span>
-                        作者：<span class="modal-people-d-text">{{ ChildDir }}</span>
+                        作者：<span class="modal-people-d-text">{{ book.dir }}</span>
                     </span>
                 </div>
                 <div class="modal-people-s">
                     <span>
-                        主角：<span class="modal-people-s-text">{{ ChildStar }}</span>
+                        主角：<span class="modal-people-s-text">{{ book.star }}</span>
                     </span>
                 </div>
                 <el-button type="info" plain
@@ -107,7 +109,7 @@
                     </div>
                     <div class="rate-block">
                         <span class="rate-this">RATE THIS</span>
-                        <span class="rate-name">{{ ChildName }}</span>
+                        <span class="rate-name">{{ book.name }}</span>
                         <!-- <span class="demonstration">区分颜色</span> -->
                         <el-rate class="book-rate-ten-star" style="margin-top: 3%;" v-model="value" :colors="colors"
                             :max="10">
@@ -124,23 +126,10 @@
 <script>
 
 export default {
-    props: {
-        ChildName: String,
-        ChildRate: Number,
-        ChildYear: Number,
-        ChildPage: String,
-        ChildFrom: String,
-        ChildType: String,
-        ChildDir: String,
-        ChildStar: String,
-        ChildText: String,
-        ChildImage: {
-            type: String,
-            required: true,
-        }
-    },
+    props: ['book'],
     data() {
         return {
+            mark: false,
             isModalVisible: false, // 控制弹窗的显示与隐藏
             isRateVisible: false,
             value: 0,

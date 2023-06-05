@@ -1,17 +1,18 @@
 <template>
     <div class="mini-card-block">
         <div class="mini-card-image-container">
-            <img :src="require(`../assets/conroy_img/${image}`)" class="mini-card-image">
+            <img :src="miniCard.miniImage" class="mini-card-image">
         </div>
         <div class="mini-card-info">
-            <span class="mini-card-name">斗破苍穹 <i class="fa-regular fa-circle-play"></i></span>
-            <span class="mini-card-word">三十年河东三十年河西，莫欺少年穷！</span>
+            <span class="mini-card-name">{{ miniCard.name }}<i class="fa-regular fa-circle-play"></i></span>
+            <span class="mini-card-word">{{ miniCard.text }}</span>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    props: ['miniCard'],
     data() {
         return {
             image: 'doupo.png'
