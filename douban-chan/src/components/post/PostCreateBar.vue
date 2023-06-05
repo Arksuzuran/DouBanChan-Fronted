@@ -240,11 +240,13 @@ export default {
                     }
                 ]
             };
+            // 只在话题中发表的帖子
             if (this.topicInfo) {
                 this.createTopicPostOnline(newPost)
             }
+            // 在小组中发表的帖子
             else {
-                this.createTopicPostOnline(newPost)
+                this.createGroupPostOnline(newPost)
             }
             console.log('用户发帖',newPost)
             // 通过事件总线触发自定义事件，并传递新帖子作为参数

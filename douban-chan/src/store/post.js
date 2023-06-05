@@ -38,71 +38,71 @@ export default {
         getPostOnline(context, id) {
             console.log("依据帖子id获取帖子，id：", id);
             context.commit("SET_POSTINFO", context.state.postInfo);
-        },
+        },  
 
         //
         //上传数据
         //
-        //在小组内创建帖子
+        //在小组内创建帖子1
         createGroupPostOnline(context, newPost) {
             console.log("小组创建帖子", newPost);
         },
-        //在话题内创建帖子
+        //在话题内创建帖子1
         createTopicPostOnline(context, newPost) {
             console.log("话题创建帖子", newPost);
         },
-        //回复帖子
-        replyPostOnline(context, postId, newReply) {
-            console.log("回复帖子", postId, newReply);
+        //回复帖子1
+        replyPostOnline(context, info) {
+            console.log("回复帖子", info.postId, info.newReply);
         },
-        //点赞帖子
-        likePostOnline(context, postId, userId) {
-            console.log("点赞帖子", postId, userId);
+        //点赞帖子1
+        likePostOnline(context, info) {
+            console.log("点赞帖子", info.postId, info.userId, info.is);
         },
-        //点踩帖子
-        dislikePostOnline(context, postId, userId) {
-            console.log("点踩帖子", postId, userId);
+        //点踩帖子1
+        dislikePostOnline(context, info) {
+            console.log("点踩帖子", info.postId, info.userId, info.is);
         },
-        //收藏帖子
-        favPostOnline(context, postId, userId) {
-            console.log("收藏帖子", postId, userId);
+        //收藏帖子1
+        favPostOnline(context, info) {
+            console.log("收藏帖子", info.postId, info.userId, info.is);
         },
-        //置顶帖子
-        topPostOnline(context, postId, top) {
-            if (top) {
-                console.log("置顶帖子", postId);
+        //置顶帖子1
+        topPostOnline(context, info) {
+            if (info.top) {
+                console.log("置顶帖子", info.postId);
             } else {
-                console.log("取消置顶帖子", postId);
+                console.log("取消置顶帖子", info.postId);
             }
         },
-        //设置为精华
-        goodPostOnline(context, postId, good) {
-            if (good) {
-                console.log("精华帖子", postId);
+        //设置为精华1
+        goodPostOnline(context, info) {
+            if (info.good) {
+                console.log("精华帖子", info.postId);
             } else {
-                console.log("取消精华帖子", postId);
+                console.log("取消精华帖子", info.postId);
             }
         },
 
-        //回复文本
-        replyTextOnline(context, textId, newReply) {
-            console.log("回复text", textId, newReply);
+        //回复文本1
+        replyTextOnline(context, info) {
+            console.log("回复text", info.textId, info.newReply);
         },
-        //点赞文本
-        likeTextOnline(context, textId, userId) {
-            console.log("点赞帖子", textId, userId);
+        //点赞文本 is:为真则点赞 为假则取消点赞
+        likeTextOnline(context, info) {
+            console.log("点赞text", info.textId, info.userId, info.is);
         },
         //点踩文本
-        dislikeTextOnline(context, textId, userId) {
-            console.log("点踩帖子", textId, userId);
+        dislikeTextOnline(context, info) {
+            console.log("点踩text", info.textId, info.userId, info.is);
         },
-        //举报文本
-        reportTextOnline(context, textId, report) {
-            console.log("回复text", textId, report);
+        //举报文本1
+        reportTextOnline(context, info) {
+            console.log("举报text", info.textId, info.report);
         },
-        //删除文本
-        deleteTextOnline(context, textId, userId) {
-            console.log("删除text", textId, report);
+        //删除文本1
+        deleteTextOnline(context, textId) {
+            console.log("删除text", textId);
         },
     },
     mutations: {
@@ -178,6 +178,7 @@ export default {
                 groupId: "g002", //来自的小组的id
             },
             {
+                postId: "p003",
                 lzId: "002",
                 lzName: "Chino",
                 lzImageUrl: require("../assets/user-image-8.jpg"),
@@ -207,6 +208,7 @@ export default {
                 groupId: "g003", //来自的小组的id
             },
             {
+                postId: "p004",
                 lzId: "002",
                 lzName: "Chino",
                 lzImageUrl: require("../assets/user-image-8.jpg"),
@@ -258,8 +260,8 @@ export default {
             dislike: 456, //帖子的点踩数
             isTopped: true, //帖子在当前小组内是否置顶
             isGoodPost: false, //帖子在当前小组内是否是精华帖
-            userIsAdmin: false, //当前用户是否是帖子所属小组的管理员
-            userIsLz: true, //当前用户是否是发帖人
+            userIsAdmin: true, //当前用户是否是帖子所属小组的管理员
+            userIsLz: false, //当前用户是否是发帖人
             userLike: false,
             userDislike: false,
             userFav: false,

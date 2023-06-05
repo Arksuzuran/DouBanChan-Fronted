@@ -28,7 +28,7 @@ export default {
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
         replyHeaderStr() {
-            return '回复 @' + this.targetUserName + '：  '
+            return '回复 @' + this.targetUserName + '： '
         }
     },
     methods: {
@@ -58,7 +58,10 @@ export default {
             if (this.floor2) {
                 newReply.text = this.replyHeaderStr + newReply.text
             }
-            this.replyTextOnline(this.textId, newReply)
+            this.replyTextOnline({
+                textId: this.textId, 
+                newReply,
+            })
 
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
             this.$bus.$emit('commentReplyCreated', this.textId);

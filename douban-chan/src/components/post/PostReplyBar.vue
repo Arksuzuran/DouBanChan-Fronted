@@ -75,12 +75,12 @@ import PictureChooser from './PictureChooser.vue'
 export default {
     name: 'PostReplyBar',
     props: ['postInfo'],
-    components:{
+    components: {
         PictureChooser,
     },
     data() {
         return {
-            
+
             // 控制是否打开发帖表单
             dialog: false,
             // 控制是否正在提交数据
@@ -113,7 +113,9 @@ export default {
         }
     },
     methods: {
-        // 点击我要发帖按钮
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        // 点击我来说两句按钮
         handleStartPost() {
             this.dialog = true
         },
@@ -147,7 +149,7 @@ export default {
             //构造对象
             let newReply = {
                 textId: nanoid(),
-                floor: 0,
+                floor: this.postInfo.comments,
                 userId: this.userId,
                 userName: this.userName,
                 userImageUrl: this.userImgUrl,
@@ -157,8 +159,15 @@ export default {
                 comments: 0,
                 like: 0,
                 dislike: 0,
+                userLike: false,
+                userDislike: false,
                 childFloorList: [],
             };
+            this.replyPostOnline({
+                postId: this.postInfo.postId,
+                newReply,
+            })
+
             // 通过事件总线触发自定义事件，并传递新回复作为参数
             this.$bus.$emit('postReplyCreated', newReply);
             // 清空内容
@@ -272,11 +281,12 @@ export default {
 </script>
 
 <style scoped>
-.replybox-container{
+.replybox-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .el-upload-list__item-thumbnail {
     object-fit: cover;
 }
@@ -312,12 +322,14 @@ export default {
     align-items: center;
     justify-content: center;
 }
-.form-main{
+
+.form-main {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-flow: column wrap;
 }
+
 .form-footer {
     display: flex;
     align-items: center;

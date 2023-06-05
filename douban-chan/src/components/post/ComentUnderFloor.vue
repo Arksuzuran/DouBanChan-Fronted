@@ -17,7 +17,7 @@
 
             <div class="footer-container">
                 <div>{{ info.date }}</div>
-                <LikeButtonGroup :info="likeInfo" :small="true" />
+                <LikeButtonGroup :info="info" :small="true" />
                 <!-- <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>{{ info.like }}
                     <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>{{ info.dislike }} -->
 
@@ -52,13 +52,7 @@ export default {
         }
     },
     computed: {
-        likeInfo() {
-            return {
-                like: this.info.like,
-                dislike: this.info.dislike,
-                textId: this.info.textId,
-            }
-        },
+
     },
     methods: {
         // 点击用户昵称或者头像即可跳转到其主页

@@ -13,8 +13,9 @@
                 <!-- 右侧 -->
                 <!-- 来自小组 和 举报按钮 -->
                 <div class="postcard-buttongroup">
-                    <PostTopicButton :info="{ topic: postInfo.topic }"></PostTopicButton>
-                    <PostReportButton></PostReportButton>
+                    <PostTopicButton :info="postInfo"></PostTopicButton>
+                    <PostOperateButton :info="postInfo"  v-if="postInfo.userIsAdmin || postInfo.userIsLz"></PostOperateButton>
+                    <PostReportButton :info="postInfo"></PostReportButton>
                 </div>
             </div>
             <!-- 标题部分 -->
@@ -50,6 +51,7 @@ import PostFloor from '@/components/post/PostFloor.vue';
 import PostReplyBar from '@/components/post/PostReplyBar.vue';
 import LikeFavButtonGroup from '@/components/post/button/LikeFavButtonGroup.vue';
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
+import PostOperateButton from '@/components/post/button/PostOperateButton.vue';
 
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
@@ -63,6 +65,7 @@ export default {
         PostReplyBar,
         LikeFavButtonGroup,
         ScrollToTopButton,
+        PostOperateButton,
     },
     methods: {
         // 向楼层列表里加入楼中楼回复
@@ -122,7 +125,7 @@ export default {
         }
     },
     mounted() {
-        let id = this.$route.params.postId
+        let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
         // 从后端获取数据
         this.getPostOnline(id)
@@ -163,7 +166,7 @@ export default {
 /* 顶栏sticky部分容器 */
 .post-top-container {
     position: sticky;
-    top: 60px;
+    top: 68px;
     background-color: rgb(255, 255, 255);
     z-index: 10;
 }

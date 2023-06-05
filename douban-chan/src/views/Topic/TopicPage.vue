@@ -41,18 +41,15 @@
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="topic-content-container">
-                <GroupHomePostList :postList="postList" :showIcongroup="true" class="topic-left-container" top="68">
-                </GroupHomePostList>
-                <TopicHotList :topicList="topicList" top="68" :mini="true" class="topic-right-container"></TopicHotList>
+                <router-view :inPostList="postList" :inTopicList="topicList"></router-view>
             </div>
         </div>
         <!-- 发帖上拉框 -->
-        <div v-if="isLogin">
+        <div v-if="isLogin && showPostCreateBar">
             <PostCreateBar :topicInfo="topicInfo"></PostCreateBar>
         </div>
-
         <!-- 滚动至顶部 -->
-        <ScrollToTopButton class="scrollbutton"></ScrollToTopButton>
+        <ScrollToTopButton v-if="showPostCreateBar" class="scrollbutton"></ScrollToTopButton>
     </div>
 </template>
 
@@ -65,7 +62,7 @@ import PostCreateBar from '@/components/post/PostCreateBar.vue'
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue'
 
 export default {
-    name: 'topicPage',
+    name: 'TopicPage',
     components: {
         TopicPostList,
         GroupHomePostList,
@@ -86,6 +83,12 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.joinTopicOnline({
+                        topicId: this.topicInfo.topicId,
+                        userId: this.userId,
+                        is: true,
+                    })
+
                     this.$message.success('您已成功加入话题!');
                     this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
@@ -98,6 +101,12 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.joinTopicOnline({
+                        topicId: this.topicInfo.topicId,
+                        userId: this.userId,
+                        is: false,
+                    })
+
                     this.$message.success('您已退出话题');
                     this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
@@ -109,8 +118,9 @@ export default {
         ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline']),
         //获取帖子列表
         ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
-        //获取话题列表    
+        //获取小组列表    
         ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
+        ...mapActions('topicAbout', ['createTopicOnline', 'joinTopicOnline']),
     },
     computed: {
         //头像路径与用户名
@@ -119,7 +129,10 @@ export default {
         ...mapGetters('postAbout', ['postList']),
         ...mapGetters('topicAbout', ['topicList', 'topicInfo']),
         ...mapGetters('groupAbout', ['groupList']),
-
+        showPostCreateBar(){
+            // console.log(this.$route)
+            return this.$route.name == 'topic'
+        },
         joinButtonClass() {
             return this.topicInfo.userJoined ? 'topic-header-button-selected' : 'topic-header-button-unselected';
         },
@@ -134,8 +147,8 @@ export default {
             console.log('用户发帖成功：', newPost)
         });
 
+        let topicId = this.$route.query.topicId? this.$route.query.topicId : this.$route.params.topicId
 
-        let topicId = this.$route.params.topicId
         console.log('已收到路由传递的话题id', topicId)
         // 从后端获取数据
         this.getPostListByTopicIdOnline(topicId)

@@ -53,7 +53,7 @@ export default {
         enterTopic(){
             this.$router.push({
                 name:'topic',
-                params:{
+                query:{
                     topicId: this.topic.topicId
                 },
             })

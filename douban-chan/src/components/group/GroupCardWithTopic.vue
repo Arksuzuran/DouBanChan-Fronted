@@ -78,7 +78,7 @@ export default {
         handleEnterGroupPage() {
             this.$router.push({
                 name: 'group',
-                params:{
+                query:{
                     groupId: this.group.groupId
                 },
             })
@@ -86,7 +86,7 @@ export default {
         handleJoinGroup() {
             this.$router.push({
                 name: 'group',
-                params:{
+                query:{
                     groupId: this.group.groupId
                 },
             })
@@ -94,7 +94,7 @@ export default {
         jumpToTopic(){
             this.$router.push({
                 name: 'topic',
-                params:{
+                query:{
                     topicId: this.group.aboutTopic.topicId
                 },
             })

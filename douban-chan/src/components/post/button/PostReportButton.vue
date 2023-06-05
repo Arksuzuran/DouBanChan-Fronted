@@ -5,7 +5,7 @@
             @click="report">
             <span ref="reportButtonText">举报</span>
         </button>
-        <ReportInputBox :signal="inputBoxOpenSignal" :info="info"></ReportInputBox>
+        <ReportInputBox :signal="inputBoxOpenSignal" :textId="info.postId"></ReportInputBox>
     </div>
 </template>
 

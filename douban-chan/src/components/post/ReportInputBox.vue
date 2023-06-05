@@ -12,7 +12,18 @@
                 <div class="form-main">
                     <!-- 表单区 -->
                     <!-- 正文输入框 -->
-                    <textarea type="textarea" v-model="form.text" rows="10" placeholder="请告诉我们发生了什么"></textarea>
+                    <el-form :model="form">
+                        <!-- 标题输入框 -->
+                        <el-form-item label="举报标题" :label-width="formLabelWidth">
+                            <el-input type="text" maxlength="50" show-word-limit v-model="form.title" autocomplete="off"
+                                placeholder="请输入标题">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="举报内容" :label-width="formLabelWidth">
+                            <textarea type="textarea" v-model="form.text" rows="10" placeholder="请告诉我们发生了什么"></textarea>
+                        </el-form-item>
+                    </el-form>
+
 
                     <!-- 缩略图 上传图片 -->
                     <!-- action 是要上传的地址 -->
@@ -41,7 +52,7 @@
                             </div>
                         </el-upload>
                     </div> -->
-                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
+                    <!-- <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser> -->
 
                     <!-- <el-dialog :visible.sync="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="">
@@ -68,7 +79,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 export default {
     name: 'ReportInputBox',
-    props: ['signal', 'postInfo'],
+    props: ['signal', 'textId'],
     components: {
         PictureChooser,
     },
@@ -86,11 +97,13 @@ export default {
             dialogVisible: false,
             disabled: false,
 
+            formLabelWidth: '80px',
             // 控制是否正在提交数据
             loading: false,
             // 表单收集的数据
             form: {
                 imgUrlList: [],
+                title: '',
                 text: '',
             },
             timer: null,
@@ -101,10 +114,6 @@ export default {
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
 
-        //回帖栏默认内容
-        inputPlaceHolderText() {
-            return '回复帖子：' + this.postInfo.title
-        },
         visable: {
             get() {
                 return this.osignal != this.signal
@@ -116,12 +125,14 @@ export default {
 
     },
     methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 关闭上拉栏
         handleClose(done) {
             if (this.loading) {
                 return;
             }
-            this.$confirm('确定要发表回帖吗？')
+            this.$confirm('确定要进行举报吗？')
                 .then(_ => {
                     //发送请求
                     this.createReport();
@@ -145,10 +156,19 @@ export default {
             this.osignal = this.signal
             clearTimeout(this.timer);
         },
-        // 创建回帖
+        // 创建举报
         createReport() {
             // 在此发送请求
-            console.log('用户发送举报请求',this.form.imgUrlList)
+            let report = {
+                title: this.form.title,
+                text: this.form.text,
+            }
+            this.reportTextOnline({
+                textId: this.textId, 
+                report,
+            })
+
+            // console.log('用户发送举报请求', report)
 
             // 清空内容
             this.fileList = []
@@ -304,10 +324,11 @@ export default {
 }
 
 .form-main {
-    display: flex;
+    margin: 0 auto;
+    /* display: flex;
     align-items: center;
     justify-content: center;
-    flex-flow: column wrap;
+    flex-flow: column wrap; */
 }
 
 .postbar-user-image {
@@ -349,7 +370,7 @@ export default {
 
 textarea {
     padding: 15px;
-    width: 75%;
+    width: 85%;
     border: 2px solid #ffeaea;
     resize: vertical;
     background-color: rgba(255, 252, 252, 0.7);

@@ -82,6 +82,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions('groupAbout', ['createGroupOnline', 'joinGroupOnline','applyAdminOnline']),
         joinGroup() {
             if (!this.groupInfo.userInGroup) {
                 this.$confirm('是否确定加入小组?加入小组后即可在小组内发表帖子。', '提示', {
@@ -89,6 +90,12 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.joinGroupOnline({
+                        groupId: this.groupInfo.groupId,
+                        userId: this.userId,
+                        is: true,
+                    })
+
                     this.$message.success('您已成功加入小组!');
                     this.groupInfo.userInGroup = !this.groupInfo.userInGroup
                 }).catch(() => {
@@ -101,6 +108,12 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.joinGroupOnline({
+                        groupId: this.groupInfo.groupId,
+                        userId: this.userId,
+                        is: false,
+                    })
+
                     this.$message.success('您已退出小组');
                     this.groupInfo.userInGroup = !this.groupInfo.userInGroup
                 }).catch(() => {
@@ -116,8 +129,14 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.applyAdminOnline({
+                        groupId: this.groupInfo.groupId,
+                        userId: this.userId,
+                        is: true,
+                    })
+
                     this.$message.success('请求已提交!');
-                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                    // this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
                 }).catch(() => {
                     this.$message.error('已取消操作');
                 });
@@ -128,8 +147,14 @@ export default {
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
+                    this.applyAdminOnline({
+                        groupId: this.groupInfo.groupId,
+                        userId: this.userId,
+                        is: false,
+                    })
+
                     this.$message.success('操作成功');
-                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                    // this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
                 }).catch(() => {
                     this.$message.error('已取消操作');
                 });
@@ -143,7 +168,7 @@ export default {
             if (this.activeIndex == 'groupPostList') {
                 this.$router.push({
                     name: 'group',
-                    params: {
+                    query: {
                         groupId: this.groupInfo.groupId
                     },
                 })
@@ -153,7 +178,7 @@ export default {
                 console.log('试图访问精华帖，当前精华帖列表：', this.getGoodPostList())
                 this.$router.push({
                     name: 'group',
-                    params: {
+                    query: {
                         groupId: this.groupInfo.groupId
                     },
                 })
@@ -161,7 +186,7 @@ export default {
             else {
                 this.$router.push({
                     name: index,
-                    params: {
+                    query: {
                         groupId: this.groupInfo.groupId
                     },
                 })
@@ -194,7 +219,7 @@ export default {
         ...mapGetters('topicAbout', ['topicList']),
         ...mapGetters('groupAbout', ['groupInfo']),
         showPostCreateBar(){
-            console.log(this.$route)
+            // console.log(this.$route)
             return this.$route.name == 'group' || this.$route.name == 'groupTopicList'
         },
         joinButtonClass() {
@@ -222,8 +247,8 @@ export default {
             this.postList.push(newPost);
             console.log('用户发帖成功：', newPost)
         });
+        let id = this.$route.query.groupId ? this.$route.query.groupId : this.$route.params.groupId
 
-        let id = this.$route.params.groupId
         // 从后端获取数据
         this.getPostListByGroupIdOnline(id)
         this.getTopicListByGroupIdOnline(id)

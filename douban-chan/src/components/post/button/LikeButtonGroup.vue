@@ -13,8 +13,9 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
-    name:'LikeButtonGroup',
+    name: 'LikeButtonGroup',
     props: ['info', 'small'],
     data() {
         return {
@@ -24,41 +25,56 @@ export default {
             basicDislikeNumber: this.info.dislike,
         }
     },
-    computed:{
-        fontClass(){
+    computed: {
+        //头像路径与用户名
+        //引入vuex的userAbout模块里的 state变量
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        fontClass() {
             return this.small ? 'postcard-data-font-small' : 'postcard-data-font'
         },
-        iconClass(){
+        iconClass() {
             return this.small ? 'postcard-icon-small' : 'postcard-icon'
         },
-        getLikeNumber(){
-            if(this.userLike){
+        getLikeNumber() {
+            if (this.userLike) {
                 return this.basicLikeNumber + 1;
             }
-            else{
+            else {
                 return this.basicLikeNumber;
             }
         },
-        getDislikeNumber(){
-            if(this.userDislike){
+        getDislikeNumber() {
+            if (this.userDislike) {
                 return this.basicDislikeNumber + 1;
             }
-            else{
+            else {
                 return this.basicDislikeNumber;
             }
         },
     },
-    methods:{
+    methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 改变点赞数
-        uploadLike(num){
+        uploadLike(num) {
             //在此向后端发送请求
+            this.likeTextOnline({
+                textId: this.info.textId,
+                userId: this.userId,
+                is: num>0
+            })
         },
         //改变点踩数
-        uploadDislike(num){
+        uploadDislike(num) {
             //在此向后端发送请求
+            this.dislikeTextOnline({
+                textId: this.info.textId,
+                userId: this.userId,
+                is: num>0
+            })
         },
         // 准备向后端发送点赞信息
-        prepareUploadLike(){
+        prepareUploadLike() {
             if (this.userLike) {
                 this.uploadLike(1)
             }
@@ -67,7 +83,7 @@ export default {
             }
         },
         // 准备向后端发送点踩信息
-        prepareUploadDislike(){
+        prepareUploadDislike() {
             if (this.userDislike) {
                 this.uploadDislike(1)
             }
@@ -131,6 +147,7 @@ export default {
 
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
+
 /* 底部点赞收藏等信息 */
 .postcard-dataicon-group {
     /* height: 20px; */
@@ -147,21 +164,26 @@ export default {
     margin: 0 5px 3px 20px;
     cursor: pointer;
 }
-.postcard-icon-small{
+
+.postcard-icon-small {
     font-size: 18px;
     color: rgb(97, 97, 97);
     margin: 15px 5px 15px 20px;
     cursor: pointer;
 }
+
 .postcard-icon-like {
     color: rgb(252, 53, 53);
 }
+
 .postcard-icon-dislike {
     color: rgb(0, 0, 0);
 }
+
 .postcard-dataicon-wrapper {
     margin-bottom: -1px;
 }
+
 .postcard-data-font {
     margin-right: 8px;
     font-size: 16px;

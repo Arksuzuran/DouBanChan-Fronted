@@ -39,17 +39,17 @@ export default {
         //
         //上传数据
         //
-        //创建话题
+        //创建话题1
         createTopicOnline(context, newTopic){
             console.log("创建话题", newTopic);
         },
         //加入话题
-        joinTopicOnline(context, topicId, userId, join){
-            if(join){
-                console.log("加入话题", topicId, userId);
+        joinTopicOnline(context, info){
+            if(info.is){
+                console.log("加入话题", info.topicId, info.userId, info.is);
             }
             else{
-                console.log("退出话题", topicId, userId);
+                console.log("退出话题", info.topicId, info.userId, info.is);
             }
         },
     },

@@ -17,10 +17,10 @@
             <PostCardUserInfo class="postcard-userinfo-container" :info="lzInfo" />
 
             <!-- 来自小组 和 举报按钮 -->
-            <div class="postcard-buttongroup"> 
+            <div class="postcard-buttongroup">
                 <PostTopicButton :info="info"></PostTopicButton>
-                <PostOperateButton :info="info"  v-if="info.userIsAdmin || info.userIsLz"></PostOperateButton>
-                <PostReportButton></PostReportButton>
+                <PostOperateButton :info="info" v-if="info.userIsAdmin || info.userIsLz"></PostOperateButton>
+                <PostReportButton :info="info"></PostReportButton>
             </div>
 
             <!-- 点赞数 与 帖子正文 -->
@@ -98,12 +98,17 @@ export default {
         PostReportButton,
         PostOperateButton,
     },
-    computed:{
-        showGroupFromBox(){
+    computed: {
+        //头像路径与用户名
+        //引入vuex的userAbout模块里的 state变量
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        showGroupFromBox() {
             return !this.notShowFromGroup && this.info.groupName
         },
     },
     methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 限制字符串长度为length
         cutStrByLength(str, length) {
             if (str.length > length) {
@@ -120,13 +125,23 @@ export default {
             this.updateFav()
             if (this.userFav) {
                 this.favNumber++;
+                this.favPostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: true,
+                })
             }
             else {
                 this.favNumber--
+                this.favPostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: true,
+                })
             }
         },
         updateFav() {
-            if(!this.$refs.favIcon){
+            if (!this.$refs.favIcon) {
                 return
             }
             if (this.userFav) {
@@ -148,7 +163,7 @@ export default {
             }
         },
         updateComment() {
-            if(!this.$refs.commentIcon){
+            if (!this.$refs.commentIcon) {
                 return
             }
             if (this.userComment) {
@@ -165,18 +180,33 @@ export default {
             if (this.userDislike) {
                 this.userDislike = false
                 this.dislikeNumber--
+                this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: false,
+                })
             }
             this.updateDislike()
             this.updateLike()
             if (this.userLike) {
                 this.likeNumber++;
+                this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: true,
+                })
             }
             else {
                 this.likeNumber--
+                this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: false,
+                })
             }
         },
         updateLike() {
-            if(!this.$refs.likeIcon){
+            if (!this.$refs.likeIcon) {
                 return
             }
             if (this.userLike) {
@@ -193,18 +223,33 @@ export default {
             if (this.userLike) {
                 this.userLike = false
                 this.likeNumber--;
+                this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: false,
+                })
             }
             this.updateDislike()
             this.updateLike()
             if (this.userDislike) {
                 this.dislikeNumber++;
+                this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: true,
+                })
             }
             else {
                 this.dislikeNumber--
+                this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: false,
+                })
             }
         },
         updateDislike() {
-            if(!this.$refs.dislikeIcon){
+            if (!this.$refs.dislikeIcon) {
                 return
             }
             if (this.userDislike) {
@@ -214,10 +259,10 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
-        jumpToGroup(){
+        jumpToGroup() {
             this.$router.push({
-                name:'group',
-                params:{
+                name: 'group',
+                query: {
                     groupId: this.info.groupId
                 },
             })
@@ -276,6 +321,7 @@ export default {
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
 }
+
 /* 所来自小组的醒目box */
 .postcard-groupFromBox {
     /* 位置 */

@@ -35,26 +35,26 @@ export default {
         //
         //上传数据
         //
-        //创建小组
+        //创建小组1
         createGroupOnline(context, newGroup){
             console.log("创建小组", newGroup);
         },
-        //加入小组
-        joinGroupOnline(context, groupId, userId, join){
-            if(join){
-                console.log("加入小组", groupId, userId);
+        //加入小组1
+        joinGroupOnline(context, info){
+            if(info.is){
+                console.log("加入小组", info.groupId, info.userId, info.is);
             }
             else{
-                console.log("退出小组", groupId, userId);
+                console.log("退出小组", info.groupId, info.userId, info.is);
             }
         },
-        //申请管理员
-        applyAdminOnline(context, groupId, userId, apply){
-            if(apply){
-                console.log("申请成为管理员", groupId, userId);
+        //申请管理员1
+        applyAdminOnline(context, info){
+            if(info.is){
+                console.log("申请成为管理员", info.groupId, info.userId, info.is);
             }
             else{
-                console.log("卸任管理员", groupId, userId);
+                console.log("卸任管理员", info.groupId, info.userId, info.is);
             }
         },
         
