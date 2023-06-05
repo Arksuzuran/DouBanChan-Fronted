@@ -3,9 +3,9 @@
   <div class="topiclist-main-container">
 
     <!-- 顶部排序部分 -->
-    <div class="topiclist-sort-label-container" :style="title? 'top: 64px;':''">
+    <div class="topiclist-sort-label-container" :style="title1? 'top: 64px;':''">
       <div class="topiclist-title">
-        {{ title ? title : '推荐参与的话题' }}
+        {{ title1 ? title1 : '推荐参与的话题' }}
       </div>
       <PostSortLabel></PostSortLabel>
     </div>
@@ -25,7 +25,7 @@ import TopicNormalList from '@/components/topic/TopicNormalList.vue'
 
 export default {
   name: 'TopicHomeTopicSquare',
-  props: ['topicList', 'title'],
+  props: ['topicList', 'title1'],
   components: {
     PostSortLabel,
     TopicNormalList,

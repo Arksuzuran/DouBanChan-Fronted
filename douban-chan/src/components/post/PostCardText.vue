@@ -125,6 +125,7 @@ export default {
 }
 
 .postcard-text-img-1 {
+    margin: 0 2%;
     max-width: 300px;
     max-height: 300px;
     object-fit: cover;
@@ -138,7 +139,7 @@ export default {
 }
 
 .postcard-text-img-3 {
-    margin: 1%;
+    margin: 0 1%;
     max-width: 31%;
     max-height: 300px;
     object-fit: cover;

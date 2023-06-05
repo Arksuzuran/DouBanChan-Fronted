@@ -2,6 +2,9 @@
 export default {
     namespaced: true,
     actions: {
+        //
+        //请求数据
+        //
         //随机获取列表
         getGroupListOnline(context, tag) {
             if(tag){
@@ -28,6 +31,33 @@ export default {
             console.log("依据指定id获取小组信息，指定id：", id);
             context.commit('SET_GROUPINFO', context.state.groupInfo)
         },
+
+        //
+        //上传数据
+        //
+        //创建小组
+        createPostOnline(context, newGroup){
+            console.log("创建小组", newGroup);
+        },
+        //加入小组
+        joinGroupOnline(context, groupId, userId, join){
+            if(join){
+                console.log("加入小组", groupId, userId);
+            }
+            else{
+                console.log("退出小组", groupId, userId);
+            }
+        },
+        //申请管理员
+        likePostOnline(context, groupId, userId, apply){
+            if(apply){
+                console.log("申请成为管理员", groupId, userId);
+            }
+            else{
+                console.log("卸任管理员", groupId, userId);
+            }
+        },
+        
     },
     mutations: {
         SET_GROUPLIST(state,value){

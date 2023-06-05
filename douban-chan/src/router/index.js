@@ -120,6 +120,12 @@ const routes = [
         name:'groupTopicList',
         component: TopicHomeTopicSquare
       },
+      // 成员列表页面
+      // {
+      //   path:'/group/memberList',
+      //   name:'groupMemberList',
+      //   component: TopicHomeTopicSquare
+      // },
     ]
   },
   //影视详情页面

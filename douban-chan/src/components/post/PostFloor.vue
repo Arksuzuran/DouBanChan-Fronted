@@ -83,7 +83,7 @@ export default {
             // 用户是否正在回复评论
             isReplying: false,
             // 允许直接展示的最多楼中楼层数
-            maxCommentsNum: 1,
+            maxCommentsNum: 2,
         }
     },
     computed: {

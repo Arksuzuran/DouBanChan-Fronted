@@ -6,6 +6,7 @@ import userOptions from './user'
 import groupOptions from './group'
 import topicOptions from './topic'
 import postOptions from './post'
+import uploadOptions from './upload'
 
 Vue.use(Vuex)
 
@@ -16,5 +17,6 @@ export default new Vuex.Store({
     groupAbout: groupOptions,
     topicAbout: topicOptions,
     postAbout: postOptions,
+    uploadAbout: uploadOptions,
   }
 })

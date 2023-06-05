@@ -24,8 +24,9 @@
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync" :placeholder="topicPlaceHolder"
-                                @select="handleSelect" style="width: 100%;" :disabled="topicLocked"></el-autocomplete>
+                            <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync"
+                                :placeholder="topicPlaceHolder" @select="handleSelect" style="width: 100%;"
+                                :disabled="topicLocked"></el-autocomplete>
                         </el-form-item>
 
                         <!-- 正文输入框 -->
@@ -46,7 +47,7 @@
                     <!-- 这里需要根据后端修改! -->
                     <!-- 这里需要根据后端修改! -->
                     <!-- 上传图片 -->
-                    
+
 
                     <!-- <template>
                         <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
@@ -106,14 +107,14 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 
 export default {
-    props:['topicInfo'],
+    props: ['groupInfo', 'topicInfo'],
     name: 'PostCreateBar',
-    components:{
+    components: {
         PictureChooser,
     },
     data() {
         return {
-            
+
             // 控制是否打开发帖表单
             dialog: false,
             // 控制是否正在提交数据
@@ -132,7 +133,7 @@ export default {
             topicList: [],
             timeout: null,
 
-            
+
             // 图片的list
             fileList: [],
             // // 图片发送相关
@@ -148,10 +149,10 @@ export default {
         //头像路径与用户名
         //引入vuex的userAbout模块里的 state变量
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
-        topicLocked(){
+        topicLocked() {
             return this.topicInfo ? true : false
         },
-        topicPlaceHolder(){
+        topicPlaceHolder() {
             return this.topicInfo ? this.topicInfo.topicName : '请选择话题'
         }
     },
@@ -205,6 +206,22 @@ export default {
                 dislike: 0,
                 isTopped: false,
                 isGoodPost: false,
+                floorList: [
+                    {
+                        textId: 'f001',
+                        floor: 1,
+                        userId: this.userId,
+                        userName: this.userName,
+                        userImageUrl: this.userImgUrl,
+                        date: this.getTimeNow(),
+                        text: this.form.text,
+                        imageUrlList: this.form.text,
+                        comments: 0,
+                        like: 0,
+                        dislike: 0,
+                        childFloorList: [],
+                    }
+                ]
             };
             // 通过事件总线触发自定义事件，并传递新帖子作为参数
             this.$bus.$emit('postCreated', newPost);
@@ -474,4 +491,5 @@ export default {
     background-color: rgb(255, 56, 56);
     color: rgb(255, 255, 255);
     cursor: pointer;
-}</style>
+}
+</style>

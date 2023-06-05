@@ -16,7 +16,7 @@
                 <p class="topiccard-intro">{{ topic.topicIntro }}</p>
             </div>
             <div class="num">
-                <span class="span1">浏览:{{ topic.visit }}</span>
+                <span class="span1">参与人数:{{ topic.follow }}</span>
                 <span class="span2">讨论:{{ topic.post }}</span>
                 <span class="span1">发起时间:{{ topic.date }}</span>
             </div>

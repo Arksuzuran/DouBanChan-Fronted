@@ -2,6 +2,9 @@
 export default {
     namespaced: true,
     actions: {
+        //
+        //请求数据
+        //
         //获取热榜话题列表 如果传入tag则以tag为标准筛选
         getTopicListByHotOnline(context, tag) {
             if(tag){
@@ -32,7 +35,25 @@ export default {
             console.log("依据指定id获取话题信息，指定id：", id);
             context.commit('SET_TOPICINFO', context.state.topicInfo)
         },
+
+        //
+        //上传数据
+        //
+        //创建话题
+        createTopicOnline(context, newTopic){
+            console.log("创建话题", newTopic);
+        },
+        //加入话题
+        joinGroupOnline(context, topicId, userId, join){
+            if(join){
+                console.log("加入话题", topicId, userId);
+            }
+            else{
+                console.log("退出话题", topicId, userId);
+            }
+        },
     },
+
     mutations: {
         SET_TOPICLIST(state, value) {
             state.topicList = value
@@ -48,7 +69,7 @@ export default {
                 topicName: '游戏',
                 topicAvatarUrl: require('../assets/topic-avatar-1.jpg'),
                 topicIntro: '是所有哺乳类动物，特别是灵长类动物学习生存的第一步。它是一种基于物质需求满足之上的，在一些特定时间、空间范围内遵循某种特定规则的，追求精神世界需求满足的社会行为方式',
-                visit: 159512,
+                follow: 159512,
                 post: 9591,
                 date: '2023-5-19 23:57',    //发帖时间
             },
@@ -57,7 +78,7 @@ export default {
                 topicName: 'BUAA',
                 topicAvatarUrl: require('../assets/group-img-1.jpg'),
                 topicIntro: '北京航空航天大学（Beihang University）简称“北航”，位于首都北京市，是中华人民共和国工业和信息化部直属的全国重点大学，中央直管高校， [89] 位列国家“双一流”、“985工程”、“211工程”重点建设高校',
-                visit: 9891,
+                follow: 9891,
                 post: 217,
                 date: '2023-6-01 23:57',    //发帖时间
             },
@@ -66,7 +87,7 @@ export default {
                 topicName: '科比',
                 topicAvatarUrl: require('../assets/user-image-3.jpg'),
                 topicIntro: '牢大，我想你了',
-                visit: 46218,
+                follow: 46218,
                 post: 1678,
                 date: '2023-5-29 45:57',    //发帖时间
             },
@@ -140,7 +161,6 @@ export default {
             topicAvatarImgUrl: require("../assets/topic-avatar-1.jpg"),
             topicName: '游戏',
             topicIntro: '是所有哺乳类动物，特别是灵长类动物学习生存的第一步。它是一种基于物质需求满足之上的，在一些特定时间、空间范围内遵循某种特定规则的，追求精神世界需求满足的社会行为方式.',
-            visit: 159512,
             follow: 75971,
             post: 9591,
             date: '2023-5-19 23:57',    //发帖时间

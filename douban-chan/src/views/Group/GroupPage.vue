@@ -33,7 +33,8 @@
 
                 <!-- 小组右侧关注按钮和申请管理员按钮 -->
                 <div class="group-header-button-group">
-                    <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出' : '关注' }}</button>
+                    <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出小组' : '加入小组'
+                    }}</button>
                     <button :class="applyButtonClass" @click="applyForAdmin">{{ groupInfo.userIsAdmin ? '解除管理员' : '申请管理员'
                     }}</button>
                 </div>
@@ -45,24 +46,35 @@
                 <el-menu-item index="groupPostList">看帖</el-menu-item>
                 <el-menu-item index="groupGoodPostList">精华</el-menu-item>
                 <el-menu-item index="groupTopicList">小组话题</el-menu-item>
+                <!-- <el-menu-item index="groupMemberList">小组成员</el-menu-item> -->
             </el-menu>
 
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="group-content-container">
-                <router-view :postList="inPostList" :topicList="topicList" title="小组参与的话题"></router-view>
+                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题"></router-view>
             </div>
         </div>
+        <!-- 发帖上拉框 -->
+        <div v-if="isLogin">
+            <PostCreateBar :groupInfo="groupInfo"></PostCreateBar>
+        </div>
+
+        <!-- 滚动至顶部 -->
+        <ScrollToTopButton class="scrollbutton"></ScrollToTopButton>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import PostCreateBar from '@/components/post/PostCreateBar.vue';
+import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
 
 export default {
     name: 'GroupPage',
     components: {
-
+        PostCreateBar,
+        ScrollToTopButton,
     },
     data() {
         return {
@@ -71,10 +83,58 @@ export default {
     },
     methods: {
         joinGroup() {
-            this.groupInfo.userInGroup = !this.groupInfo.userInGroup
+            if (!this.groupInfo.userInGroup) {
+                this.$confirm('是否确定加入小组?加入小组后即可在小组内发表帖子。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已成功加入小组!');
+                    this.groupInfo.userInGroup = !this.groupInfo.userInGroup
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            else{
+                this.$confirm('是否确定退出小组？您仍然可以再次加入该小组', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已退出小组');
+                    this.groupInfo.userInGroup = !this.groupInfo.userInGroup
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            
         },
         applyForAdmin() {
-            this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+            if (!this.groupInfo.userIsAdmin) {
+                this.$confirm('是否确定申请小组管理员?您的申请需要等待小组管理员同意。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('请求已提交!');
+                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            else{
+                this.$confirm('是否确定卸任小组管理员?该操作无法撤回。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('操作成功');
+                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            
         },
         //选中二级导航栏
         handleSelect(index) {
@@ -259,7 +319,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     position: absolute;
-    width: 85%;
+    width: 88%;
     left: 190px;
     bottom: 12px;
     border-radius: 5px;
@@ -281,11 +341,12 @@ export default {
 .group-header-follown {
     /* 位置 */
     position: absolute;
-    right: 20px;
-    bottom: 21px;
+    right: 40px;
+    bottom: 20px;
     border-radius: 5px;
     /* 高度 */
-    height: 34px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -299,10 +360,11 @@ export default {
 /* 小组帖子数 */
 .group-header-postn {
     position: absolute;
-    right: 140px;
-    bottom: 21px;
+    right: 150px;
+    bottom: 20px;
     border-radius: 5px;
-    height: 34px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -322,14 +384,15 @@ export default {
 
     /* 在父元素的位置 */
     position: absolute;
-    right: 15px;
+    right: 26px;
     bottom: 100px;
     border-radius: 5px;
-    height: 24px;
+    height: 34px;
 }
 
 
 .group-header-button-selected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgb(254, 224, 224, 0.8);
     border: 2px solid rgba(252, 231, 231, 0.7);
@@ -338,14 +401,16 @@ export default {
     padding: 7px;
     margin: 10px;
     /* 字体 */
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     color: rgba(49, 49, 49, 0.9);
     /* 手型 */
     cursor: pointer;
+    transition: .5s ease;
 }
 
 .group-header-button-unselected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgba(252, 236, 236, 0.6);
     border: 2px solid rgba(252, 231, 231, 0.7);
@@ -354,11 +419,12 @@ export default {
     padding: 7px;
     margin: 10px;
     /* 字体 */
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 700;
     color: rgba(49, 49, 49, 0.9);
     /* 手型 */
     cursor: pointer;
+    transition: .5s ease;
 }
 
 .group-header-button-unselected:hover,
@@ -371,5 +437,11 @@ export default {
     background-color: rgb(255, 255, 255);
     margin: 0 auto;
     margin-top: 20px;
+}
+/* 滚动至顶部 */
+.scrollbutton{
+    position: fixed;
+    bottom: 150px;
+    right: 20px;
 }
 </style>

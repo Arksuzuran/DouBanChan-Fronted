@@ -34,7 +34,7 @@
 
                 <!-- 话题右侧关注按钮 -->
                 <div class="topic-header-button-topic">
-                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userIntopic ? '退出' : '关注' }}</button>
+                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userIntopic ? '退出话题' : '加入话题' }}</button>
                 </div>
             </div>
 
@@ -80,13 +80,36 @@ export default {
     },
     methods: {
         jointopic() {
-            this.topicInfo.userIntopic = !this.topicInfo.userIntopic
+            if (!this.topicInfo.userIntopic) {
+                this.$confirm('是否确定加入话题?加入话题后即可在话题内发表帖子。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已成功加入话题!');
+                    this.topicInfo.userIntopic = !this.topicInfo.userIntopic
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
+            else{
+                this.$confirm('是否确定退出话题？您仍然可以再次加入该话题。', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    // type: 'warning',
+                }).then(() => {
+                    this.$message.success('您已退出话题');
+                    this.topicInfo.userIntopic = !this.topicInfo.userIntopic
+                }).catch(() => {
+                    this.$message.error('已取消操作');
+                });
+            }
         },
         //获取话题列表    
         ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline']),
         //获取帖子列表
         ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
-        //获取小组列表    
+        //获取话题列表    
         ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
     },
     computed: {
@@ -210,7 +233,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     position: absolute;
-    width: 85%;
+    width: 87%;
     left: 190px;
     bottom: 12px;
     border-radius: 5px;
@@ -232,11 +255,12 @@ export default {
 .topic-header-follown {
     /* 位置 */
     position: absolute;
-    right: 20px;
-    bottom: 21px;
+    right: 40px;
+    bottom: 20px;
     border-radius: 5px;
     /* 高度 */
-    height: 34px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -250,10 +274,11 @@ export default {
 /* 话题帖子数 */
 .topic-header-postn {
     position: absolute;
-    right: 140px;
-    bottom: 21px;
+    right: 150px;
+    bottom: 20px;
     border-radius: 5px;
-    height: 34px;
+    height: 42px;
+    min-width: 80px;
     /* 背景 边界 阴影 */
     background-color: rgba(255, 249, 249, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -273,14 +298,15 @@ export default {
 
     /* 在父元素的位置 */
     position: absolute;
-    right: 15px;
+    right: 26px;
     bottom: 100px;
     border-radius: 5px;
-    height: 24px;
+    height: 34px;
 }
 
 
 .topic-header-button-selected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgb(254, 224, 224, 0.8);
     border: 2px solid rgba(252, 231, 231, 0.7);
@@ -297,6 +323,7 @@ export default {
 }
 
 .topic-header-button-unselected {
+    width: 120px;
     /* 背景 边界 阴影 */
     background-color: rgba(252, 236, 236, 0.6);
     border: 2px solid rgba(252, 231, 231, 0.7);
