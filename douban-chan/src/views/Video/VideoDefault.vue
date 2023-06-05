@@ -1,35 +1,46 @@
 <template>
   <div>
-    <div class="grouphome-header-container">
-      <div class="grouphome-header-title" @click="toVideoDefault">豆瓣影视酱</div>
-      <!-- 按钮组 -->
-      <div v-for="button in buttons" :key="button.id" class="grouphome-header-btn"
-        :class="getActiveButtonClass(button.id)" @click="handleSelect(button.id)">
-        {{ button.label }}
-      </div>
-    </div>
-
-    <div class="container">
-      <!-- <VideoRow :items="recommendItems"></VideoRow> -->\
-      <router-view></router-view>
-    </div>
+    <VideoRow :items="hotMovies" title="热门电影"></VideoRow>
+    <VideoRow :items="hotMovies" title="热门电视剧"></VideoRow>
+    <HotComments :items="hotComments"></HotComments>
   </div>
 </template>
 
 <script>
-import Lunbo from '@/components/Video/Lunbo.vue';
-import HotVideo from '@/components/Video/HotVideo.vue';
+import qs from "qs"
 import VideoRow from '@/components/Video/VideoRow.vue';
+import HotComments from '@/components/Video/HotComments.vue'
 export default {
-  components: {
-    Lunbo,
-    HotVideo, VideoRow
+  components:{
+    VideoRow, HotComments
   },
   data() {
-    return {
-      buttons: [
-        { id: 0, label: '排行榜' },
-        { id: 1, label: '分类索引' },
+    return { 
+      hotComments:[
+        {
+          t_id: 1,
+          t_type: 1,
+          t_rate: 9,
+          t_like: 100,
+          t_dislike: 100,
+          t_description: "<p><strong>hello world</strong></p><p style=\"text-align: center;\"><span style=\"font-size: 14px;\"><strong>dfgsfgsdfgsdfg</strong></span></p><p><br></p>",
+          t_topic: "软工做不完了",
+          t_media_id: 1,
+          t_user_id: 1,
+          t_create_time: '2020-05-20 12:00:00',
+        },
+        {
+          t_id: 1,
+          t_type: 1,
+          t_rate: 9,
+          t_like: 100,
+          t_dislike: 100,
+          t_description: "<h1 style=\"text-align: left;\"><span style=\"font-size: 14px;\"><strong>阿打发斯蒂芬</strong></span></h1><p><span style=\"color: rgb(17, 17, 17); background-color: rgb(255, 255, 255); font-size: 14px;\">早在电影正片开始之前，在那首钢琴曲伴随着字幕卡轻快地敲响之时，《处女心经》（2000）就已开始颠覆我们对洪常秀此前作品的印象；在首作《猪堕井的那天》（1996）中，占据同一位置的是一首诡谲失谐的弦乐[1]。在这里，改变的是音乐的情绪基调，更是电影的风格音符，而这首钢琴曲作为一连串音符中的第一个 [2]，先行宣明了整首乐曲的创作策略的转向。等到电影的第一颗镜头出现，我们进一步确认了这一转向的切实：《处女心经》褪去了前两作中鲜艳得有些诡异的胶片色彩，代之以色调宛如影片中的冬日晴天的黑白摄影，泛着清澈的灰度而又不乏凌厉的线条，仿佛是洪常秀下定决心要一扫前两作的阴郁沉重之感。</span></p><p><br></p>",
+          t_topic: "软工做不完了",
+          t_media_id: 1,
+          t_user_id: 1,
+          
+        }
       ],
       hotMovies: [
           {
@@ -166,136 +177,50 @@ export default {
     }
   },
   methods: {
-    // 更新被选中标签的属性
-    getActiveButtonClass(index) {
-      if (this.activeHeaderLabel === index) {
-        return 'grouphome-header-btn-active'
-      }
-      return ''
-    },
-    handleSelect(index) {
-      if (index === 0) {
-        this.$router.push({
-          name: "rankBoard"
-        });
-      } else if (index === 1) {
-        this.$router.push({
-          name: "videoCategory"
-        });
-      }
-    },
-    toVideoDefault(){
-      this.$router.push({
-        name:"videoDefault"
-      })
-    }
-  }
+    getHotComments() {
+        this.$axios({
+          method: "post",
+          data: qs.stringify({
+            t_id: 1
+          }),
+          url: "/text/query_single/",
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+        })
+          .then((res) => {
+            this.hotComments = res.data;
+            console.log(this.items)
+          })
+          .catch((err) => {
+            this.$message.error("网络出错了QAQ")
+          });
+      	},
+    getHotVideos() {
+        this.$axios({
+          method: "post",
+          data: qs.stringify({
+            t_id: 1
+          }),
+          url: "/text/query_single/",
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+        })
+          .then((res) => {
+            this.hotComments = res.data;
+            console.log(this.items)
+          })
+          .catch((err) => {
+            this.$message.error("网络出错了QAQ")
+          });
+      	},
+
+  },
+  mounted(){
+    // this.getHotMovies();
+    // this.getHotTVs();
+    // this.updateHotComments();
+  },  
 }
 </script>
 
 <style scoped>
-.container {
-  margin: 0 auto;
-  width: 75%;
-  background-color: white;
-}
 
-.grouphome-header-container {
-  padding: 0 11%;
-  position: sticky;
-  top: 65px;
-  z-index: 11;
-
-  height: 90px;
-
-  background-color: rgb(255, 237, 237);
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-/* 页面顶栏处标题 */
-.grouphome-header-title {
-  margin: 0 40px;
-  font-size: 36px;
-  font-weight: 700;
-  color: rgba(255, 133, 133, 0.9);
-  cursor: pointer;
-}
-
-/* 顶栏 筛选器 组件 */
-/* === removing default button style ===*/
-/* === removing default button style ===*/
-/* 按钮基本样式 */
-.grouphome-header-btn {
-  margin: 0 10px;
-
-  font-size: 18px;
-  background: transparent;
-  border: none;
-  padding: 12px 18px;
-  color: rgba(255, 133, 133, 0.9);
-  text-transform: uppercase;
-  position: relative;
-  transition: .5s ease;
-
-  cursor: pointer;
-}
-
-.grouphome-header-btn::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 2px;
-  width: 0;
-  background-color: rgba(255, 66, 66, 0.9);
-  transition: .5s ease;
-}
-
-.grouphome-header-btn:hover,
-.grouphome-header-btn.grouphome-header-btn-active {
-  color: #ffffff;
-  transition-delay: .5s;
-}
-
-.grouphome-header-btn-active {
-  border-radius: 10px;
-  transition: .5s ease;
-  background-color: rgb(255, 97, 97);
-}
-
-.grouphome-header-btn:hover::before,
-.grouphome-header-btn.grouphome-header-btn-active::before {
-  width: 100%;
-}
-
-.grouphome-header-btn::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 0;
-  width: 100%;
-  border-radius: 10px;
-  background-color: rgba(255, 154, 154, 0.8);
-  transition: .4s ease;
-  z-index: -1;
-}
-
-.grouphome-header-btn:hover::after,
-.grouphome-header-btn.grouphome-header-btn-active::after {
-  height: 100%;
-  transition-delay: 0.4s;
-  color: aliceblue;
-}
-
-/* 小标题 */
-.section-title{
-  font-size: 30px;
-  text-align: left;
-  font-weight: bold;
-  color: black;
-}
 </style>

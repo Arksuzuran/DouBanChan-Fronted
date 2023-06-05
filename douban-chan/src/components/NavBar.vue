@@ -60,7 +60,7 @@ export default {
             image: "qq.jpg",
             menuItems: [
                 { label: '主页', value: 'item1', index: "" },
-                { label: '电影', value: 'item2', index: "videoHome" },
+                { label: '电影', value: 'item2', index: "video" },
                 { label: '图书', value: 'item3', index: "bookHome" },
                 { label: '小组', value: 'item4', index: "groupHome" },
                 { label: '话题', value: 'item5', index: "topicHome" },

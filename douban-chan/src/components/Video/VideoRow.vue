@@ -1,31 +1,39 @@
 <template>
-  <div class="container">
-  <div id="v-carousel">
-    <div class="card-carousel-wrapper">
-      <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
-      <div class="card-carousel">
-        <div class="card-carousel--overflow-container">
-          <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')'}">
-            <div class="card-carousel--card" v-for="(item, index) in items" :key="index">
-              <div class="card-carousel--card--footer">
-                <VideoBookItem  :myObject="item"></VideoBookItem>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
+  <div class="film-module-block2 clearfix">
+        <el-container>
+            <el-header>
+                <div>
+                    <i class="fa-brands fa-hotjar hot-logo" style="color: #e63737;"></i>
+                    <div style="float: left; display: inline-block;">
+                        <span
+                            style="float: left;margin-top: 20px;margin-left: 5px;font-size: 30px; font-weight: bold;color: #000000;">{{ title }}</span>
+                        <div class="button-for-more">
+                            <ButtonForMore></ButtonForMore>
+                        </div>
+                    </div>
+                </div>
+            </el-header> 
+            <el-main>
+                <div class="card-container">
+                    <UniversalCard v-for="movie in items" :key="movie.id" :ChildId="movie.id" :ChildType="movie.type"
+                        :ChildYear="movie.year" :ChildName="movie.name" :ChildRate="movie.rate" :ChildTime="movie.time"
+                        :ChildFrom="movie.from" :ChildDir="movie.dir" :ChildStar="movie.star" :ChildText="movie.text"
+                        :ChildImage="movie.imageUrl">
+                    </UniversalCard>
+                </div>
+            </el-main>
+        </el-container>
     </div>
-  </div>
-</div>
+    
 </template>
 
 <script>
 import VideoBookItem from '@/components/Video/VideoBookItem.vue'
+import UniversalCard from '../UniversalCard.vue';
 export default {
   name: 'ShowARow',
-  components: { VideoBookItem },
-  props:['items'],
+  components: { VideoBookItem, UniversalCard},
+  props:['items', 'title'],
   data() {
     return {
       currentOffset: 0,
@@ -55,66 +63,36 @@ export default {
 </script>
 
 <style scoped>
-.card-carousel-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  color: #666a73;
+.button-for-more {
+    margin-top: 5px;
+    float: right;
 }
 
-.card-carousel {
-  display: flex;
-  justify-content: center;
-  width: 1050px;
-}
-.card-carousel--overflow-container {
-  overflow: hidden;
-}
-.card-carousel--nav__left, .card-carousel--nav__right {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  padding: 10px;
-  box-sizing: border-box;
-  border-top: 2px solid #42b883;
-  border-right: 2px solid #42b883;
-  cursor: pointer;
-  margin: 0 10px;
-  transition: transform 150ms linear;
-}
-.card-carousel--nav__left[disabled], .card-carousel--nav__right[disabled] {
-  opacity: 0.2;
-  border-color: black;
-}
-.card-carousel--nav__left {
-  transform: rotate(-135deg);
-}
-.card-carousel--nav__left:active {
-  transform: rotate(-135deg) scale(0.9);
-}
-.card-carousel--nav__right {
-  transform: rotate(45deg);
-}
-.card-carousel--nav__right:active {
-  transform: rotate(45deg) scale(0.9);
+.film-module-block2 {
+    width: 100%;
+    margin: 0 auto;
+    background-color: white;
 }
 
-.card-carousel-cards {
-  display: flex;
-  transition: transform 500ms ease-out;
-  transform: translatex(0px);
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: transparent;
+    gap: 20px 10px
 }
-.card-carousel-cards .card-carousel--card {
-  margin: 0 10px;
-  z-index: 3;
-  margin-bottom: 2px;
-  height: 300px;  
+
+
+.hot-logo {
+    float: left;
+    font-size: 50px;
+    margin-top: 15px;
 }
-.card-carousel-cards .card-carousel--card:first-child {
-  margin-left: 0;
-}
-.card-carousel-cards .card-carousel--card:last-child {
-  margin-right: 0;
+.clearfix::after {
+    display: block;
+    height: 0;
+    content: "";
+    clear: both;
+    visibility: hidden;
 }
 </style>

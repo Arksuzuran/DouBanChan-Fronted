@@ -1,8 +1,10 @@
 <template>
-    <div class="section-title">
-        <span>{{ title }}</span>
-        <span class="more">更多</span>
+    <div class="clearfix">
+        <div class="section-title">
+            <span>{{ title }}</span>
+        </div>
     </div>
+    
 </template>
 
 <script>
@@ -14,17 +16,14 @@ export default {
 
 <style scoped>
     .section-title{
-        height: 100px;
-        background-color: black;
-        color: white;
-        font-size: 50px;
-        font-weight: bold;
-        line-height: 100px;
-        margin-top: 20px;
+        font-size: 30px;
+        float: left;
     }
-    .section-title .more{
-        float: right;
-        font-size: 14px;
-        color: #999;
+    .clearfix::after {
+        display: block;
+        height: 0;
+        content: "";
+        clear: both;
+        visibility: hidden;
     }
 </style>

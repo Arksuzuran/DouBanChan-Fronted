@@ -1,48 +1,57 @@
 <template>
-    <div style="margin: 25px 0px">
+    <div style="width: 530px;">
         <div class="header">
             <div class="review-row clearfix">
                 <el-image
                     style="width: 50px; height: 50px;float: left"
                     :src="item.reviewerImage"></el-image>
                     <div class="reviewer">
-                        {{ item.reviewername }}
+                        <span>{{ reviewerName }}</span>
+                        <span style="margin: 0 10px;">评论了</span>
+                        <span>{{ videoName }}</span>
                     </div>
                     &nbsp;
-                    <RateWithNumber :score="item.rate" style="float:left"></RateWithNumber>
+                    <RateWithNumber :score="rate" style="float:left"></RateWithNumber>
                     <div class="time">
-                        {{ item.time }}
+                        {{ time }}
                     </div>
             </div>
         </div>
 
         <div class="body">
-            <div class="title" @click="toReviewPage(item.id)">{{ item.title }}</div>
-            <div class="wrapper">
-                <input id="exp1" class="exp"  type="checkbox">
-                <div class="text" @click="toReviewPage(item.id)">
-                    <label class="btn" for="exp1"></label>
-                    {{ item.content }}
+            <div class="video-image">
+                <img :src="videoImageUrl" style="height: 200px;">
+            </div>
+            <div>
+                <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
+                <div class="comment-body">
+                    <div class="wrapper" @click="toReviewPage(reviewId)">
+                        <div class="text">
+                            {{ content }}
+                        </div>
+                        <div class="add">(查看全文)</div>
+                    </div>
+                </div>
+                <div class="postcard-dataicon-group">
+                    <div class="postcard-dataicon-wrapper" @click="handleLike">
+                        <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
+                        <span class="postcard-data-font">{{ like }}</span>
+                    </div>
+                    <div class="postcard-dataicon-wrapper" @click="handleDislike">
+                        <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
+                        <span class="postcard-data-font">{{ dislike }}</span>
+                    </div>
+                    <div class="postcard-dataicon-wrapper" @click="handleComment">
+                        <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
+                        <span class="postcard-data-font">{{ commentNum }}</span>
+                    </div>
+                    <div class="postcard-dataicon-wrapper" @click="handleFav">
+                        <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
+                        <span class="postcard-data-font">{{ favNum }}</span>
+                    </div>
                 </div>
             </div>
-            <div class="postcard-dataicon-group">
-                <div class="postcard-dataicon-wrapper" @click="handleLike">
-                    <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
-                    <span class="postcard-data-font">{{ item.agree }}</span>
-                </div>
-                <div class="postcard-dataicon-wrapper" @click="handleDislike">
-                    <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
-                    <span class="postcard-data-font">{{ item.disagree }}</span>
-                </div>
-                <div class="postcard-dataicon-wrapper" @click="handleComment">
-                    <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
-                    <span class="postcard-data-font">{{ item.comment }}</span>
-                </div>
-                <div class="postcard-dataicon-wrapper" @click="handleFav">
-                    <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
-                    <span class="postcard-data-font">{{ item.fav }}</span>
-                </div>
-            </div>
+            
         </div>
 
     </div>
@@ -50,6 +59,7 @@
 
 <script>
 import RateWithNumber from '../Video/RateWithNumber.vue'
+import qs from "qs"
 export default {
     name: 'ReviewSmall',
     components: {
@@ -62,6 +72,22 @@ export default {
             userDislike: false,
             userFav: false,
             userComment: false,
+            //下面是评论的相关信息
+            reviewerName: '',
+            reviewerImageUrl: '',
+            reviewerId: this.item.t_user_id,
+            videoId: this.item.t_media_id,
+            videoName: '默认',
+            videoImageUrl: require('../../assets/movie/1.jpg'),
+            time: this.item.t_create_time,
+            content: '',
+            like: this.item.t_like,
+            dislike: this.item.t_dislike,
+            topic: this.item.t_topic,
+            rate: this.item.t_rate,
+            reviewId: this.item.t_id,
+            commentNum: this.item.t_floor,
+            favNum: 0
         }
     },
     methods: {
@@ -116,15 +142,15 @@ export default {
             //点赞与点踩只能有一个
             if (this.userDislike) {
                 this.userDislike = false
-                this.item.disagree -- 
+                this.dislike -- ;
             }
             this.updateDislike()
             this.updateLike()
             if (this.userLike) {
-                this.item.agree++;
+                this.like ++ ;
             }
             else {
-                this.item.agree--
+                this.like -- ;
             }
         },
         updateLike() {
@@ -141,15 +167,15 @@ export default {
             //点赞与点踩只能有一个
             if (this.userLike) {
                 this.userLike = false
-                this.item.agree--;
+                this.like -- ;
             }
             this.updateDislike()
             this.updateLike()
             if (this.userDislike) {
-                this.item.disagree++;
+                this.dislike ++ ;
             }
             else {
-                this.item.disagree--
+                this.dislike -- ;
             }
         },
         updateDislike() {
@@ -160,7 +186,56 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
+        getReviewer() {
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: this.item.t_user_id
+            }),
+            url: "/user/query_single/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                console.log(res.data.user)
+                this.reviewerName = res.data.user.u_name
+                this.reviewerImageUrl = res.data.user.u_profile_photo    //后期要处理
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+            },
+        getVideo() {
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                m_id: this.item.t_media_id
+            }),
+            url: "/media/query_single/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                console.log(res.data.media)
+                this.videoName = res.data.media.m_name
+                this.videoImageUrl = res.data.media.m_profile_photo    //后期要处理
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+            },
     },
+    mounted(){
+        this.getReviewer();
+        // this.getVideo();
+
+        // 假设htmlContent包含HTML代码
+        var htmlContent = this.item.t_description;
+        // 定义一个正则表达式
+        var regExp = /<[^>]+>/g;
+        // 去除HTML标签，提取文本内容
+        var textContent = htmlContent.replace(regExp, "");
+        this.content = textContent;
+        // 输出："这是一段HTML代码这是另一段HTML代码"
+    }
 }
 </script>
 
@@ -197,13 +272,10 @@ export default {
         border-radius: 8px;
         background-color: white;
         padding: 10px;
+        height: 230px;
+        text-align: left;
         box-shadow: 10px 10px 30px #bebebe;
-        transition: all 0.3s ease-in-out; 
-    }
-    .body:hover {
-        box-shadow: 10px 10px 30px #bebebe;
-        transform: translate(0,-8px);
-        transition-delay: 0s !important;
+        display: flex;
     }
     .title{
         font-size: 20px;
@@ -214,7 +286,7 @@ export default {
     .content {
     overflow : hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     position: relative;
     text-overflow: "";
@@ -227,7 +299,6 @@ export default {
 }
 .postcard-dataicon-group {
     margin: 0 auto;
-    width: 85%;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -246,57 +317,42 @@ export default {
     font-weight: 500;
     color: rgb(35, 35, 35);
 }
- 
+
+.comment-body{
+    display:flex;
+}
+.video-image{
+    margin-right: 10px;
+}
 .wrapper {
-  display: flex;
+  display: block;
   overflow: hidden;
   margin-top: 10px;
-background-color: white;
+  height: 130px;
+  width: 350px;
+    background-color: white;
+}
+.wrapper:hover .text,
+.wrapper:hover .add {
+  color: red;
 }
 .text {
-  font-size: 15px;
+  font-size: 18px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: justify;
   /* display: flex; */
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   position: relative;
   cursor: pointer;
+}
+.add{
+    cursor: pointer;
 }
 .text::before {
   content: '';
   height: calc(100% - 18px);
   float: right;
-}
-.text::after {
-  content: '';
-  width: 999vw;
-  height: 999vw;
-  position: absolute;
-  box-shadow: inset calc(100px - 999vw) calc(30px - 999vw) 0 0 #fff;
-    margin-left: -100px;
-}
-.btn{
-  float: right;
-  clear: both;
-  margin-left: 10px;
-  font-size: 12px;
-  padding: 0 8px;
-  background: white;
-  line-height: 16px;
-  border: 1px solid black;
-  border-radius: 4px;
-  color:  black;
-  cursor: pointer;
-  /* margin-top: -30px; */
-}
-.exp{
-    display: none;
-}
-.btn::before{
-  content:'>详细'
 }
 /* .exp:checked+.text{
   -webkit-line-clamp: 999;
@@ -322,4 +378,5 @@ background-color: white;
 .postcard-icon-comment {
     color: rgb(255, 128, 128);
 }
+
 </style>
