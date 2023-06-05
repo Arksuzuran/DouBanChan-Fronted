@@ -164,7 +164,7 @@ export default {
             follow: 75971,
             post: 9591,
             date: '2023-5-19 23:57',    //发帖时间
-            userIntopic: true,
+            userInTopic: true,
             //话题标签
             tagList: ['生活', '文化'],
         }

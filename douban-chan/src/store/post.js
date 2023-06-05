@@ -128,6 +128,9 @@ export default {
                 isGoodPost: false, //帖子在当前小组内是否是精华帖
                 userIsAdmin: true, //当前用户是否是帖子所属小组的管理员
                 userIsLz: true, //当前用户是否是发帖人
+                userLike: false,
+                userDislike: false,
+                userFav: false,
                 //如果该小组不来自于一个小组 那么下面的字段均填 ''
                 groupName: "Game", //来自的小组的名称
                 groupId: "g001", //来自的小组的id
@@ -402,6 +405,8 @@ export default {
                     comments: 2,
                     like: 6431,
                     dislike: 457,
+                    userLike: false,
+                    userDislike: false,
                     childFloorList: [
                         {
                             textId: "fr006",
@@ -412,6 +417,8 @@ export default {
                             text: "5，最喜欢的游戏",
                             like: 123,
                             dislike: 0,
+                            userLike: false,
+                            userDislike: false,
                         },
                         {
                             textId: "fr007",
@@ -422,6 +429,8 @@ export default {
                             text: "5，曾经有教育家做了一个实验，让中国孩子和日本孩子探索有瘴气的山洞。日本小孩从小玩《塞尔达传说:王国之泪》，一进洞就点燃火把，结果爆炸至死。而聪明的中国孩子因为玩过《原神》，立马就从背包里掏出发光的流明石来照明，最终顺利通关。",
                             like: 695,
                             dislike: 9,
+                            userLike: false,
+                            userDislike: false,
                         },
                         {
                             textId: "fr008",
@@ -432,6 +441,8 @@ export default {
                             text: "客观来讲3.5吧，能玩。最新通知:五一劳动节期间，要求所有人将电脑上的Steam、Origin、 Epic等游戏平台卸载，所有的PS、Xbox、Switch 全部就地销毁，并于五一假期前 下载并安装米哈游自主研发的全新开放世界冒险游戏《原神》，已下载的全部更新到最新版本。要求:1.充值大月卡，自愿充值，应冲尽冲:2.等级升到60级，自愿升级，应升尽升;3.假期期间至少180抽，自愿抽卡，应抽尽抽。收到请回复。",
                             like: 361,
                             dislike: 1,
+                            userLike: false,
+                            userDislike: false,
                         },
                     ],
                 },
@@ -451,6 +462,8 @@ export default {
                     comments: 2,
                     like: 4231,
                     dislike: 54,
+                    userLike: false,
+                    userDislike: false,
                     childFloorList: [
                         {
                             textId: "fr003",
@@ -461,6 +474,8 @@ export default {
                             text: "终章《发生交火，我无法呼吸？！》",
                             like: 11255,
                             dislike: 4,
+                            userLike: false,
+                            userDislike: false,
                         },
                         {
                             textId: "fr008",
@@ -471,6 +486,8 @@ export default {
                             text: "谴责肖万→理解肖万→同情肖万→敬佩肖万→感激肖万→肖万，黑膝铠甲，合体。",
                             like: 745,
                             dislike: 41,
+                            userLike: false,
+                            userDislike: false,
                         },
                     ],
                 },

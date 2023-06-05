@@ -34,7 +34,7 @@
 
                 <!-- 话题右侧关注按钮 -->
                 <div class="topic-header-button-topic">
-                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userIntopic ? '退出话题' : '加入话题' }}</button>
+                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userInTopic ? '退出话题' : '加入话题' }}</button>
                 </div>
             </div>
 
@@ -80,14 +80,14 @@ export default {
     },
     methods: {
         jointopic() {
-            if (!this.topicInfo.userIntopic) {
+            if (!this.topicInfo.userInTopic) {
                 this.$confirm('是否确定加入话题?加入话题后即可在话题内发表帖子。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     // type: 'warning',
                 }).then(() => {
                     this.$message.success('您已成功加入话题!');
-                    this.topicInfo.userIntopic = !this.topicInfo.userIntopic
+                    this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
                     this.$message.error('已取消操作');
                 });
@@ -99,7 +99,7 @@ export default {
                     // type: 'warning',
                 }).then(() => {
                     this.$message.success('您已退出话题');
-                    this.topicInfo.userIntopic = !this.topicInfo.userIntopic
+                    this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
                     this.$message.error('已取消操作');
                 });

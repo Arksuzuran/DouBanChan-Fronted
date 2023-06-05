@@ -199,6 +199,7 @@ export default {
                 text: this.form.text,
                 postImageUrlList: this.form.imgUrlList,
                 topic: this.form.topic,
+                topicId: this.form.topic, //帖子所属的话题的id
                 visits: 1,
                 fav: 0,
                 comments: 0,
@@ -206,6 +207,14 @@ export default {
                 dislike: 0,
                 isTopped: false,
                 isGoodPost: false,
+                userIsAdmin: false, //当前用户是否是帖子所属小组的管理员
+                userIsLz: true, //当前用户是否是发帖人
+                userLike: false,
+                userDislike: false,
+                userFav: false,
+                //如果该小组不来自于一个小组 那么下面的字段均填 ''
+                groupName: "Game", //来自的小组的名称
+                groupId: "g001", //来自的小组的id
                 floorList: [
                     {
                         textId: 'f001',
@@ -219,6 +228,8 @@ export default {
                         comments: 0,
                         like: 0,
                         dislike: 0,
+                        userLike: false,
+                        userDislike: false,
                         childFloorList: [],
                     }
                 ]
