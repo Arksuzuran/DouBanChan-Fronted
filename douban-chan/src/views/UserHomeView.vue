@@ -32,6 +32,8 @@
             我的帖子</el-menu-item>
           <el-menu-item index="userpageMessage"><i class="fa-solid fa-message" style="color: #e08aff;"></i>
             消息</el-menu-item>
+          <el-menu-item index="userpageSetting"><i class="fa-solid fa-gear" style="color: #000000;"></i>
+            修改资料</el-menu-item>
         </el-menu>
 
         <!-- 二级主页 -->
@@ -82,6 +84,8 @@ export default {
         return 'userpagePost';
       } else if (currentRoute === '/userHome/message') {
         return 'userpageMessage';
+      } else if (currentRoute === '/userHome/setting') {
+        return 'userpageSetting';
       }
     }
   },

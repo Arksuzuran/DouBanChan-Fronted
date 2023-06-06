@@ -5,6 +5,9 @@ import store from './store'
 import axios from 'axios'
 import qs from "qs"
 
+import VueCropper from 'vue-cropper';
+Vue.use(VueCropper)
+
 //引入ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
