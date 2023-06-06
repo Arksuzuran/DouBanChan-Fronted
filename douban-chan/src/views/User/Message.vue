@@ -22,6 +22,10 @@
                             <input type="radio" name="radio" @change="toShow = 3">
                             <span>系统通知</span>
                         </label>
+                        <label>
+                            <input type="radio" name="radio" @change="toShow = 4">
+                            <span>管理信息</span>
+                        </label>
                     </form>
                 </div>
             </div>
@@ -47,6 +51,13 @@
                     <div class="message-no-reply-img"></div>
                 </div>
             </div>
+            <div v-if="toShow == 4" class="message-reply-block">
+                <ManageInfo v-for="manage in manages" :key="manage.id" :manage="manage" @delete="deleteManage(manage.id)">
+                </ManageInfo>
+                <div class="message-no-reply" v-if="isManageEmpty">
+                    <div class="message-no-reply-img"></div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -55,11 +66,13 @@
 import MessageCardReply from '../MessageCardReply.vue';
 import MessageGood from '../MessageGood.vue';
 import SystemInfoVue from '../SystemInfo.vue';
+import ManageInfo from '../../components/ManageInfo.vue';
 export default {
     components: {
         MessageCardReply,
         MessageGood,
         SystemInfoVue,
+        ManageInfo,
     },
     data() {
         return {
@@ -154,6 +167,34 @@ export default {
                     text: '您的评论‘曹尼玛的北航真傻逼’涉嫌违规，已经被管理员删除，希望您理性评论！',
                 },
             ],
+            manages: [
+                {
+                    id: 1,
+                    title: 'ADK太吊了,北航不允许这么牛逼的人存在',
+                    text: '家人们,GodA你听过吗?不得了啊,不得了啊,他一个小时写完挑战性任务,软工前后端全栈,国奖什么的都是小意思,paper遍地走,nature得管他叫爹,院士得喊他哥,女人们都想做他的学术妲己,男人们都想做他的GGBoy!',
+                },
+                {
+                    id: 2,
+                    title: '涉黄信息、有害信息、网络暴力',
+                    text: '我,李一博实名举报江南第一深情吴一凡聚众pc!',
+                },
+                {
+                    id: 3,
+                    title: '过度内卷,校园毒瘤',
+                    text: '只能说这个人太过分了,怎么能这样卷软工捏,你让同行怎么活,必须严惩,学霸们自重吧 别把身边的学渣逼急了 因为学渣可能会用身高鄙视你 用身材藐视你 用滑板拍死你 用画笔戳死你 用乐器砸死你 用篮球扔死你 用歌喉亮死你 德玛西亚虐死你 我们喜欢会教题的学霸而不是秀优越的学霸.',
+                },
+                {
+                    id: 4,
+                    title: 'emo了家人们',
+                    text: '越来越觉得似乎恋爱没那么重要了 把自己彻底交给一个人开始懂得权衡利弊了 打得一手好防御 每当这时候我就觉得我大概也不是那么需要爱情了 以前觉得安全感是秒回的信息 她的早安晚安每一个承诺 温暖好脾气的话语 而现在安全感唯有明媚阳光的好天气 繁华路口人行道的绿灯 出门时口袋里的钱包和钥匙 手机里显示的满格电 因为那点安全感寄托于她人身上 难免会令我疼到失望 我甚至开始讨厌一些人的出现打乱我的生活 但我又希望有人可以陪我 怎么会有我这么矛盾的人 想要爱却在爱来临时闪躲.',
+                },
+                {
+                    id: 5,
+                    title: 'ADK太吊了,北航不允许这么牛逼的人存在',
+                    text: '家人们,GodA你听过吗?不得了啊,不得了啊,他一个小时写完挑战性任务,软工前后端全栈,国奖什么的都是小意思,paper遍地走,nature得管他叫爹,院士得喊他哥,女人们都想做他的学术妲己,男人们都想做他的GGBoy!',
+                },
+            ],
+            isManageEmpty: true,
             isMessageEmpty: true,
             isGoodEmpty: true,
             isInfoEmpty: true,
@@ -163,6 +204,7 @@ export default {
         this.checkMessageEmpty();
         this.checkGoodEmpty();
         this.checkInfoEmpty();
+        this.checkManageEmpty();
     },
     computed: {
         messageHeaderText() {
@@ -172,6 +214,8 @@ export default {
                 return '收到的赞';
             } else if (this.toShow === 3) {
                 return '系统通知';
+            } else if (this.toShow === 3) {
+                return '管理信息';
             }
             // 默认情况
             return '回复我的';
@@ -180,6 +224,9 @@ export default {
     methods: {
         checkMessageEmpty() {
             this.isMessageEmpty = this.messages.length === 0;
+        },
+        checkManageEmpty() {
+            this.isManageEmpty = this.manages.length === 0;
         },
         checkGoodEmpty() {
             this.isGoodEmpty = this.goods.length === 0;
@@ -207,6 +254,13 @@ export default {
                 this.infos.splice(index, 1);
             }
             this.checkInfoEmpty(); // 在删除消息后再次检查数组是否为空
+        },
+        deleteManage(id) {
+            const index = this.manages.findIndex(manage => manage.id === id);
+            if (index !== -1) {
+                this.manages.splice(index, 1);
+            }
+            this.checkManageEmpty(); // 在删除消息后再次检查数组是否为空
         },
     },
 
@@ -324,7 +378,7 @@ export default {
 .message-left-switch {
     width: 10%;
     background-color: transparent;
-    margin-top: 45px;
+    margin-top: 15px;
     /* 居中对齐 */
 }
 

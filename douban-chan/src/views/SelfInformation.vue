@@ -42,7 +42,7 @@
                     </el-form-item>
                     <div style="height: 7px;"></div>
                     <el-form-item label="个人简介" prop="desc">
-                        <el-input type="textarea" placeholder="填写个人简介更有利于交友哟qwq" v-model="form.desc"></el-input>
+                        <el-input type="textarea" placeholder="填写个人简介更有利于交友哟" v-model="form.desc"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -59,20 +59,9 @@
             </div>
             <el-divider></el-divider>
             <div class="self-info-menu-right-true-2">
-
-                <div class="nowImage">
-                    <img :src="imagePath" class="coverImage">
-                    <span>当前头像</span>
-                </div>
                 <div class="changeImage">
                     <UploadImage></UploadImage>
                 </div>
-            </div>
-            <el-divider></el-divider>
-            <div class="save">
-                <button>
-                    确认更换
-                </button>
             </div>
         </div>
         <div v-if="choice == 3" class="self-info-menu-right-3">
@@ -91,11 +80,6 @@
                         <input type="text" required="" autocomplete="off" v-model="changePassword.key">
                         <label for="name">验证码</label>
                     </div>
-                    <button class="forKey">获取验证码
-                        <div class="arrow-wrapper">
-                            <div class="arrow"></div>
-                        </div>
-                    </button>
                     <div style="height: 5px;"></div>
                     <div class="inputGroup">
                         <input type="text" required="" autocomplete="off" v-model="changePassword.newPassword1">
@@ -107,6 +91,11 @@
                         <label for="name">确认密码</label>
                     </div>
                 </el-form>
+                <button class="forKey">获取验证码
+                    <div class="arrow-wrapper">
+                        <div class="arrow"></div>
+                    </div>
+                </button>
             </div>
             <el-divider></el-divider>
             <div class="save">
@@ -173,24 +162,6 @@ export default ({
 </script>
 
 <style scoped>
-.nowImage {
-    width: 10em;
-    height: 10em;
-    background: white;
-    border-radius: 30px;
-    position: absolute;
-    margin-left: 120px;
-    margin-top: 20px;
-}
-
-.coverImage {
-    position: relative;
-    border-radius: 30px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .save button {
     background-color: white;
     color: black;
@@ -227,9 +198,9 @@ export default ({
 .self-info-block {
     display: flex;
     flex-direction: row;
-    width: 70%;
+    width: 80%;
     margin-left: 15%;
-    height: 700px;
+    height: 600px;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     background-color: #f9f9f9;
@@ -237,12 +208,12 @@ export default ({
 
 .self-info-menu-left {
     width: 20%;
-    height: 700px;
+    height: 600px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 }
 
 .self-info-menu-left-select {
-    width: 50%;
+    width: 60%;
     height: 300px;
     /* background-color: black; */
     display: flex;
@@ -334,7 +305,8 @@ export default ({
     display: flex;
     align-items: center;
     padding: 5px 10px;
-    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     background-color: #ffffff;
     border-radius: 5px;
     margin-right: 12px;
@@ -343,29 +315,12 @@ export default ({
     transition: all 0.3s ease-in-out;
 }
 
-.radio-input label:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    transition: all 0.3s ease-in-out;
-}
 
-.radio-input input[type="radio"]:checked+label:before {
-    background-color: rgb(255, 106, 0);
-    top: 0;
-}
+
 
 .radio-input input[type="radio"]:checked+label {
-    background-color: rgb(203, 180, 255);
-    color: #685151;
+    background-color: rgb(78, 149, 255);
+    color: #ffffff;
     border-color: rgb(1, 1, 1);
     animation: radio-translate 0.5s ease-in-out;
 }
@@ -408,7 +363,7 @@ export default ({
 
 .changeImage {
     margin-top: 120px;
-    margin-left: 200px;
+    margin-left: 50px;
 }
 
 .self-info-menu-right-3 {
@@ -452,7 +407,7 @@ export default ({
     font-weight: bold;
     position: absolute;
     margin-left: 270px;
-    margin-top: -65px;
+    margin-top: -222px;
 }
 
 .forKey .arrow-wrapper {

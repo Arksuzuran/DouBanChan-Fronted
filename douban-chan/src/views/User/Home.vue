@@ -5,12 +5,8 @@
             <div class="user-home-like">
                 <span class="user-home-text">我的订阅</span>
                 <div class="user-home-like-list">
-                    <CollectionCard></CollectionCard>
-                    <CollectionCard></CollectionCard>
-                    <CollectionCard></CollectionCard>
-                    <CollectionCard></CollectionCard>
-                    <CollectionCard></CollectionCard>
-                    <CollectionCard></CollectionCard>
+                    <SubscribeCard v-for="subscribe in subscribes" :key="subscribe.id" :subscribe="subscribe">
+                    </SubscribeCard>
                 </div>
                 <el-divider></el-divider>
             </div>
@@ -34,13 +30,13 @@
             </div>
         </div>
         <div class="user-home-right-block">
-            <div class="user-home-info">
+            <div class="user-home-info" @click="skipSetting">
                 <div class="card" style="--rating:90">
                     <div class="icon"><i class="fa-solid fa-user" style="color: #ff7e29;"></i></div>
                     <div class="title">Did <span style="color: #4f7eff;">{{ Did }}</span></div>
                     <p class="sex">性别 <span style="color: #4f7eff;">{{ sex }}</span> &nbsp&nbsp&nbsp&nbsp 生日 <span
                             style="color: #4f7eff;">{{ birthday }}</span></p>
-                    <a href="#" class="link">修改资料</a>
+                    <a class="link">修改资料</a>
                 </div>
             </div>
         </div>
@@ -50,12 +46,14 @@
 <script>
 import CollectionCard from '../../components/CollectionCard.vue';
 import PostCard from '../../components/post/PostCard.vue';
-import GroupCard from '@/components/group/GroupCard.vue'
+import GroupCard from '@/components/group/GroupCard.vue';
+import SubscribeCard from '../../components/SubscribeCard.vue';
 export default {
     components: {
         CollectionCard,
         PostCard,
         GroupCard,
+        SubscribeCard,
     },
     data() {
         return {
@@ -64,6 +62,48 @@ export default {
             Did: 12306777,
             sex: '男',
             birthday: '01-13',
+            subscribes: [
+                {
+                    id: 1,
+                    name: '斗破苍穹',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 2,
+                    name: '斗破苍穹迦南学院',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/doupo.png'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 3,
+                    name: '偶像梦想祭',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/OM.jpg'),
+                    text: '为什么ta会出现在这儿，只有你知道',
+                    star: '朔间零 北斗',
+                },
+                {
+                    id: 4,
+                    name: '只狼 影逝二度',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/shadowdie.jpg'),
+                    text: '不死斩,斩灭不死,为了大日本帝国而战！',
+                    star: '狼 弦一郎 苇名一心',
+                },
+                {
+                    id: 5,
+                    name: '斗破苍穹',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+            ]
         }
     },
     methods: {
@@ -217,6 +257,11 @@ export default {
                 },
             ]
         },
+        skipSetting() {
+            this.$router.push({
+                path: '/' + 'userHome/setting',
+            });
+        }
     },
     mounted() {
         this.postList = this.getPostListOnline();
@@ -248,6 +293,7 @@ export default {
 }
 
 .user-home-right-block {
+    cursor: pointer;
     position: absolute;
     margin-left: 66%;
     width: 18%;
@@ -283,7 +329,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     /* 在一行中放置两列 */
-    gap: 15px;
+    gap: 30px;
 }
 
 .user-home-collect {

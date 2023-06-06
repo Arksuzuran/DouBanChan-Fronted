@@ -6,33 +6,31 @@
             <div class="switch-for-list">
                 <div class="radio-inputs">
                     <label class="radio">
-                        <input type="radio" name="radio" checked="">
+                        <input type="radio" name="radio" value="all" checked="" v-model="selectedOption">
                         <span class="name">全部</span>
                     </label>
                     <label class="radio">
-                        <input type="radio" name="radio">
+                        <input type="radio" name="radio" value="movie" v-model="selectedOption">
                         <span class="name">影视</span>
                     </label>
 
                     <label class="radio">
-                        <input type="radio" name="radio">
+                        <input type="radio" name="radio" value="book" v-model="selectedOption">
                         <span class="name">图书</span>
                     </label>
                 </div>
             </div>
-            <div class="sub-list-for-switch">
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
-                <CollectionCard></CollectionCard>
+            <div v-if="selectedOption == 'all'" class="sub-list-for-switch">
+                <SubscribeCard v-for="subscribe in subscribes" :key="subscribe.id" :subscribe="subscribe">
+                </SubscribeCard>
+            </div>
+            <div v-if="selectedOption == 'movie'" class="sub-list-for-switch">
+                <SubscribeCard v-for="subscribe in movies" :key="subscribe.id" :subscribe="subscribe">
+                </SubscribeCard>
+            </div>
+            <div v-if="selectedOption == 'book'" class="sub-list-for-switch">
+                <SubscribeCard v-for="subscribe in books" :key="subscribe.id" :subscribe="subscribe">
+                </SubscribeCard>
             </div>
         </div>
     </div>
@@ -40,9 +38,122 @@
 
 <script>
 import CollectionCard from '../../components/CollectionCard.vue';
+import SubscribeCard from '../../components/SubscribeCard.vue';
 export default {
     components: {
         CollectionCard,
+        SubscribeCard,
+    },
+    data() {
+        return {
+            selectedOption: 'all', // 初始选中的值，默认为 'all'
+            subscribes: [
+                {
+                    id: 1,
+                    name: '斗破苍穹',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 2,
+                    name: '斗破苍穹迦南学院',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/doupo.png'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 3,
+                    name: '偶像梦想祭',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/OM.jpg'),
+                    text: '为什么ta会出现在这儿，只有你知道',
+                    star: '朔间零 北斗',
+                },
+                {
+                    id: 4,
+                    name: '只狼 影逝二度',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/shadowdie.jpg'),
+                    text: '不死斩,斩灭不死,为了大日本帝国而战！',
+                    star: '狼 弦一郎 苇名一心',
+                },
+                {
+                    id: 5,
+                    name: '斗破苍穹',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 6,
+                    name: '斗破苍穹迦南学院',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/doupo.png'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 7,
+                    name: '偶像梦想祭',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/OM.jpg'),
+                    text: '为什么ta会出现在这儿，只有你知道',
+                    star: '朔间零 北斗',
+                },
+                {
+                    id: 8,
+                    name: '只狼 影逝二度',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/shadowdie.jpg'),
+                    text: '不死斩,斩灭不死,为了大日本帝国而战！',
+                    star: '狼 弦一郎 苇名一心',
+                },
+                {
+                    id: 9,
+                    name: '斗破苍穹',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+                {
+                    id: 10,
+                    name: '偶像梦想祭',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/OM.jpg'),
+                    text: '为什么ta会出现在这儿，只有你知道',
+                    star: '朔间零 北斗',
+                },
+                {
+                    id: 11,
+                    name: '只狼 影逝二度',
+                    class: 'book',
+                    image: require('../../assets/conroy_img/shadowdie.jpg'),
+                    text: '不死斩,斩灭不死,为了大日本帝国而战！',
+                    star: '狼 弦一郎 苇名一心',
+                },
+                {
+                    id: 12,
+                    name: '斗破苍穹',
+                    class: 'film',
+                    image: require('../../assets/conroy_img/snake.jpg'),
+                    text: '三十年河东三十年河西，莫欺少年穷！',
+                    star: '萧炎 美杜莎 萧薰儿',
+                },
+            ],
+        }
+    },
+    computed: {
+        movies() {
+            return this.subscribes.filter(item => item.class === 'film');
+        },
+        books() {
+            return this.subscribes.filter(item => item.class === 'book');
+        },
     },
 }
 </script>
@@ -112,7 +223,7 @@ export default {
 }
 
 .radio-inputs .radio input:checked+.name {
-    background-color: #ffeded;
+    background-color: #cdcdcd;
     font-weight: 600;
 }
 
