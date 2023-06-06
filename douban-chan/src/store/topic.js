@@ -167,7 +167,7 @@ export default {
         topicInfo: {
             topicId: 't001',
             topicHeadBgUrl: require("../assets/user-bg-2.jpg"),
-            topicAvatarImgUrl: require("../assets/topic-avatar-1.jpg"),
+            topicAvatarUrl: require("../assets/topic-avatar-1.jpg"),
             topicName: '游戏',
             topicIntro: '是所有哺乳类动物，特别是灵长类动物学习生存的第一步。它是一种基于物质需求满足之上的，在一些特定时间、空间范围内遵循某种特定规则的，追求精神世界需求满足的社会行为方式.',
             follow: 75971,

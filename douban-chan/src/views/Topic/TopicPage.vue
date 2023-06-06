@@ -9,7 +9,7 @@
                 <img :src="topicInfo.topicHeadBgUrl" class="header-background-image" />
 
                 <!-- 话题头像 -->
-                <img :src="topicInfo.topicAvatarImgUrl" class="topic-header-avatar" />
+                <img :src="topicInfo.topicAvatarUrl" class="topic-header-avatar" />
 
                 <!-- 话题名称 -->
                 <div class="topic-header-name header-blur-container">

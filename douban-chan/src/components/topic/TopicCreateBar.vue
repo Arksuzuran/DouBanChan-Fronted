@@ -181,7 +181,7 @@ export default {
             let newTopic = {
                 topicId: nanoid(),
                 topicHeadBgUrl: this.form.headimgUrlList[0],
-                topicAvatarImgUrl: this.form.avatarUrlList[0],
+                topicAvatarUrl: this.form.avatarUrlList[0],
                 topicName: this.form.name,
                 topicIntro: this.form.intro,
                 follow: 1,
