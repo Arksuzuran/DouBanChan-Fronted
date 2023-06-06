@@ -3,9 +3,9 @@
   <div class="topiclist-main-container">
 
     <!-- 顶部排序部分 -->
-    <div class="topiclist-sort-label-container" :style="title1? 'top: 64px;':''">
+    <div class="topiclist-sort-label-container" :style="distanceToTop">
       <div class="topiclist-title">
-        {{ title1 ? title1 : '推荐参与的话题' }}
+        {{ title ? title : '推荐参与的话题' }}
       </div>
       <PostSortLabel></PostSortLabel>
     </div>
@@ -25,7 +25,7 @@ import TopicNormalList from '@/components/topic/TopicNormalList.vue'
 
 export default {
   name: 'TopicHomeTopicSquare',
-  props: ['topicList', 'title1'],
+  props: ['topicList', 'title', 'top'],
   components: {
     PostSortLabel,
     TopicNormalList,
@@ -63,6 +63,15 @@ export default {
       console.log(list)
       return list
     },
+    // 动态设置到顶部的距离
+    distanceToTop() {
+      if (this.top) {
+        return {
+          top: this.top + 'px',
+        }
+      }
+      return {}
+    }
   },
   mounted() {
     // 监听TopicSortLabel的改变排序方式事件，在事件回调中重新向服务器请求帖子列表，并重新加载topicList

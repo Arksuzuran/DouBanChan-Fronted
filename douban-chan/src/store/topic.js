@@ -5,6 +5,15 @@ export default {
         //
         //请求数据
         //
+        //搜索框接口 根据指定输入内容返回话题列表
+        getTopicListSearchOnline(context, input){
+            if (input) {
+                console.log("依据指定tag获取话题列表，指定搜索内容：", input);
+            } else {
+                console.log("随机获取话题列表");
+            }
+            context.commit('SET_TOPICLIST', context.state.topicList)
+        },
         //获取热榜话题列表 如果传入tag则以tag为标准筛选
         getTopicListByHotOnline(context, tag) {
             if(tag){
@@ -39,17 +48,17 @@ export default {
         //
         //上传数据
         //
-        //创建话题
+        //创建话题1
         createTopicOnline(context, newTopic){
             console.log("创建话题", newTopic);
         },
         //加入话题
-        joinTopicOnline(context, topicId, userId, join){
-            if(join){
-                console.log("加入话题", topicId, userId);
+        joinTopicOnline(context, info){
+            if(info.is){
+                console.log("加入话题", info.topicId, info.userId, info.is);
             }
             else{
-                console.log("退出话题", topicId, userId);
+                console.log("退出话题", info.topicId, info.userId, info.is);
             }
         },
     },
@@ -158,7 +167,7 @@ export default {
         topicInfo: {
             topicId: 't001',
             topicHeadBgUrl: require("../assets/user-bg-2.jpg"),
-            topicAvatarImgUrl: require("../assets/topic-avatar-1.jpg"),
+            topicAvatarUrl: require("../assets/topic-avatar-1.jpg"),
             topicName: '游戏',
             topicIntro: '是所有哺乳类动物，特别是灵长类动物学习生存的第一步。它是一种基于物质需求满足之上的，在一些特定时间、空间范围内遵循某种特定规则的，追求精神世界需求满足的社会行为方式.',
             follow: 75971,

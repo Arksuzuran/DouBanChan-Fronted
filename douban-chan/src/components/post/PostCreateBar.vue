@@ -172,8 +172,21 @@ export default {
             if (this.loading) {
                 return;
             }
-            this.$confirm('确定要提交表单吗？')
+            this.$confirm('确定要创建帖子吗？')
                 .then(_ => {
+                    if(!this.form.title){
+                        this.$message.error("帖子标题不能为空。")
+                        return;
+                    }
+                    if(!this.form.topicId){
+                        this.$message.error("请为帖子选择一个话题。如果您选定的话题并不存在，我们会自动为您创建一个新话题。")
+                        return;
+                    }
+                    if(!this.form.text || this.form.text.length < 25){
+                        this.$message.error("帖子正文内容不能少于25个字符。")
+                        return;
+                    }
+
                     this.createPost();
                     this.loading = true;
                     this.timer = setTimeout(() => {
@@ -240,12 +253,17 @@ export default {
                     }
                 ]
             };
+            // 只在话题中发表的帖子
             if (this.topicInfo) {
                 this.createTopicPostOnline(newPost)
+                this.$message.success("成功在话题下创建帖子")
             }
+            // 在小组中发表的帖子
             else {
-                this.createTopicPostOnline(newPost)
+                this.createGroupPostOnline(newPost)
+                this.$message.success("成功在小组内创建帖子")
             }
+            
             console.log('用户发帖',newPost)
             // 通过事件总线触发自定义事件，并传递新帖子作为参数
             // this.$bus.$emit('postCreated', newPost);
@@ -253,6 +271,7 @@ export default {
             this.fileList = []
             this.form.title = ''
             this.form.topic = ''
+            this.form.topicId = ''
             this.form.imgUrlList = []
             this.form.text = ''
         },

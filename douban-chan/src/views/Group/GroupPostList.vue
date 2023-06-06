@@ -1,7 +1,6 @@
 <!-- 帖子列表页面 -->
 <template>
     <div class="postlist-main-container">
-
         <!-- 顶部排序部分 -->
         <div class="postlist-sort-label-container">
             <PostSortLabel></PostSortLabel>

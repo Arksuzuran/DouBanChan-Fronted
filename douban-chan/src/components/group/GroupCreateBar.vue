@@ -146,8 +146,26 @@ export default {
             if (this.loading) {
                 return;
             }
-            this.$confirm('确定要提交表单吗？')
+            this.$confirm('确定要创建小组吗？')
                 .then(_ => {
+                    if(!this.form.name){
+                        this.$message.error("小组名称不能为空。")
+                        return;
+                    }
+                    if(!this.form.tag){
+                        this.$message.error("请选择小组所属的标签。如果您不想让小组参与标签分类，请选择“无”。")
+                        return;
+                    }
+                    if(!this.form.headimgUrlList[0]){
+                        this.$message.error("请上传小组的封面头像。")
+                        return;
+                    }
+                    if(!this.form.avatarUrlList[0]){
+                        this.$message.error("请上传小组的主页头图。")
+                        return;
+                    }
+
+
                     this.createGroup();
                     this.loading = true;
                     this.timer = setTimeout(() => {
@@ -171,26 +189,16 @@ export default {
 
             //构造对象
             let newGroup = {
+                userId: this.userId,
                 groupId: nanoid(),
                 groupHeadBgUrl: this.form.headimgUrlList[0],
                 groupAvatarImgUrl: this.form.avatarUrlList[0],
                 groupName: this.form.name,
                 groupIntro: this.form.intro,
                 tag: this.form.tag,
-                groupPostNumber: 0,
-                groupFollowNumber: 1,
-                userInGroup: true,
-                userIsAdmin: true,
-                memberList: [
-                    {
-                        userId: this.userId,
-                        userName: this.userName,
-                        userImageUrl: this.userImageUrl,
-                        isAdmin: true,
-                    },
-                ],
             };
             this.createGroupOnline(newGroup)
+            this.$message.success("成功创建小组:" + this.form.name)
 
             // // 通过事件总线触发自定义事件，并传递新小组作为参数
             // this.$bus.$emit('groupCreated', newGroup);

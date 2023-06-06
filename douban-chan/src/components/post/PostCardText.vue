@@ -53,17 +53,17 @@ export default {
                 // console.log('跳转到帖子详情页')
                 this.$router.push({
                     name: 'groupPost',
-                    params:{
+                    query:{
                         groupId: this.info.groupId,
                         postId: this.info.postId,
                     },
                 })
             }
-            else{
-                // console.log('从其他地方跳转到帖子详情页')
+            else if (this.info.topicId){
+                console.log('从其他地方跳转到帖子详情页',this.info.postId)
                 this.$router.push({
                     name: 'topicPost',
-                    params:{
+                    query:{
                         topicId: this.info.topicId,
                         postId: this.info.postId,
                     },

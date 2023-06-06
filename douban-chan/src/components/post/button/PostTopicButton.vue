@@ -1,4 +1,4 @@
-<!-- 举报按钮及举报单弹窗 -->
+<!-- 跳转到相应话题的按钮 -->
 <template>
     <div class="button-container">
         <button class="postcard-button-topic" @mouseenter="mouseenterTopicButton" @mouseleave="mouseleaveTopicButton"
@@ -16,10 +16,9 @@ export default {
         // 跳转至相应话题
         jumpToTopic() {
             this.$router.push({
-                name: 'topicPost',
-                params: {
+                name: 'topic',
+                query: {
                     topicId: this.info.topicId,
-                    postId: this.info.postId,
                 },
             })
         },

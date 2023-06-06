@@ -11,15 +11,15 @@
             <i class="fa-solid fa-thumbs-down likefav-icon" ref="dislikeIcon"></i>
             <span class="likefav-data-font">{{ getDislikeNumber }}</span>
         </div> -->
-        <div class="likefav-button" @mouseenter="mouseenterButton(1)" @mouseleave="mouseleaveButton(1)"
-            @click="handleFav" :class="getFavButtonClass" ref="favButton">
+        <div class="likefav-button" @mouseenter="mouseenterButton(1)" @mouseleave="mouseleaveButton(1)" @click="handleFav"
+            :class="getFavButtonClass" ref="favButton">
             <i class="fa-solid fa-bookmark likefav-icon" ref="favIcon"></i>
             <span class="likefav-data-font" ref="favText">{{ getFavNumber }}</span>
         </div>
 
-        <div class="likefav-button" @mouseenter="mouseenterButton(2)" @mouseleave="mouseleaveButton(2)"
-            @click="handleLike" :class="getLikeButtonClass" ref="likeButton">
-            <i class="fa-solid fa-thumbs-up likefav-icon"  ref="likeIcon"></i>
+        <div class="likefav-button" @mouseenter="mouseenterButton(2)" @mouseleave="mouseleaveButton(2)" @click="handleLike"
+            :class="getLikeButtonClass" ref="likeButton">
+            <i class="fa-solid fa-thumbs-up likefav-icon" ref="likeIcon"></i>
             <span class="likefav-data-font" ref="likeText">{{ getLikeNumber }}</span>
         </div>
 
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'LikeFavButtonGroup',
     props: ['info'],
@@ -49,29 +50,32 @@ export default {
             enterFav: false,
         }
     },
-    computed:{
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
         // 点赞数 点踩数 收藏数
-        getLikeNumber(){
+        getLikeNumber() {
             return this.enterLike ? (this.userLike ? '取消点赞' : '点赞') : (this.userLike ? this.basicLikeNumber + 1 : this.basicLikeNumber);
         },
-        getDislikeNumber(){
+        getDislikeNumber() {
             return this.enterDislike ? (this.userDislike ? '取消点踩' : '点踩') : (this.userDislike ? this.basicDislikeNumber + 1 : this.basicDislikeNumber);
         },
-        getFavNumber(){
+        getFavNumber() {
             return this.enterFav ? (this.userFav ? '取消收藏' : '收藏') : (this.userFav ? this.basicFavNumber + 1 : this.basicFavNumber);
         },
         // 根据当前点赞 点踩 收藏情况改变按钮颜色
-        getLikeButtonClass(){
+        getLikeButtonClass() {
             return this.userLike ? "likefav-button-like" : '';
         },
-        getDislikeButtonClass(){
+        getDislikeButtonClass() {
             return this.userDislike ? "likefav-button-dislike" : '';
         },
-        getFavButtonClass(){
+        getFavButtonClass() {
             return this.userFav ? "likefav-button-fav" : '';
         },
     },
-    methods:{
+    methods: {
+        //帖子 文本相关
+        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 处理点赞
         handleLike() {
             // 更新点赞
@@ -108,30 +112,45 @@ export default {
             // this.updateFavClass()
         },
         // 改变点赞数
-        uploadLike(num){
+        uploadLike(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：点赞数',num)
+            this.likePostOnline({
+                postId: this.info.postId,
+                userId: this.userId,
+                is: num > 0,
+            })
         },
         //改变点踩数
-        uploadDislike(num){
+        uploadDislike(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：点踩数',num)
+            this.dislikePostOnline({
+                postId: this.info.postId,
+                userId: this.userId,
+                is: num > 0,
+            })
         },
         //改变收藏数
-        uploadFav(num){
+        uploadFav(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：收藏数',num)
+            this.favPostOnline({
+                postId: this.info.postId,
+                userId: this.userId,
+                is: num > 0,
+            })
         },
         // 准备向后端发送点赞信息
-        prepareUploadLike(){
+        prepareUploadLike() {
             this.userLike ? this.uploadLike(1) : this.uploadLike(-1)
         },
         // 准备向后端发送点踩信息
-        prepareUploadDislike(){
+        prepareUploadDislike() {
             this.userDislike ? this.uploadDislike(1) : this.uploadDislike(-1)
         },
         //准备向后端发送收藏信息
-        prepareUploadFav(){
+        prepareUploadFav() {
             this.userFav ? this.uploadFav(1) : this.uploadFav(-1)
         },
         // // 根据点赞来修改css类
@@ -154,30 +173,30 @@ export default {
         // },
         // 按钮动效
         mouseenterButton(index) {
-            if(index === 1){
+            if (index === 1) {
                 this.enterFav = true
                 this.$refs.favButton.classList.add('likefav-slide-in')
             }
-            else if(index === 2){
+            else if (index === 2) {
                 this.enterLike = true
                 this.$refs.likeButton.classList.add('likefav-slide-in')
             }
-            else if(index === 3){
+            else if (index === 3) {
                 this.enterDislike = true
                 this.$refs.dislikeButton.classList.add('likefav-slide-in')
             }
         },
         // 需要注意的是，此处替换了文本内容 也就失去了vue的自动更新，因此我们必须手动更新like和dislike这一对互相影响的对象
         mouseleaveButton(index) {
-            if(index === 1){
+            if (index === 1) {
                 this.enterFav = false
                 this.$refs.favButton.classList.remove('likefav-slide-in')
             }
-            else if(index === 2){
+            else if (index === 2) {
                 this.enterLike = false
                 this.$refs.likeButton.classList.remove('likefav-slide-in')
             }
-            else if(index === 3){
+            else if (index === 3) {
                 this.enterDislike = false
                 this.$refs.dislikeButton.classList.remove('likefav-slide-in')
             }
@@ -214,21 +233,26 @@ export default {
     align-items: center;
     justify-content: space-around;
 }
+
 .likefav-button:hover {
     background-color: rgba(255, 126, 126, 1);
 }
-.likefav-button-like{
+
+.likefav-button-like {
     background-color: rgb(255, 53, 53);
     color: white;
 }
-.likefav-button-dislike{
+
+.likefav-button-dislike {
     background-color: rgb(90, 90, 90);
     color: white;
 }
-.likefav-button-fav{
+
+.likefav-button-fav {
     background-color: rgb(255, 107, 77);
     color: white;
 }
+
 /* 鼠标移入的动画效果 */
 .likefav-slide-in {
     animation: slideInAnimation 0.5s forwards;
@@ -254,15 +278,19 @@ export default {
     margin: 5px;
     cursor: pointer;
 }
+
 .likefav-icon-like {
     color: rgb(252, 53, 53);
 }
+
 .likefav-icon-dislike {
     color: rgb(0, 0, 0);
 }
+
 .likefav-dataicon-wrapper {
     margin-bottom: -1px;
 }
+
 .likefav-data-font {
     margin-right: 8px;
     font-size: 16px;
@@ -271,7 +299,7 @@ export default {
 
 .likefav-container {
     width: 130px;
-    
+
     border-radius: 5px;
     background-color: rgb(255, 217, 217);
     border: 3px solid rgba(254, 232, 232, 0.8);

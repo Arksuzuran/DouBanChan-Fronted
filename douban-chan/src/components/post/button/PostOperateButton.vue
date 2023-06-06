@@ -31,7 +31,7 @@
 </template>
 
 <script>
-
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'PostOperateButton',
     // 举报信息
@@ -46,6 +46,8 @@ export default {
 
     },
     methods: {
+        //帖子 文本相关
+...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline','replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline','topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline','reportTextOnline', 'deleteTextOnline']),
         handleClick() {
             this.show = !this.show
         },
@@ -61,6 +63,8 @@ export default {
                 cancelButtonText: '取消',
                 // type: 'warning',
             }).then(() => {
+                this.deleteTextOnline(this.info.postId)
+
                 this.$message.success('删除请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');
@@ -73,6 +77,11 @@ export default {
                 cancelButtonText: '取消',
                 // type: 'warning',
             }).then(() => {
+                this.topPostOnline({
+                    postId: this.info.postId,
+                    top: true
+                })
+
                 this.$message.success('置顶请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');
@@ -85,6 +94,11 @@ export default {
                 cancelButtonText: '取消',
                 // type: 'warning',
             }).then(() => {
+                this.goodPostOnline({
+                    postId: this.info.postId,
+                    good: true
+                })
+
                 this.$message.success('设置精华请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');
@@ -97,6 +111,11 @@ export default {
                 cancelButtonText: '取消',
                 // type: 'warning',
             }).then(() => {
+                this.topPostOnline({
+                    postId: this.info.postId,
+                    top: false
+                })
+
                 this.$message.success('取消置顶请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');
@@ -109,6 +128,11 @@ export default {
                 cancelButtonText: '取消',
                 // type: 'warning',
             }).then(() => {
+                this.goodPostOnline({
+                    postId: this.info.postId,
+                    good: false
+                })
+
                 this.$message.success('取消精华帖请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');

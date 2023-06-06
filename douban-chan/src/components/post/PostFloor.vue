@@ -5,7 +5,7 @@
         <PostCardUserInfo :info="userInfo"></PostCardUserInfo>
         <!-- 赞 踩 和 举报按钮 -->
         <div class="postfloor-buttongroup">
-            <PostReportButton></PostReportButton>
+            <PostReportButton :info="post"></PostReportButton>
         </div>
         <!-- 点赞数 与 帖子正文 -->
         <div class="postfloor-text-container">
@@ -22,7 +22,7 @@
 
             <!-- 赞与踩 回复按钮-->
             <div class="postfloor-like-container">
-                <LikeButtonGroup :info="likeInfo" />
+                <LikeButtonGroup :info="info" />
                 <!-- 回复按钮 -->
                 <div class="postfloor-reply-button" @click="changeReplying">
                     回复
@@ -108,14 +108,6 @@ export default {
             return {
                 text: this.info.text,
                 postImageUrlList: this.info.imageUrlList,
-            }
-        },
-        // 要传递给LikeButtonGroup组件的信息
-        likeInfo() {
-            return {
-                like: this.info.like,
-                dislike: this.info.dislike,
-                textId: this.info.textId,
             }
         },
         showFoldedComments() {

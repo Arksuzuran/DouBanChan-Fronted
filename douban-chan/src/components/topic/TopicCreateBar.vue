@@ -146,8 +146,17 @@ export default {
             if (this.loading) {
                 return;
             }
-            this.$confirm('确定要提交表单吗？')
+            this.$confirm('确定要创建话题吗？')
                 .then(_ => {
+                    if(!this.form.name){
+                        this.$message.error("话题名称不能为空。")
+                        return;
+                    }
+                    if(!this.form.tag){
+                        this.$message.error("请选择话题所属的标签。如果您不想让话题参与标签分类，请选择“无”。")
+                        return;
+                    }
+
                     this.createTopic();
                     this.loading = true;
                     this.timer = setTimeout(() => {
@@ -172,7 +181,7 @@ export default {
             let newTopic = {
                 topicId: nanoid(),
                 topicHeadBgUrl: this.form.headimgUrlList[0],
-                topicAvatarImgUrl: this.form.avatarUrlList[0],
+                topicAvatarUrl: this.form.avatarUrlList[0],
                 topicName: this.form.name,
                 topicIntro: this.form.intro,
                 follow: 1,
@@ -183,6 +192,7 @@ export default {
                 tag: this.form.tag,
             };
             this.createTopicOnline(newTopic)
+            this.$message.success("成功创建话题:" + this.form.name)
 
             // 清空内容
             this.avatarFileList = []
