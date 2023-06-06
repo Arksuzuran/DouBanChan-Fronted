@@ -1,9 +1,9 @@
 <template>
     <div class="container">
     <div :style="{
-            'background-image': 'url(' + detailImageUrl + ')', 
-            'background-size': 'contain', 
+            'background-image': 'url(' + backgroundImage + ')',
             'position': 'absolute',
+            'background-size': 'cover',
             'width': '100%',
             'height': '600px',
             'opacity': '0.8',
@@ -18,46 +18,46 @@
         <div class="rank-one-wrapper">
             <div class="videocard-heng">
                 <div class="image">
-                    <img :src="items[0].imageUrl" style="height: 100%; border-radius: 10px;">
+                    <img :src="items[0].m_profile_photo" style="height: 100%;border-radius: 10px;">
                 </div>
                 <div class="content">
-                    <div class="name">{{ items[0].name }}</div>
+                    <div class="name">{{ items[0].m_name }}</div>
                     <div class="detail">
-                        {{ items[0].onDate }} | {{ items[0].country }} <br/>
-                        导演：{{ items[0].director }}<br/>
-                        主演：{{ items[0].actor }} <br/>
+                        {{ items[0].m_year }} | {{ items[0].m_region }} <br/>
+                        导演：{{ items[0].m_director }}<br/>
+                        主演：{{ items[0].m_actor }} <br/>
                     </div>
                 </div>
                 <div class="rate">
-                    <div class="rate-num">{{ items[0].rate }}</div> 
+                    <div class="rate-num">{{ items[0].m_rate }}</div> 
                     <el-rate
-                        v-model="value"
+                        v-model="value2"
                         disabled
                         text-color="#ff9900"
                         score-template="{value}"
                         style="display:inline-block">
                         </el-rate>
-                    <div class="rate-persons">{{ items[0].rateNum }}人参与评分</div>
+                    <div class="rate-persons">{{ items[0].m_rate_num }}人参与评分</div>
                 </div>
             </div>
             <div class="comment clearfix">
                 <div class="yinhao"><i class="fa-solid fa-quote-left"></i>酱友点评</div>
                 <div class="comment-content">
-                    {{ firstComment }}
+                    {{ videoFirstReviewTitle }}
                 </div>
             </div>
         </div>
         <div class="nineWrapper">
             <div class="videocard-heng2" v-for="(item, index) in filteredItems" :key="index">
                 <div class="image">
-                    <img :src="item.imageUrl" style="height: 100%; border-radius: 10px;">
+                    <img :src="item.m_profile_photo" style="height: 100%; border-radius: 10px;">
                 </div>
                 <div class="content2">
-                    <div class="name2">{{ item.name }} <span style="margin-left: 20px;color: orange">{{ item.rate }}</span></div>
+                    <div class="name2">{{ item.m_name }} <span style="margin-left: 20px;color: orange">{{ item.m_rate }}</span></div>
                     <div class="detail2">
-                        {{ item.onDate }} | {{ item.country }} <br/>
-                        导演：{{ item.director }}<br/>
-                        主演：{{ item.actor }} <br/>
+                        {{ item.m_year }} | {{ item.m_region }} <br/>
+                        导演：{{ item.m_director }}<br/>
+                        主演：{{ item.m_actor }} <br/>
                         <br/>
                     </div>
                 </div>
@@ -69,20 +69,90 @@
 
 <script>
 import VideoHengCard from '@/components/Video/VideoHengCard.vue'
+import qs from "qs"
 export default {
     name: "RankBoardSingle",
-    props: ['title', 'items', 'firstComment', 'detailImageUrl'],
+    props: ['title'],
     components:{VideoHengCard},
     data(){
         return {
-            value: this.items[0].rate / 2.0
+            value: null,
+            backgroundImage: '',
+            videoFirstReviewTitle: '',
+            videoReviewId: '',
+            items: [],
+            selected: {
+                '影or视': '电影',
+                '类型': '全部',
+                '地区': '全部',
+                '年份': '全部',
+                'extraDetail': 'ratedown'
+            }
         }
     },
     computed: {
         filteredItems() {
             return this.items.slice(1, 10);
         },
+        value2(){
+            return 1.0 * this.items[0].m_rate / 2
+        }
     },
+    methods:{
+        getVideos(){
+            //根据title向后端发送分类的请求。
+            //if (this.title==='最高评分电影')
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                m_type: this.selected['影or视'], 
+                m_genre: this.selected['类型'],
+                m_region: this.selected['地区'],
+                m_year: this.selected['年份'],
+                m_order: this.selected['extraDetail']
+            }),
+            url: "/media/filter/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.items = res.data.media
+                this.backgroundImage = this.items[0].m_first_preview
+                this.getVideoFirstReview()
+            })
+            .catch((err) => {
+                this.$message.error("网络出错了QAQ")
+            });
+        },
+        getVideoFirstReview(){
+            //根据第一个item[0]的m_id找到最热门的评论的标题
+            // console.log(item[0].m_id)
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 1,
+                m_id: this.items[0].m_id
+            }),
+            url: "/media/query_single/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.videoFirstReviewTitle = res.data.text_by_like[0].text.t_topic
+            })
+            .catch((err) => {
+                this.$message.error("网络出错了QAQ")
+            });
+        },
+        getSelected(){
+            if (this.title === '最高评分电影')
+            {
+                this.selected = this.selected
+            }
+        }
+    },
+    mounted(){
+        this.getSelected()
+        this.getVideos()
+    }
 }
 </script>
 
@@ -108,12 +178,12 @@ export default {
 }
 
 .videocard-heng{
-    width: 500px;
+    width: 400px;
     height: 150px;
     background-color: white;
     display: flex;
     margin-bottom: 10px;
-    background-color: rgba(123,95,52,0.5);
+    background-color: rgba(244, 126, 63, 0.5);
     border-radius: 10px;
     color: white;
 }
@@ -142,21 +212,27 @@ export default {
     font-size: 18px;
 }
 .rate-persons{
-    color: gray;
+    color: white;
     font-size: 14px;
 }
 .comment {
     margin: auto 0;
     text-align: left;
     margin-left: 20px;
-    color: #C5B99E
+    color: black
 }
 .yinhao {
     color: lightcoral;
     font-size: 18px;
 }
 .comment-content{
-    width: 80%;
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 400px;
+    height: 50px;
+    padding: 10px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
 }
 .clearfix::after {
     display: block;
@@ -198,7 +274,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 600px;
-    /* background-color: rgba(255, 255, 255, 0.1);  */
-    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.7); 
+    /* backdrop-filter: blur(5px); */
 }
 </style>

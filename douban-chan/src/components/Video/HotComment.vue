@@ -4,11 +4,11 @@
             <div class="review-row clearfix">
                 <el-image
                     style="width: 50px; height: 50px;float: left"
-                    :src="item.reviewerImage"></el-image>
+                    :src="reviewerImageUrl"></el-image>
                     <div class="reviewer">
                         <span>{{ reviewerName }}</span>
                         <span style="margin: 0 10px;">评论了</span>
-                        <span>{{ videoName }}</span>
+                        <span @click="toVideoDetail(videoId)">{{ videoName }}</span>
                     </div>
                     &nbsp;
                     <RateWithNumber :score="rate" style="float:left"></RateWithNumber>
@@ -19,19 +19,22 @@
         </div>
 
         <div class="body">
-            <div class="video-image">
+            <div class="video-image" @click="toVideoDetail(videoId)">
                 <img :src="videoImageUrl" style="height: 200px;">
             </div>
             <div>
-                <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
-                <div class="comment-body">
-                    <div class="wrapper" @click="toReviewPage(reviewId)">
-                        <div class="text">
-                            {{ content }}
+                <div class="hover-style">
+                    <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
+                    <div class="comment-body">
+                        <div class="wrapper" @click="toReviewPage(reviewId)">
+                            <div class="text">
+                                {{ content }}
+                            </div>
+                            <div class="add">(查看全文)</div>
                         </div>
-                        <div class="add">(查看全文)</div>
                     </div>
                 </div>
+                
                 <div class="postcard-dataicon-group">
                     <div class="postcard-dataicon-wrapper" @click="handleLike">
                         <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
@@ -73,21 +76,21 @@ export default {
             userFav: false,
             userComment: false,
             //下面是评论的相关信息
-            reviewerName: '',
-            reviewerImageUrl: '',
-            reviewerId: this.item.t_user_id,
+            reviewerName: this.item.userName,
+            reviewerImageUrl: this.item.userImageUrl,
+            reviewerId: this.item.userId,
             videoId: this.item.t_media_id,
-            videoName: '默认',
-            videoImageUrl: require('../../assets/movie/1.jpg'),
-            time: this.item.t_create_time,
-            content: '',
-            like: this.item.t_like,
-            dislike: this.item.t_dislike,
+            videoName: '', //根据videoId获取
+            videoImageUrl: '',  //根据videoId获取得到
+            time: this.item.date,
+            content: this.item.text,
+            like: this.item.like,
+            dislike: this.item.dislike,
             topic: this.item.t_topic,
             rate: this.item.t_rate,
-            reviewId: this.item.t_id,
-            commentNum: this.item.t_floor,
-            favNum: 0
+            reviewId: this.item.textId,
+            commentNum: this.item.comments,
+            // favNum: this.item.favNum,    收藏数
         }
     },
     methods: {
@@ -186,47 +189,33 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
-        getReviewer() {
+        //根据id得到对应的影视
+        getVideo(id) {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: this.item.t_user_id
-            }),
-            url: "/user/query_single/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
-            })
-            .then((res) => {
-                console.log(res.data.user)
-                this.reviewerName = res.data.user.u_name
-                this.reviewerImageUrl = res.data.user.u_profile_photo    //后期要处理
-            })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
-            },
-        getVideo() {
-            this.$axios({
-            method: "post",
-            data: qs.stringify({
-                m_id: this.item.t_media_id
+                u_id: 1,
+                m_id: id
             }),
             url: "/media/query_single/",
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             .then((res) => {
-                console.log(res.data.media)
                 this.videoName = res.data.media.m_name
-                this.videoImageUrl = res.data.media.m_profile_photo    //后期要处理
+                this.videoImageUrl = res.data.media.m_profile_photo
             })
             .catch((err) => {
                 this.$message.error("网络出错QAQ")
             });
             },
+
+        //跳转到影视详情
+        toVideoDetail(videoId) {
+            this.$router.push({ name: 'videoDetail', params: { id: videoId } })
+        }
     },
     mounted(){
-        this.getReviewer();
-        // this.getVideo();
-
+        this.getVideo(this.videoId)
         // 假设htmlContent包含HTML代码
         var htmlContent = this.item.t_description;
         // 定义一个正则表达式
@@ -268,7 +257,7 @@ export default {
         float: left;
     }
     .body{
-        margin-top: 10px;
+        margin: 10px 0px;
         border-radius: 8px;
         background-color: white;
         padding: 10px;
@@ -332,10 +321,14 @@ export default {
   width: 350px;
     background-color: white;
 }
-.wrapper:hover .text,
-.wrapper:hover .add {
-  color: red;
+.hover-style:hover .title,
+.hover-style:hover .wrapper{
+    color:gray;
 }
+/* .wrapper:hover .text,
+.wrapper:hover .add {
+  color: gray;
+} */
 .text {
   font-size: 18px;
   overflow: hidden;

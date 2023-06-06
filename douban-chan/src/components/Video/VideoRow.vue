@@ -15,10 +15,7 @@
             </el-header> 
             <el-main>
                 <div class="card-container">
-                    <UniversalCard v-for="movie in items" :key="movie.id" :ChildId="movie.id" :ChildType="movie.type"
-                        :ChildYear="movie.year" :ChildName="movie.name" :ChildRate="movie.rate" :ChildTime="movie.time"
-                        :ChildFrom="movie.from" :ChildDir="movie.dir" :ChildStar="movie.star" :ChildText="movie.text"
-                        :ChildImage="movie.imageUrl">
+                    <UniversalCard v-for="movie in items" :key="movie.id" :movie="movie">
                     </UniversalCard>
                 </div>
             </el-main>

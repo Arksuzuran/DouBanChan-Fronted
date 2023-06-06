@@ -4,43 +4,43 @@
             <div class="review-row clearfix">
                 <el-image
                     style="width: 50px; height: 50px;float: left"
-                    :src="item.reviewerImage"></el-image>
+                    :src="item.userImageUrl"></el-image>
                     <div class="reviewer">
-                        {{ item.reviewername }}
+                        {{ item.userName }}
                     </div>
                     &nbsp;
-                    <RateWithNumber :score="item.rate" style="float:left"></RateWithNumber>
+                    <RateWithNumber :score="item.t_rate" style="float:left"></RateWithNumber>
                     <div class="time">
-                        {{ item.time }}
+                        {{ item.date }}
                     </div>
             </div>
         </div>
 
         <div class="body">
-            <div class="title" @click="toReviewPage(item.id)">{{ item.title }}</div>
+            <div class="title" @click="toReviewPage(item.textId)">{{ item.t_topic }}</div>
             <div class="wrapper">
                 <input id="exp1" class="exp"  type="checkbox">
-                <div class="text" @click="toReviewPage(item.id)">
+                <div class="text" @click="toReviewPage(item.textId)">
                     <label class="btn" for="exp1"></label>
-                    {{ item.content }}
+                    {{ item.text }}
                 </div>
             </div>
             <div class="postcard-dataicon-group">
                 <div class="postcard-dataicon-wrapper" @click="handleLike">
                     <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
-                    <span class="postcard-data-font">{{ item.agree }}</span>
+                    <span class="postcard-data-font">{{ item.like }}</span>
                 </div>
                 <div class="postcard-dataicon-wrapper" @click="handleDislike">
                     <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
-                    <span class="postcard-data-font">{{ item.disagree }}</span>
+                    <span class="postcard-data-font">{{ item.dislike }}</span>
                 </div>
-                <div class="postcard-dataicon-wrapper" @click="handleComment">
+                <div class="postcard-dataicon-wrapper" @click="toReviewPage(item.textId)">
                     <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
-                    <span class="postcard-data-font">{{ item.comment }}</span>
+                    <span class="postcard-data-font">{{ item.comments }}</span>
                 </div>
                 <div class="postcard-dataicon-wrapper" @click="handleFav">
                     <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
-                    <span class="postcard-data-font">{{ item.fav }}</span>
+                    <span class="postcard-data-font">{{ item.t_favorite }}</span>
                 </div>
             </div>
         </div>
@@ -50,6 +50,7 @@
 
 <script>
 import RateWithNumber from '../Video/RateWithNumber.vue'
+import qs from "qs"
 export default {
     name: 'ReviewSmall',
     components: {
@@ -61,10 +62,95 @@ export default {
             userLike: false,
             userDislike: false,
             userFav: false,
-            userComment: false,
+            reviewer: null,
         }
     },
     methods: {
+        clickLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickCancelLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/cancel_like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickCancelDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/cancel_dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickFavorite(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/text_set_favorite/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickCancelFavorite(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/text_cancel_favorite/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+
         toReviewPage(id){
             console.log(id)
             this.$router.push({
@@ -78,10 +164,12 @@ export default {
             this.userFav = !this.userFav
             this.updateFav()
             if (this.userFav) {
-                this.item.fav++;
+                this.item.t_favorite++;
+                this.clickFavorite()
             }
             else {
-                this.item.fav--
+                this.item.t_favorite--
+                this.clickCancelFavorite()
             }
         },
         updateFav() {
@@ -92,39 +180,23 @@ export default {
                 this.$refs.favIcon.classList.remove('postcard-icon-fav')
             }
         },
-        // 处理评论
-        handleComment() {
-            this.userComment = !this.userComment
-            this.updateComment()
-            if (this.userComment) {
-                this.item.comment++;
-            }
-            else {
-                this.item.comment--
-            }
-        },
-        updateComment() {
-            if (this.userComment) {
-                this.$refs.commentIcon.classList.add('postcard-icon-comment')
-            }
-            else {
-                this.$refs.commentIcon.classList.remove('postcard-icon-comment')
-            }
-        },
         handleLike() {
             this.userLike = !this.userLike
             //点赞与点踩只能有一个
             if (this.userDislike) {
                 this.userDislike = false
-                this.item.disagree -- 
+                this.item.dislike -- 
+                this.clickCancelDislike()
             }
             this.updateDislike()
             this.updateLike()
             if (this.userLike) {
-                this.item.agree++;
+                this.item.like++;
+                this.clickLike()
             }
             else {
-                this.item.agree--
+                this.item.like--
+                this.clickCancelLike()
             }
         },
         updateLike() {
@@ -141,15 +213,18 @@ export default {
             //点赞与点踩只能有一个
             if (this.userLike) {
                 this.userLike = false
-                this.item.agree--;
+                this.item.like--;
+                this.clickCancelLike()
             }
             this.updateDislike()
             this.updateLike()
             if (this.userDislike) {
-                this.item.disagree++;
+                this.item.dislike++;
+                this.clickDislike()
             }
             else {
-                this.item.disagree--
+                this.item.dislike--
+                this.clickCancelDislike()
             }
         },
         updateDislike() {
@@ -160,7 +235,34 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
+        //根据id得到对应的评论者对象
+        getReviewer(id){
+            
+        },
+        getStatus(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId
+            }),
+            url: "/media/get_status/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.userLike = res.data.is_liked
+                this.userDislike = res.data.is_disliked
+                this.userFav = res.data.is_favorite
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        }
     },
+    mounted(){
+        this.getStatus();
+    }
+
 }
 </script>
 
@@ -201,9 +303,7 @@ export default {
         transition: all 0.3s ease-in-out; 
     }
     .body:hover {
-        box-shadow: 10px 10px 30px #bebebe;
-        transform: translate(0,-8px);
-        transition-delay: 0s !important;
+        color: gray;
     }
     .title{
         font-size: 20px;

@@ -10,7 +10,7 @@
     </div>
 
     <div class="container">
-      <!-- <VideoRow :items="recommendItems"></VideoRow> -->\
+      <!-- <VideoRow :items="recommendItems"></VideoRow> -->
       <router-view></router-view>
     </div>
   </div>
@@ -31,138 +31,7 @@ export default {
         { id: 0, label: '排行榜' },
         { id: 1, label: '分类索引' },
       ],
-      hotMovies: [
-          {
-              id: 1,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.1,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 2,
-              name: '斗破苍穹',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '52013页',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 3,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 4,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 5,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 6,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.1,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 7,
-              name: '斗破苍穹',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '52013页',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 8,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 9,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-          {
-              id: 10,
-              name: '伦菲尔德',
-              imageUrl: require('../../assets/movie/1.jpg'),
-              rate: 9.4,
-              year: 2020,
-              time: '2h13min',
-              from: '漂亮国',
-              type: '动作 / 冒险 / 科幻',
-              dir: '诺兰',
-              star: '吴亦凡 李易峰 郑爽',
-              text: '伦菲尔德 (Renfield) 是德古拉 (Dracula) 的追随者，也是疯人院几十年来的囚犯，他渴望远离伯爵、他的各种要求以及随之而来的所有流血事件。',
-          },
-      ],
+      hotMovies: [],
     }
   },
   methods: {
@@ -188,7 +57,10 @@ export default {
       this.$router.push({
         name:"videoDefault"
       })
-    }
+    },
+    
+  },
+  mounted(){
   }
 }
 </script>

@@ -45,6 +45,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     background-color: transparent;
+    gap: 0 20px;
 }
 
 

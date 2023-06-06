@@ -40,6 +40,7 @@
 
 <script>
 import VideoHengCard from "@/components/Video/VideoHengCard.vue"
+import qs from "qs"
 export default {
     name: "VideoCategory",
     components: {VideoHengCard},
@@ -75,89 +76,42 @@ export default {
         }
     },
     methods:{
+        updatePage() {
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                m_type: this.selected['影or视'], 
+                m_genre: this.selected['类型'],
+                m_region: this.selected['地区'],
+                m_year: this.selected['年份'],
+                m_order: this.selected['extraDetail']
+            }),
+            url: "/media/filter/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.items = res.data.media
+                console.log(this.items)
+            })
+            .catch((err) => {
+                this.$message.error("网络出错了QAQ")
+            });
+            },
         selectCategory(categoryName, detail){
             if (this.selected[categoryName] !== detail) //如果点击的和现在的不一样才更改
             {
                 this.selected[categoryName] = detail
-                updatePage() //更新页面数据
+                this.updatePage() //更新页面数据
             } 
-        },
-        updatePage(selected){
-            //根据selected的信息发送给后端，更新接收数据，更新items
-            this.items = [
-                {
-                    id: 1,
-                    name: '软工的救赎',
-                    rate: 9,
-                    director: 'anndddkkk',
-                    actor: 'adkadkadk',
-                    onDate: '2023-6-4',
-                    category: '惊悚',
-                    country: '英国',
-                    imageUrl: require('../../assets/movie/avatar.webp')
-                },
-                {
-                    id: 2,
-                    name: '软工的救赎',
-                    rate: 9,
-                    director: 'anndddkkk',
-                    actor: 'adkadkadk',
-                    onDate: '2023-6-4',
-                    country: '英国',
-                    category: '惊悚',
-                    imageUrl: require('../../assets/movie/avatar.webp')
-                },
-                {
-                    id: 3,
-                    name: '软工的救赎',
-                    rate: 9,
-                    director: 'anndddkkk',
-                    actor: 'adkadkadk',
-                    onDate: '2023-6-4',
-                    category: '惊悚',
-                    imageUrl: require('../../assets/movie/avatar.webp')
-                },
-                {
-                    id: 4,
-                    name: '软工的救赎',
-                    rate: 9,
-                    director: 'anndddkkk',
-                    actor: 'adkadkadk',
-                    onDate: '2023-6-4',
-                    category: '惊悚',
-                    imageUrl: require('../../assets/movie/avatar.webp')
-                },
-            ]
         },
         changeOrder(detail){
             this.selected['extraDetail'] = detail;
-            console.log(detail)
+            this.updatePage()
         },
-        // updatePage() {
-        //     this.$axios({
-        //     method: "post",
-        //     data: qs.stringify({
-        //         m_type: this.selected['影or视'], 
-        //         m_genre: this.selected['类型'],
-        //         m_region: this.selected['地区'],
-        //         m_year: this.selected['年份'],
-        //         m_order: this.selected['extraDetail']
-        //     }),
-        //     url: "/media/filter/",
-        //     headers: { "content-type": "application/x-www-form-urlencoded" },
-        //     })
-        //     .then((res) => {
-        //         this.items = res.data;
-        //         console.log(this.items)
-        //     })
-        //     .catch((err) => {
-        //         this.$message.error("网络出错了QAQ")
-        //     });
-        //     },
+        
     },
     mounted(){
-        this.updatePage(this.selected);
-        this.updateVideos();
+        this.updatePage();
     }
 }
 </script>

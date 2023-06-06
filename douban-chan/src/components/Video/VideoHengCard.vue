@@ -1,14 +1,14 @@
 <template>
-  <div class="videocard-heng">
+  <div class="videocard-heng" @click="toVideoDetail(item.m_id)">
     <div class="image">
-        <img :src="item.imageUrl" style="height: 150px">
+        <img :src="item.m_profile_photo" style="height: 150px;">
     </div>
     <div class="content">
-        <div class="name">{{ item.name }}</div>
+        <div class="name">{{ item.m_name }}</div>
         <div class="detail">
-            {{ item.onDate }} | {{ item.country }} <br/>
-            导演：{{ item.director }} | 主演：{{ item.actor }} <br/>
-            {{ item.category }} <br/>
+            {{ item.m_year }} | {{ item.m_region }} <br/>
+            导演：{{ item.m_director }} | 主演：{{ item.m_actor }} <br/>
+            {{ item.m_genre }} <br/>
             <br/>
             <el-rate
             v-model="value"
@@ -17,7 +17,7 @@
             score-template="{value}"
             style="display:inline-block">
             </el-rate>
-            <span class="rate">{{ item.rate }}</span>
+            <span class="rate">{{ item.m_rate }}</span>
         </div>
     </div>
 
@@ -31,7 +31,12 @@ export default {
     props: ['item'],
     data(){
         return {
-            value: this.item.rate / 2.0
+            value: this.item.m_rate / 2.0
+        }
+    },
+    methods:{
+        toVideoDetail(videoId) {
+            this.$router.push({ name: 'videoDetail', params: { id: videoId } })
         }
     }
 }
@@ -43,6 +48,7 @@ export default {
     background-color: white;
     display: flex;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 .image{
     flex: 0.5

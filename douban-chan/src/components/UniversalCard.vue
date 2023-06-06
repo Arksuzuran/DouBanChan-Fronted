@@ -13,19 +13,19 @@
                     </span>
                 </button>
             </div>
-            <div class="image-container" @click="toDetailPage(movie.id)">
-                <img :src="movie.image" class="image">
+            <div class="image-container" @click="toDetailPage(movie.m_id)">
+                <img :src="movie.m_profile_photo" class="image">
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ movie.rate
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ movie.m_rate
                 }}</span>
                 <button class="star-button" @click="showRate">
                     <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
             <div style="margin-top: -15px;text-align: left;margin-left: 10px;">
-                <span class="card-name" style="display: inline-block;">{{ movie.name }}</span>
+                <span class="card-name" style="display: inline-block;">{{ movie.m_name }}</span>
             </div>
             <el-button type="info" plain
                 style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; float: left;width: 180px; font-weight: bold;">
@@ -48,25 +48,25 @@
             <div class="modal-overlay" @click="closeModal"></div> <!-- 遮罩层 -->
             <div class="modal-content">
                 <div>
-                    <img :src="movie.image" class="image-modal">
+                    <img :src="movie.m_profile_photo" class="image-modal">
                 </div>
-                <button class="modal-name">{{ movie.name }}</button>
+                <button class="modal-name">{{ movie.m_name }}</button>
                 <button class="close-button" @click="closeModal"><i class="fa-solid fa-xmark"></i></button>
                 <div class="modal-detail">
                     <div class="modal-info-1">
-                        <span class="info-value-1"><i class="fa-solid fa-calendar-days"></i> {{ movie.year }} &nbsp<i
-                                class="fa-solid fa-clock"></i> {{ movie.time }} &nbsp<i
+                        <span class="info-value-1"><i class="fa-solid fa-calendar-days"></i> {{ movie.m_year }} &nbsp<i
+                                class="fa-solid fa-clock"></i> {{ movie.m_duration }} &nbsp<i
                                 class="fa-solid fa-location-dot"></i>
-                            {{ movie.from }}</span>
+                            {{ movie.m_region }}</span>
                     </div>
                     <div class="modal-info-2">
                         <span class="info-value-2"><i class="fa-solid fa-film"> </i>
-                            {{ movie.type }}</span>
+                            {{ movie.m_genre }}</span>
                     </div>
                 </div>
                 <div class="modal-rate">
                     <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ movie.rate }}</span>
+                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ movie.m_rate }}</span>
                     <span
                         style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 2px;color: rgba(0, 0, 0, 0.5);">/10</span>
                     <button class="modal-rating" @click="showRate"><i class="fa-solid fa-star" style="color: #dcdde0;"></i>
@@ -74,17 +74,17 @@
                 </div>
                 <div class="modal-introduction">
                     <span class="modal-introduction-text">
-                        {{ movie.text }}
+                        {{ movie.m_description }}
                     </span>
                 </div>
                 <div class="modal-people-d">
                     <span>
-                        导演：<span class="modal-people-d-text">{{ movie.dir }}</span>
+                        导演：<span class="modal-people-d-text">{{ movie.m_director }}</span>
                     </span>
                 </div>
                 <div class="modal-people-s">
                     <span>
-                        主演：<span class="modal-people-s-text">{{ movie.star }}</span>
+                        主演：<span class="modal-people-s-text">{{ movie.m_actor }}</span>
                     </span>
                 </div>
                 <el-button type="info" plain
@@ -115,7 +115,7 @@
                     </div>
                     <div class="rate-block">
                         <span class="rate-this">RATE THIS</span>
-                        <span class="rate-name">{{ movie.name }}</span>
+                        <span class="rate-name">{{ movie.m_name }}</span>
                         <!-- <span class="demonstration">区分颜色</span> -->
                         <el-rate style="margin-top: 3%;" v-model="value" :colors="colors" :max="10">
                         </el-rate>

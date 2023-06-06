@@ -3,7 +3,7 @@
         <div>
           <div style="text-align: left; margin: 15px 0px">
               <div class="video-name">
-                  {{ item.name }}
+                  {{ item.m_name }}
               </div>
           </div>
         </div> 
@@ -11,7 +11,7 @@
         <el-row>
           <el-col :span="18"><div>
             <el-col :span="6"><div>
-              <img :src="item.imageSrc" style="float: left; width: 200px;height: 100%;border-radius: 5px">
+              <img :src="item.m_profile_photo" style="float: left; width: 200px;height: 100%;border-radius: 5px">
             </div></el-col>
             <el-col :span="18"><div style="height:300px;">
               <el-col :span="16"><div>
@@ -19,9 +19,9 @@
               </div></el-col>
               
               <el-col :span="8"><div class="rate-board">
-                <div>豆瓣酱评分</div>
-                <Rate :score="item.rating"></Rate>
-                <div>我的评分</div>
+                <div class="little-button">豆瓣酱评分</div>
+                <Rate :score="item.m_rate"></Rate>
+                <div class="little-button">我的评分</div>
               </div>
               </el-col>
             </div></el-col>
@@ -31,7 +31,7 @@
                 -- 简介 --
               </div>
               <div class="brief-content">
-                {{ item.brief }}
+                {{ item.m_description }}
               </div>
             </div>
             
@@ -41,16 +41,36 @@
                 -- 剧照 --
             </div>
             
-            <div class="photo-container">
-              <img v-for="(photoItem, index) in photos" :key="index" :src="photoItem" class="photo-item">
-            </div>
-            
+            <VueSlickCarousel v-bind="settings" v-if="photos.length > 0">
+              <div v-for="(imageUrl, index) in photos" :key="index" ><img :src="imageUrl" :style="{'width' : '90%'}"></div>
+            </VueSlickCarousel>
 
+            <br/>
+            
             <el-divider></el-divider>
-
-            <ReviewSection title="影评" v-on:reply="toWriteReviewPage" :reviewItems="reviews"></ReviewSection>
-
             
+            <!-- 影评区 -->
+            <div>
+                <div class="section-title">
+                    -- 影评 --
+                </div>
+                <div class="section-row">
+                    <div class="choose">
+                        <div class="tab" :class="{ active: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
+                        |
+                        <div class="tab" :class="{ active: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
+                    </div>
+                    <button class="button-35" role="button" @click="toWriteReviewPage"><i class="el-icon-plus"></i> 我要写影评</button>
+                </div>
+
+                <div v-for="(reviewItem,index) in reviewItems" :key="index">
+                    <ReviewSmall :item="reviewItem.text"></ReviewSmall>
+                </div>
+
+            </div>    
+
+
+
 
           </div></el-col>
           <el-col :span="6" class="right-side"><div>
@@ -76,17 +96,6 @@
             </div>
           </div></el-col>
         </el-row>
-
-        <el-upload
-          class="avatar-uploader"
-          action="http://127.0.0.1:8000/user/upload_profile"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :http-request="uploadFile"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
     </div>
 </template>
 
@@ -99,38 +108,57 @@ import GroupCard from '@/components/Video/GroupCard.vue'
 import TopicCard from '@/components/Video/TopicCard.vue'
 import VideoEditor from '@/components/Editor/VideoEditor.vue'
 import VueSlickCarousel from 'vue-slick-carousel'
-import 'vue-slick-carousel/dist/vue-slick-carousel.css'
-// optional style for arrows & dots
-import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import ReviewSmall from '@/components/Video/ReviewSmall.vue'
+  import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+  // optional style for arrows & dots
+  import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 export default {
     components: {
-      ReviewSection, ItemInfo, Rate, GroupCard, TopicCard, VideoEditor,VueSlickCarousel
+      ReviewSection, ItemInfo, Rate, GroupCard, TopicCard, VideoEditor,VueSlickCarousel, ReviewSmall
     },
     name: 'VideoDetail',
     data(){
         return {
-            //上传图片相关
-            imageUrl: '',
-            dialogImageUrl: "",
-            dialogVisible: false,
-            disabled: false,
-            uploadFiles: [],
-            
+            settings: {
+              "dots": true,
+              "focusOnSelect": true,
+              "infinite": true,
+              "speed": 1000,
+              "slidesToShow": 3,
+              "slidesToScroll": 3,
+              "touchThreshold": 5
+            },
             item:'',
-            reviews: [],
+            reviewItems:[],
+            reviewsOrderedByTime: [],
+            reviewsOrderedByLike: [],
+            
             recommendTopics:[],
             recommendGroups:[],
-
+            
+            activeTab: 'latest',
             photos:[
-              require("../../assets/group-img-1.jpg"),
-              require("../../assets/group-img-2.jpg"),
-              require("../../assets/group-img-1.jpg"),
-              require("../../assets/group-img-2.jpg"),
-              require("../../assets/group-img-1.jpg"),
             ],  //剧照
         }
     },
     methods: {
+      //选择最热和最新
+      setActiveTab(tab){
+            if (this.activeTab != tab)
+            {
+              this.activeTab = tab;
+              if (tab === 'latest')
+              {
+                  console.log('最新');
+                  this.reviewItems = this.reviewsOrderedByTime
+              }
+              else if (tab === 'hottest')
+              {
+                  console.log('最热');
+                  this.reviewItems = this.reviewsOrderedByLike
+              }
+            }
+      },
       // 跳转到写影评页面
       toWriteReviewPage(){
         this.$router.push({
@@ -140,135 +168,30 @@ export default {
           }
         })
       },
-      login(){
-        const formData = new FormData();
-        formData.append('username', '1');
-        formData.append('password', '1');
-        this.$axios({
-          method: "post",
-          data: formData,
-          
-          url: "/user/login/",
-          headers: { "content-type": " multipart/form-data" },
-        })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            this.$message({
-              type: "error",
-              message: "网络出错QAQ",
+      //得到电影对象
+      getVideo(id) {
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 1,
+                m_id: id
+            }),
+            url: "/media/query_single/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+              this.item = res.data.media
+              this.photos = res.data.m_preview
+              this.reviewsOrderedByLike = res.data.text_by_like
+              this.reviewsOrderedByTime = res.data.text_by_time
+              this.reviewItems = this.reviewsOrderedByLike
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
             });
-          });
-      },
-      sendData(){
-        const formData = new FormData();
-        // formData.append("p_content", require('@/assets/user-image-1.jpg'));
-        // this.$axios({
-        //   method: "post",
-        //   data: formData,
-          
-        //   url: "/user/upload_profile/",
-        //   headers: { "content-type": " multipart/form-data" },
-        // })
-        //   .then((res) => {
-        //     console.log(res);
-        //     this.item = res.data;
-        //   })
-        //   .catch((err) => {  
-        //     this.$message({
-        //       type: "error",
-        //       message: "网络出错QAQ",
-        //     });
-        //   });
-      },
-      uploadFile(val){
-        const formData = new FormData();
-        formData.append("p_content", val.file);
-        formData.append("user_id", 6)
-        this.$axios({
-          method: "post",
-          data: formData,
-          
-          url: "/user/upload_profile/",
-          headers: { "content-type": " multipart/form-data" },
-        })
-          .catch((err) => {  
-            this.$message({
-              type: "error",
-              message: "网络出错QAQ",
-            });
-          });
-      },
-      
-      //下面是关于头像上传的
-      handleAvatarSuccess(res, file) {
-        console.log(1)
-        this.imageUrl = URL.createObjectURL(file.raw);
-        console.log(this.imageUrl)
-        // const formData = new FormData();
-        // formData.append("p_content", file[0])
-        // this.$axios({
-        //   method: "post",
-        //   data: formData,
-          
-        //   url: "/user/upload_profile/",
-        //   headers: { "content-type": " multipart/form-data" },
-        // })
-        //   .then((res) => {
-        //     console.log(res);
-        //     this.item = res.data;
-        //   })
-        //   .catch((err) => {  
-        //     this.$message({
-        //       type: "error",
-        //       message: "网络出错QAQ",
-        //     });
-        //   });
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-      handleRemove(file) {
-        // this.$refs.upload.clearFiles();
-        let fileList = this.$refs.uploadImg.uploadFiles;
-
-        let index = fileList.findIndex((fileItem) => {
-          return fileItem.uid === file.uid;
-        });
-        fileList.splice(index, 1);
-        //console.log('filelist_2'+filelist)
-        console.log(file);
-      },
-      updateVideo(){
-        this.item = {
-                id: 0,  //电影的id
-                name: '肖申克的救赎',   //电影名字
-                onDate: '2008-08-08',   //上映日期
-                rating: 8.8,  //评分
-                lastTime: '2h14m',  //电影时长
-                imageSrc: "http://127.0.0.1:8000/images/avatar.webp",   //电影封面图片
-                images: [require('../../assets/movie/roll-banner1.jpg'),require('../../assets/movie/roll-banner1.jpg'),   //电影的剧照
-                require('../../assets/movie/roll-banner1.jpg'),require('../../assets/movie/roll-banner1.jpg')],
-                category: ['剧情','犯罪'],    //电影分类
-                brief: "　　一场谋杀案使银行家安迪（蒂姆•罗宾斯 Tim Robbins 饰）蒙冤入狱，谋杀妻子及其情人的指控将囚禁他终生。在肖申克监狱的首次现身就让监狱“大哥”瑞德（摩根•弗里曼 Morgan Freeman 饰）对他另眼相看。瑞德帮助他搞到一把石锤和一幅女明星海报，两人渐成患难 之交。很快，安迪在监狱里大显其才，担当监狱图书管理员，并利用自己的金融知识帮助监狱官避税，引起了典狱长的注意，被招致麾下帮助典狱长洗黑钱。偶然一次，他得知一名新入狱的小偷能够作证帮他洗脱谋杀罪。燃起一丝希望的安迪找到了典狱长，希望他能帮自己翻案。阴险伪善的狱长假装答应安迪，背后却派人杀死小偷，让他唯一能合法出狱的希望泯灭。沮丧的安迪并没有绝望，在一个电闪雷鸣的风雨夜，一场暗藏几十年的越狱计划让他自我救赎，重获自由！老朋友瑞德在他的鼓舞和帮助下，也勇敢地奔向自由。",  //电影简介
-                director: "窝使莎比",   //电影导演
-                writer: "軟功狗市",   //电影编剧
-                actor: ["阿里大健康","啊都说了副科级", "阿斯顿发"],   //电影演员
-                country: "中国",    //国家
-                language: "汉语",   //语言
-            }
-      },
-      updateTopics(){
+            },
+      //得到相关话题
+      getTopics(){
         this.recommendTopics = [
               {
                 topicContent: "cr锐评北航软工",
@@ -297,7 +220,8 @@ export default {
               }
             ]
       },
-      updateGroups(){
+      //得到相关小组
+      getGroups(){
         this.recommendGroups = [
               {
                 groupName: "豆瓣电影小组",
@@ -329,59 +253,11 @@ export default {
               }
             ]
       },
-      updateReviews(){
-        this.reviews = [
-                
-                {
-                id: 1,
-                reviewername: 'adk',
-                reviewerImage: require('@/assets/user-image-1.jpg'),
-                rate: 8,
-                title: "一封迟到500年的道歉信，3D的",
-                content: "“如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。",
-                time: "2022-2-28",
-                agree: 200,
-                disagree: 100,
-                fav: 141,
-                comment: 1000
-                },
-                {
-                id: 2,
-                reviewername: 'adk',
-                reviewerImage: require('@/assets/user-image-1.jpg'),
-                rate: 8,
-                title: "一封迟到500年的道歉信，3D的",
-                content: "“如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。",
-                time: "2022-2-28",
-                agree: 200,
-                disagree: 100,
-                fav: 141,
-                comment: 1000
-                },
-                {
-                id: 3,
-                reviewername: 'adk',
-                reviewerImage: require('@/assets/user-image-1.jpg'),
-                rate: 8,
-                title: "一封迟到500年的道歉信，3D的",
-                content: "“如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。如果我们放弃这片土地，转让给你们，你们一定要记住：这片土地是神圣的。”1854年，一位印第安人酋长给“在华盛顿特区的大首领”写下这句话。他与他的族人已经拼尽了最后的一分力量，年轻的猎手们已牺牲殆尽，年老体弱者被疾病缠身……没有人听到他们的哀嚎与怒吼，没有人在乎这已在灭族边缘的古老部族。酋长已经看到了故事的结局：守不住了，再也守不住了……这土地，祖先的土地……那些白人殖民者端着他们的步枪，一波又一波地出现在地平线上……“他们会来的，就像永不停歇的雨。”——电影《阿凡达》。在2010年的最冷的一天里我盼来了期待已久的视觉盛宴，科技进步创造出的华丽纵然让人惊叹，但却并没能让我感动。《阿凡达》技术上的巅峰位置毋庸置疑，但从“电影本身”来讲，却乏善可陈——甚至可以说缺乏原创性。抛开整个创意与《风中奇缘》的相似，在众多场景中都能找到《天空之城》的影子；灵魂之树下的治疗仪式和《幽灵公主》中湖边的一幕如出一辙；人形机器战甲不能追溯回高达也至少可以说和沃卓斯基的《骇客帝国》有雷同，而哈里路亚山更是酷似徐克的新蜀山；更别提那个脸谱得不得了的大反派，他简直可以塞到所有反战电影里演个无人性长官而游刃有余，如此没有层次没有个性的人物加上影片视觉上的特点，让我恍惚生出“正在看动画片”的错觉。",
-                time: "2022-2-28",
-                agree: 200,
-                disagree: 100,
-                fav: 141,
-                comment: 1000
-                },
-
-            ]
-      }
     },
     mounted(){
-      this.updateVideo();
-      this.updateReviews();
-      this.updateGroups();
-      this.updateTopics();
-      // this.login();
-      // this.sendData();
+      this.getVideo(this.$route.params.id);
+      this.getGroups();
+      this.getTopics();
     }
 }
 </script>
@@ -503,4 +379,71 @@ export default {
     height: 150px;
     margin: 5px;
   }
+
+  .little-button {
+    background-color: lightpink;
+    width: 100px;
+    margin: 0 auto;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  /* 下面是reviewsection的样式 */
+  .section-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.section-title{
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.review{
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    padding: 10px;
+}
+.tab {
+  display: inline-block;
+  cursor: pointer;
+}
+.tab.active {
+  font-weight: bold; /* 选中状态下的文本加粗 */
+}
+
+
+/* CSS */
+.button-35 {
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: transparent 0 0 0 3px,rgba(18, 18, 18, .1) 0 6px 20px;
+  box-sizing: border-box;
+  color: #121212;
+  cursor: pointer;
+  font-family: Inter,sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s,-webkit-box-shadow .2s;
+  white-space: nowrap;
+  border: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-35:hover {
+  box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
+}
 </style>
