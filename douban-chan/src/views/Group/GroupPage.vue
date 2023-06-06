@@ -52,7 +52,7 @@
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="group-content-container">
-                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题"></router-view>
+                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题" top="64"></router-view>
             </div>
         </div>
         <!-- 发帖上拉框 -->

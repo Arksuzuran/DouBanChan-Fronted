@@ -189,24 +189,13 @@ export default {
 
             //构造对象
             let newGroup = {
+                userId: this.userId,
                 groupId: nanoid(),
                 groupHeadBgUrl: this.form.headimgUrlList[0],
                 groupAvatarImgUrl: this.form.avatarUrlList[0],
                 groupName: this.form.name,
                 groupIntro: this.form.intro,
                 tag: this.form.tag,
-                groupPostNumber: 0,
-                groupFollowNumber: 1,
-                userInGroup: true,
-                userIsAdmin: true,
-                memberList: [
-                    {
-                        userId: this.userId,
-                        userName: this.userName,
-                        userImageUrl: this.userImageUrl,
-                        isAdmin: true,
-                    },
-                ],
             };
             this.createGroupOnline(newGroup)
             this.$message.success("成功创建小组:" + this.form.name)

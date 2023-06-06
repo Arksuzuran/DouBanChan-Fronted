@@ -36,6 +36,11 @@ import TopicPostList from '../views/Topic/TopicPostList.vue';
 import TopicPageDefault from '../views/Topic/TopicPageDefault.vue';
 //搜索界面
 import SearchView from '../views/Search/SearchView.vue';
+import SearchBook from '../views/Search/SearchBook.vue';
+import SearchVideo from '../views/Search/SearchVideo.vue';
+import SearchPost from '../views/Search/SearchPost.vue';
+import SearchGroup from '../views/Search/SearchGroup.vue';
+import SearchTopic from '../views/Search/SearchTopic.vue';
 
 //写影评
 import WriteReview from "../views/Review/WriteReview.vue"
@@ -60,6 +65,33 @@ const routes = [
     path: "/search",
     name: "search",
     component: SearchView,
+    children: [
+      {
+        path: '/search/video',
+        name: "searchVideo",
+        component: SearchVideo,
+      },
+      {
+        path: '/search/book',
+        name: "searchBook",
+        component: SearchBook,
+      },
+      {
+        path: '/search/post',
+        name: "searchPost",
+        component: SearchPost,
+      },
+      {
+        path: '/search/group',
+        name: "searchGroup",
+        component: SearchGroup,
+      },
+      {
+        path: '/search/topic',
+        name: "searchTopic",
+        component: SearchTopic,
+      },
+    ]
   },
   //话题版块主页
   {
