@@ -75,7 +75,7 @@ export default {
             isLogin: false,
             circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
             homePath: ['/'],
-            videoPath: ['videoHome', 'videoDetail', 'review'],
+            videoPath: ['video/home', 'video/detail', 'video/rankboard', 'video/category', 'review'],
             bookPath: ['bookHome'],
             groupPath: ['groupHome', 'group', 'group/post'],
             topicPath: ['topicHome',],
