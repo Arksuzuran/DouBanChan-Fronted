@@ -134,6 +134,15 @@ export default {
             }
             this.$confirm('确定要进行举报吗？')
                 .then(_ => {
+                    if(!this.form.title){
+                        this.$message.error("举报标题不能为空。")
+                        return;
+                    }
+                    if(!this.form.text || this.form.text.length < 15){
+                        this.$message.error("举报内容不能少于15个字。")
+                        return;
+                    }
+
                     //发送请求
                     this.createReport();
 
@@ -167,7 +176,7 @@ export default {
                 textId: this.textId, 
                 report,
             })
-
+            this.$message.success("举报提交成功，您的管理员将会收到举报信息。")
             // console.log('用户发送举报请求', report)
 
             // 清空内容

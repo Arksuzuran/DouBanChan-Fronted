@@ -126,6 +126,11 @@ export default {
             }
             this.$confirm('确定要发表回帖吗？')
                 .then(_ => {
+                    if(!this.form.text){
+                        this.$message.error("回帖内容不能为空")
+                        return;
+                    }
+
                     this.createPost();
                     this.loading = true;
                     this.timer = setTimeout(() => {
@@ -167,9 +172,11 @@ export default {
                 postId: this.postInfo.postId,
                 newReply,
             })
+            this.$message.success("成功发表回帖")
 
             // 通过事件总线触发自定义事件，并传递新回复作为参数
-            this.$bus.$emit('postReplyCreated', newReply);
+            // this.$bus.$emit('postReplyCreated', newReply);
+            
             // 清空内容
             this.fileList = []
             this.form.imgUrlList = []

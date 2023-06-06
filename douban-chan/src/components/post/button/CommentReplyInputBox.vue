@@ -42,6 +42,10 @@ export default {
         },
         // 提交
         submit() {
+            if (!this.text) {
+                this.$message.error("回复内容不能为空。")
+                return;
+            }
             let newReply = {
                 textId: nanoid(),
                 userId: this.userId,
@@ -59,9 +63,10 @@ export default {
                 newReply.text = this.replyHeaderStr + newReply.text
             }
             this.replyTextOnline({
-                textId: this.textId, 
+                textId: this.textId,
                 newReply,
             })
+            this.$message.success("成功发表回复")
 
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
             this.$bus.$emit('commentReplyCreated', this.textId);
