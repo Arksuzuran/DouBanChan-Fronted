@@ -5,6 +5,16 @@ export default {
         //
         //请求数据
         //
+        //搜索框接口 根据指定输入内容返回帖子列表
+        getPostListSearchOnline(context, input){
+            if (input) {
+                console.log("依据指定tag获取帖子列表，指定搜索内容：", input);
+            } else {
+                console.log("随机获取帖子列表");
+            }
+            context.commit("SET_POSTLIST", context.state.postList);
+        },
+
         //获得帖子列表 如果传入tag则以tag为标准筛选
         getPostListOnline(context, tag) {
             if (tag) {

@@ -5,6 +5,15 @@ export default {
         //
         //请求数据
         //
+        //搜索框接口 根据指定输入内容返回话题列表
+        getTopicListSearchOnline(context, input){
+            if (input) {
+                console.log("依据指定tag获取话题列表，指定搜索内容：", input);
+            } else {
+                console.log("随机获取话题列表");
+            }
+            context.commit('SET_TOPICLIST', context.state.topicList)
+        },
         //获取热榜话题列表 如果传入tag则以tag为标准筛选
         getTopicListByHotOnline(context, tag) {
             if(tag){

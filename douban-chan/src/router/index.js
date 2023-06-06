@@ -34,6 +34,8 @@ import TopicHomeTodaysHot from '../views/Topic/TopicHomeTodaysHot.vue';
 import TopicPage from '../views/Topic/TopicPage.vue';
 import TopicPostList from '../views/Topic/TopicPostList.vue';
 import TopicPageDefault from '../views/Topic/TopicPageDefault.vue';
+//搜索界面
+import SearchView from '../views/Search/SearchView.vue';
 
 //写影评
 import WriteReview from "../views/Review/WriteReview.vue"
@@ -52,6 +54,12 @@ const routes = [
     path: "/bookHome",
     name: "bookHome",
     component: BookHomeView,
+  },
+  //全站搜索页面
+  {
+    path: "/search",
+    name: "search",
+    component: SearchView,
   },
   //话题版块主页
   {
