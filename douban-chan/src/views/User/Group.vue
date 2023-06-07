@@ -7,7 +7,6 @@
         <GroupCard v-for="group in groupList" :key="group.groupId" :group="group">
         </GroupCard>
       </div>
-
     </div>
   </div>
 </template>
