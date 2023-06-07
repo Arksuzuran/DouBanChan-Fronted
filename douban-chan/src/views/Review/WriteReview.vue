@@ -132,8 +132,9 @@ export default Vue.extend({
         onCreated(editor) {
             this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
         },
+
         toReviewPage(textId) {
-            this.$router.push({ name: 'review', params: { m_id: this.videoItem.m_id, t_id: textId} })
+            this.$router.push({ name: 'videoReview', params: { m_id: this.videoItem.m_id, t_id: textId} })
         },
         uploadReview(){
             if (this.title === '')

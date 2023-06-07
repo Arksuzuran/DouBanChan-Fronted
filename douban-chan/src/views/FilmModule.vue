@@ -20,7 +20,7 @@
                             换一批
                         </div>
 
-                        <div class="button-for-more">
+                        <div class="button-for-more" @click="toVideoHome()">
                             <ButtonForMore></ButtonForMore>
                         </div>
                     </div>
@@ -86,6 +86,9 @@ export default {
                     this.$message.error("网络出错QAQ");
                 });
         },
+        toVideoHome(){
+            this.$router.push({ name: 'videoDefault'})
+        }
     },
     mounted() {
         this.requestMovieList();

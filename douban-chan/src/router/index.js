@@ -235,22 +235,40 @@ const routes = [
       // },
     ]
   },
-  //影视/图书详情页面
+  //影视详情页面
   {
     path: "/subject/:id",
     name: "videoDetail",
     component: VideoDetail,
   },
-  //写评论页面
+  //图书详情页面
+  {
+    path: "/subject/:id",
+    name: "bookDetail",
+    component: VideoDetail,
+  },
+  //写影评页面
   {
     path: "/subject/:id/write_review",
-    name: "writeReview",
+    name: "writeVideoReview",
     component: WriteReview,
   },
-  //评论详情页面
+  //写书评页面
+  {
+    path: "/subject/:id/write_review",
+    name: "writeBookReview",
+    component: WriteReview,
+  },
+  //影视评论详情页面
   {
     path: "/subject/:m_id/review/:t_id",
-    name: "review",
+    name: "videoReview",
+    component: reviewView,
+  },
+  //图书评论详情页面
+  {
+    path: "/subject/:m_id/review/:t_id",
+    name: "bookReview",
     component: reviewView,
   },
   //用户个人账户主页

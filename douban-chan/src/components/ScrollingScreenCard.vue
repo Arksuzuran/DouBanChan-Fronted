@@ -1,7 +1,7 @@
 <template>
     <div class="scrolling-screen-card-block">
         <div class="scrolling-screen-card-image-container">
-            <img :src="scrollCard.cardImage" class="scrolling-screen-card-image">
+            <img :src="scrollCard.cardImage" class="scrolling-screen-card-image" @click="toVideoDetail(scrollCard.id)">
         </div>
         <div class="scrolling-screen-mini-block">
             <MiniCard :miniCard="scrollCard"></MiniCard>
@@ -19,6 +19,11 @@ export default {
     },
     components: {
         MiniCard,
+    },
+    methods:{
+        toVideoDetail(videoId) {
+            this.$router.push({ name: 'videoDetail', params: { id: videoId } })
+        },
     },
 }
 </script>
