@@ -29,9 +29,8 @@
             </div>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 110px;font-weight: bold;float: left;"><i
-                        class="fa-solid fa-plus" style="color: #003899;"></i>
-                    我的订阅
+                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 110px;font-weight: bold;float: left;">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> 查看详情
                 </el-button>
                 <el-button circle style="border: none;margin-top: 2px;background-color:#002333;" @click="showModal"><i
                         class="fa-solid fa-circle-info custom-icon"></i></el-button>

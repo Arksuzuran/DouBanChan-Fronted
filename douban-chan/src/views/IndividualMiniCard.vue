@@ -42,6 +42,7 @@ export default ({
         ...mapMutations('userAbout', ['LOGIN', 'LOGOUT']),
         quit() {
             this.LOGOUT();
+            window.location.reload();
             this.$router.push('/');//退出登录回到主页
         },
         gotoMyHome() {
