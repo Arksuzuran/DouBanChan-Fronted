@@ -8,7 +8,7 @@
                         <div style="float: left; display: inline-block; margin-left: 5px;width:90%;">
                             <span
                                 style="float: left;margin-left: 5px;font-size: 40px; font-weight: bold;color: #000000;">话题栏目</span>
-                            <div class="topic-button-for-more">
+                            <div class="topic-button-for-more" @click="toTopicHome">
                                 <ButtonForMore></ButtonForMore>
                             </div>
                         </div>
@@ -16,8 +16,8 @@
                 </el-header>
                 <el-main>
                     <div class="topic-module-card-container">
-                        <topic-card v-for="topic in topics" :key="topic.id" :topic="topic"
-                            style="margin-bottom: 20px;"></topic-card>
+                        <topic-card v-for="topic in topics" :key="topic.topicId" :topic="topic"
+                            style="margin-bottom: 20px;" @click="toTopicPage(topic.topicId)"></topic-card>
                     </div>
                 </el-main>
             </el-container>
@@ -30,7 +30,7 @@
                         <div style="float: left; display: inline-block; margin-left: 5px;width:400px;">
                             <span
                                 style="float: left;margin-left: 5px;font-size: 40px; font-weight: bold;color: #000000;">热门小组</span>
-                            <div class="group-button-for-more">
+                            <div class="group-button-for-more" @click="toGroupHome">
                                 <ButtonForMore></ButtonForMore>
                             </div>
                         </div>
@@ -174,6 +174,15 @@ export default ({
         ...mapState('userAbout', ['userId']),
     },
     methods: {
+        toTopicPage(id){
+            this.$router.push({name: 'topic', query: {topicId: '1'} })
+        },
+        toGroupHome(){
+            this.$router.push({name: 'groupHome'})
+        },
+        toTopicHome(){
+            this.$router.push({ name: 'topicHome'})
+        },
         //请求话题栏目数据
         requestTopicList() {
             this.$axios({
