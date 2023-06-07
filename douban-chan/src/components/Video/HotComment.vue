@@ -1,56 +1,62 @@
 <template>
     <div style="width: 530px;">
         <div class="header">
-            <div class="review-row clearfix">
-                <el-image
-                    style="width: 50px; height: 50px;float: left"
-                    :src="reviewerImageUrl"></el-image>
+            
+        </div>
+
+        <div class="body">
+            <div>
+                <div class="review-row">
+                <img
+                    style="width: 26px; height: 26px; display: inline-block"
+                    :src="reviewerImageUrl">
                     <div class="reviewer">
                         <span>{{ reviewerName }}</span>
                         <span style="margin: 0 10px;">评论了</span>
-                        <span @click="toVideoDetail(videoId)">{{ videoName }}</span>
+                        <span @click="toVideoDetail(videoId)" class="video-name">{{ videoName }}</span>
                     </div>
                     &nbsp;
                     <RateWithNumber :score="rate" style="float:left"></RateWithNumber>
                     <div class="time">
                         {{ time }}
                     </div>
+                </div>
             </div>
-        </div>
-
-        <div class="body">
-            <div class="video-image" @click="toVideoDetail(videoId)">
-                <img :src="videoImageUrl" style="height: 200px;">
-            </div>
-            <div>
-                <div class="hover-style">
-                    <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
-                    <div class="comment-body">
-                        <div class="wrapper" @click="toReviewPage(reviewId)">
-                            <div class="text">
-                                {{ content }}
+            
+            <div style="display: flex">
+                <div class="video-image" @click="toVideoDetail(videoId)">
+                    <img :src="videoImageUrl" style="height: 150px; cursor: pointer" @click="toVideoDetail(videoId)">
+                </div>
+                <div>
+                    <div class="hover-style">
+                        <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
+                        <div class="comment-body">
+                            <div class="wrapper" @click="toReviewPage(reviewId)">
+                                <div class="text">
+                                    {{ content }}
+                                </div>
+                                <div class="add">(查看全文)</div>
                             </div>
-                            <div class="add">(查看全文)</div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="postcard-dataicon-group">
-                    <div class="postcard-dataicon-wrapper" @click="handleLike">
-                        <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
-                        <span class="postcard-data-font">{{ like }}</span>
-                    </div>
-                    <div class="postcard-dataicon-wrapper" @click="handleDislike">
-                        <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
-                        <span class="postcard-data-font">{{ dislike }}</span>
-                    </div>
-                    <div class="postcard-dataicon-wrapper" @click="handleComment">
-                        <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
-                        <span class="postcard-data-font">{{ commentNum }}</span>
-                    </div>
-                    <div class="postcard-dataicon-wrapper" @click="handleFav">
-                        <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
-                        <span class="postcard-data-font">{{ favNum }}</span>
+                    
+                    <div class="postcard-dataicon-group">
+                        <div class="postcard-dataicon-wrapper" @click="handleLike">
+                            <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
+                            <span class="postcard-data-font">{{ like }}</span>
+                        </div>
+                        <div class="postcard-dataicon-wrapper" @click="handleDislike">
+                            <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
+                            <span class="postcard-data-font">{{ dislike }}</span>
+                        </div>
+                        <div class="postcard-dataicon-wrapper" @click="handleComment">
+                            <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
+                            <span class="postcard-data-font">{{ commentNum }}</span>
+                        </div>
+                        <div class="postcard-dataicon-wrapper" @click="handleFav">
+                            <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
+                            <span class="postcard-data-font">{{ favNum }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,7 +85,7 @@ export default {
             reviewerName: this.item.userName,
             reviewerImageUrl: this.item.userImageUrl,
             reviewerId: this.item.userId,
-            videoId: this.item.t_media_id,
+            videoId: '',
             videoName: '', //根据videoId获取
             videoImageUrl: '',  //根据videoId获取得到
             time: this.item.date,
@@ -90,12 +96,104 @@ export default {
             rate: this.item.t_rate,
             reviewId: this.item.textId,
             commentNum: this.item.comments,
-            // favNum: this.item.favNum,    收藏数
+            favNum: this.item.t_favorite,    
         }
     },
     methods: {
         toReviewPage(id){
-            console.log(id)
+            this.$router.push({
+                name: 'review',
+                params: {
+                    id: id
+                }
+            })
+        },
+        clickLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickCancelLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/cancel_like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        },
+        clickCancelDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/cancel_dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+        clickFavorite(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/text_set_favorite/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+        clickCancelFavorite(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId,
+            }),
+            url: "/text/text_cancel_favorite/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+
+        toReviewPage(id){
             this.$router.push({
                 name: 'review',
                 params: {
@@ -107,10 +205,12 @@ export default {
             this.userFav = !this.userFav
             this.updateFav()
             if (this.userFav) {
-                this.item.fav++;
+                this.item.t_favorite++;
+                this.clickFavorite()
             }
             else {
-                this.item.fav--
+                this.item.t_favorite--
+                this.clickCancelFavorite()
             }
         },
         updateFav() {
@@ -121,39 +221,23 @@ export default {
                 this.$refs.favIcon.classList.remove('postcard-icon-fav')
             }
         },
-        // 处理评论
-        handleComment() {
-            this.userComment = !this.userComment
-            this.updateComment()
-            if (this.userComment) {
-                this.item.comment++;
-            }
-            else {
-                this.item.comment--
-            }
-        },
-        updateComment() {
-            if (this.userComment) {
-                this.$refs.commentIcon.classList.add('postcard-icon-comment')
-            }
-            else {
-                this.$refs.commentIcon.classList.remove('postcard-icon-comment')
-            }
-        },
         handleLike() {
             this.userLike = !this.userLike
             //点赞与点踩只能有一个
             if (this.userDislike) {
                 this.userDislike = false
-                this.dislike -- ;
+                this.dislike -- 
+                // this.clickCancelDislike()
             }
             this.updateDislike()
             this.updateLike()
             if (this.userLike) {
-                this.like ++ ;
+                this.like++;
+                this.clickLike()
             }
             else {
-                this.like -- ;
+                this.like--
+                this.clickCancelLike()
             }
         },
         updateLike() {
@@ -170,15 +254,18 @@ export default {
             //点赞与点踩只能有一个
             if (this.userLike) {
                 this.userLike = false
-                this.like -- ;
+                this.like--;
+                // this.clickCancelLike()
             }
             this.updateDislike()
             this.updateLike()
             if (this.userDislike) {
-                this.dislike ++ ;
+                this.dislike++;
+                this.clickDislike()
             }
             else {
-                this.dislike -- ;
+                this.dislike--
+                this.clickCancelDislike()
             }
         },
         updateDislike() {
@@ -194,7 +281,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 1,
+                u_id: 2,
                 m_id: id
             }),
             url: "/media/query_single/",
@@ -207,14 +294,45 @@ export default {
             .catch((err) => {
                 this.$message.error("网络出错QAQ")
             });
-            },
-
+        },
+        
+        getStatus(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.item.textId
+            }),
+            url: "/media/get_status/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.userLike = res.data.is_liked
+                this.userDislike = res.data.is_disliked
+                this.userFav = res.data.is_favorite
+                this.updateLike()
+                this.updateDislike()
+                this.updateFav()
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+        handleComment(){
+            this.toReviewPage(this.videoId)
+        },
         //跳转到影视详情
         toVideoDetail(videoId) {
             this.$router.push({ name: 'videoDetail', params: { id: videoId } })
+        },
+        //跳转到图书详情
+        toBookDetail(bookId){
+            this.$router.push({ name: 'bookDetail', params: { id: bookId } })
         }
     },
     mounted(){
+        this.getStatus()
+        this.videoId = this.item.textId
         this.getVideo(this.videoId)
         // 假设htmlContent包含HTML代码
         var htmlContent = this.item.t_description;
@@ -231,30 +349,18 @@ export default {
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
     .reviewer{
-        float: left;
-        margin: 0px 10px;
+        margin-left: 10px;
+        font-size: 14px;
     }
     .time{
         color: gray;
-        float: left;
         margin-left: 10px;
     }
     .review-row {
-        line-height: 50px; /* 将行高设置为元素的高度，实现元素垂直居中 */
-        height: 50px;
+        line-height: 30px; /* 将行高设置为元素的高度，实现元素垂直居中 */
+        height: 30px;
         text-align: center; /* 将文本水平居中对齐 */
-    }
-    .review-row div{
-        height: 50px;
-        line-height: 50px;
-    }
-    .clearfix::after {
-        content: "";
-        display: block;
-        clear: both;
-    }
-    .rate{
-        float: left;
+        display: flex
     }
     .body{
         margin: 10px 0px;
@@ -264,10 +370,9 @@ export default {
         height: 230px;
         text-align: left;
         box-shadow: 10px 10px 30px #bebebe;
-        display: flex;
     }
     .title{
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
         cursor: pointer;
     }
@@ -312,25 +417,26 @@ export default {
 }
 .video-image{
     margin-right: 10px;
+    margin-top: 10px;
 }
 .wrapper {
   display: block;
   overflow: hidden;
   margin-top: 10px;
-  height: 130px;
+  height: 100px;
   width: 350px;
     background-color: white;
 }
-.hover-style:hover .title,
+/* .hover-style:hover .title,
 .hover-style:hover .wrapper{
     color:gray;
-}
-/* .wrapper:hover .text,
+} */
+.wrapper:hover .text,
 .wrapper:hover .add {
   color: gray;
-} */
+}
 .text {
-  font-size: 18px;
+  font-size: 16px;
   overflow: hidden;
   /* display: flex; */
   display: -webkit-box;
@@ -372,4 +478,10 @@ export default {
     color: rgb(255, 128, 128);
 }
 
+.video-name{
+    cursor: pointer;
+}
+.video-name:hover{
+    color: gray;
+}
 </style>

@@ -2,13 +2,14 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" class="card">
             <div class="flag">
-                <button class="favorite-button" @click="mark = !mark">
+                <button class="favorite-button" @click="wantFav">
                     <span class="fa-layers fa-fw" style="background:transparent position: absolute; top: 0px; left: 0px;">
-                        <i v-if="!mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
-                        <i v-if="!mark" class="fa-duotone fa-plus fa-xs"
+                        <i v-if="!movie.is_fav" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
+                        <i v-if="!movie.is_fav" class="fa-duotone fa-plus fa-xs"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-55%, -300%); color: #ffffff; font-size: 30px;"></i>
-                        <i v-if="mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
-                        <i v-if="mark" class="fa-solid fa-check fa-xs"
+                        <i v-if="movie.is_fav" class="fas fa-bookmark"
+                            style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
+                        <i v-if="movie.is_fav" class="fa-solid fa-check fa-xs"
                             style="position: absolute; top: 50%; left: 55%; transform: translate(-55%, -300%); color: #000000; font-size: 24px;"></i>
                     </span>
                 </button>
@@ -18,7 +19,8 @@
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ movie.m_rate
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{
+                    movie.m_rate
                 }}</span>
                 <button class="star-button" @click="showRate">
                     <i class="fa-solid fa-star star-button-color-1"></i>
@@ -29,8 +31,8 @@
             </div>
             <el-button type="info" plain
                 style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; float: left;width: 180px; font-weight: bold;">
-                <i class="fa-solid fa-plus" style="color: #003899;"></i>
-                &nbsp 我的订阅
+                <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i>
+                &nbsp 查看详情
             </el-button>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
@@ -129,12 +131,13 @@
 </template>
 
 <script>
-
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default {
     props: ['movie'],
     data() {
         return {
-            mark: false,
+            tempMark: false,
             isModalVisible: false, // 控制弹窗的显示与隐藏
             isRateVisible: false,
             value: 0,
@@ -171,12 +174,91 @@ export default {
         },
         toDetailPage(videoId) {
             this.$router.push({ name: 'videoDetail', params: { id: videoId } })
-        }
+        },
+        //当前用户想要收藏或者取消收藏
+        wantFav() {
+            //提醒用户先登录
+            if (this.userId == 1) {
+                this.favError();
+                return;
+            }
+            this.tempMark = !this.movie.is_fav;
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    m_id: this.movie.m_id,
+                    op: this.tempMark ? 1 : 0,
+                }),
+                url: "/media/set_favourite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    if (this.tempMark) {
+                        if (res.data.msg == 0) {
+                            this.movie.is_fav = !this.movie.is_fav;
+                            this.favSuccess();
+                        } else {
+                            this.favFail();
+                        }
+                    } else {
+                        if (res.data.msg == 0) {
+                            this.movie.is_fav = !this.movie.is_fav;
+                            this.cancelSuccess();
+                        } else {
+                            this.cancelFail();
+                        }
+                    }
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        favSuccess() {
+            this.$Notify.success({
+                title: 'Success',
+                message: '恭喜你订阅成功！',
+                showClose: false,
+            })
+        },
+        cancelSuccess() {
+            this.$Notify.success({
+                title: 'Success',
+                message: '取消订阅成功！',
+                showClose: false,
+            })
+        },
+        favError() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '请您先登录',
+                showClose: false,
+            })
+        },
+        favFail() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '订阅失败,请您重新尝试',
+                showClose: false,
+            })
+        },
+        cancelFail() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '取消订阅失败，请你重新尝试',
+                showClose: false,
+            })
+        },
     },
     computed: {
+        ...mapState('userAbout', ['userId']),
         starSize() {
             return this.value * 2 + 100 + 'px';
-        }
+        },
+    },
+    mounted() {
     },
 };
 </script>

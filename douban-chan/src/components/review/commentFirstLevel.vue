@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="postcard-userinfo-container">
-            <img :src="item.imageUrl" class="lz-image" @click="jumpToUserHome" />
+            <img :src="item.userImageUrl" class="lz-image" @click="jumpToUserHome" />
             <div class="lz-name" @click="jumpToUserHome">
-                {{ item.name }}
+                {{ item.userName }}
             </div>
         </div>
-        <div class="comment-content">{{item.content}}</div>
+        <div class="comment-content">{{item.text}}</div>
         <div class="footer-container">
             <div class="comment-time">{{ item.date }}</div>
             <div>
@@ -40,52 +40,6 @@ export default {
     },
     data(){
         return {
-            isReplying: false,
-            sonIsReplyId: -1,   //-1表示是父组件的回复
-            replyName: "",
-            commentSeconds: [
-                {
-                    id: 1,
-                    commenterName: "adk",
-                    commenterImageUrl: require('../../assets/user-image-4.jpg'),
-                    commenteeName: "czx",
-                    date: "2020-12-31 12:00:00",
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 120,
-                    dislike:111
-                    
-                },
-                {
-                    id: 2,
-                    commenterName: "adk2",
-                    commenterImageUrl: require('../../assets/user-image-5.jpg'),
-                    commenteeName: "czx",
-                    date: "2020-12-31 12:00:00",
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 120,
-                    dislike:111
-                },
-                {
-                    id: 3,
-                    commenterName: "adk3",
-                    commenterImageUrl: require('../../assets/user-image-6.jpg'),
-                    commenteeName: "czx",
-                    date: "2020-12-31 12:00:00",
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 120,
-                    dislike:111
-                },
-                {
-                    id: 4,
-                    commenterName: "adk4",
-                    commenterImageUrl: require('../../assets/user-image-7.jpg'),
-                    commenteeName: "czx",
-                    date: "2020-12-31 12:00:00",
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 120,
-                    dislike:111
-                }
-            ]
         }
     },
     computed:{
@@ -93,7 +47,7 @@ export default {
             return {
                 like: this.item.like,
                 dislike: this.item.dislike,
-                textId: this.item.id,
+                textId: this.item.textId,
             }
         },
     },

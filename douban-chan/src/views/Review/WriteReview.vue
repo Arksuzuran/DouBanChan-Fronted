@@ -30,10 +30,10 @@
                 <div class="image">
                     <img
                         style="width: 150px; height: 200px;"
-                        :src="videoItem.m_profile_photo"/>
+                        :src="videoItem.m_profile_photo" @click="toVideoDetail(this.videoItem.m_id)"/>
                 </div>
                 <div class="detail">
-                    <div style="text-align: left;">
+                    <div style="text-align: left;" v-if="this.videoItem.m_type !== 3">
                         <div>
                             <span>电影名：</span>{{ videoItem.m_name }}
                         </div>
@@ -47,7 +47,20 @@
                             <span>上映时间：</span>{{ videoItem.m_year }}
                         </div>
                     </div>
-                    
+                    <div style="text-align: left;" v-else>
+                        <div>
+                            <span>书名：</span>{{ videoItem.m_name }}
+                        </div>
+                        <div>
+                            <span>作者：</span>{{ videoItem.m_author }}
+                        </div>
+                        <div>
+                            <span>出版社</span>{{ videoItem.m_publisher }}
+                        </div>
+                        <div>
+                            <span>出版时间：</span>{{ videoItem.m_year }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,7 +79,7 @@ export default Vue.extend({
             title: '',  //输入的标题
             rate: 0,    //评分
 
-            videoItem: null,
+            videoItem: {},
 
             html: '',
             editor: null,
@@ -83,8 +96,8 @@ export default Vue.extend({
                 placeholder: '请输入内容', 
                 MENU_CONF: {
                     'uploadImage': {
-                        // server: 'http://10.193.206.15:8000/picture/upload/',
-                        server: 'http://127.0.0.1:8000/picture/upload/',
+                        server: 'http://10.193.206.15:8000/picture/upload/',
+                        // server: 'http://127.0.0.1:8000/picture/upload/',
                         fieldName: 'p_content',
                         // 单个文件的最大体积限制，默认为 2M
                         maxFileSize: 5 * 1024 * 1024, // 5M
@@ -110,12 +123,17 @@ export default Vue.extend({
                     }
                 }
             },
-            mode: 'default', // or 'simple'
+            
+            mode: 'default', // or 'simple',
+            
         }
     },
     methods: {
         onCreated(editor) {
             this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
+        },
+        toReviewPage(textId) {
+            this.$router.push({ name: 'review', params: { m_id: this.videoItem.m_id, t_id: textId} })
         },
         uploadReview(){
             if (this.title === '')
@@ -129,8 +147,8 @@ export default Vue.extend({
                 this.$axios({
                     method: "post",
                     data: qs.stringify({
-                        u_id: 1,
-                        m_id: 1,
+                        u_id: 2,
+                        m_id: this.$route.params.id,
                         t_rate: this.rate,
                         t_description: this.editor.getHtml(),
                         t_topic: this.title,
@@ -139,8 +157,13 @@ export default Vue.extend({
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                     })
                     .then((res) => {
-                        console.log(res)
-                        this.$message.success('发表成功');
+                        if (res.data.msg === 0)
+                        {
+                            this.$message.success('发表成功');
+                            this.toReviewPage(res.data.t_id);
+                            console.log(res.data.t_id)
+                            console.log(this.videoItem.m_id)
+                        }
                     })
                     .catch((err) => {
                         this.$message({
@@ -151,20 +174,27 @@ export default Vue.extend({
             }
             
         },
-        getVideo(id){
-            this.videoItem = {
-                m_profile_photo:"http://127.0.0.1:8000/images/avatar.webp",
-                m_name:  '阿凡达',
-                m_year:  '2022',
-                m_director:  'fgl',
-                m_actor:  "adk / czx / cr",
-                m_editor: 'zdw',
-            }
-        }
+        getVideo() {
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                m_id: this.$route.params.id
+            }),
+            url: "/media/query_single/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.videoItem = res.data.media;
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+            },
     },
     mounted() {
         //根据this.$route.params.id从后端获得数据并更新下列数据
-        this.getVideo(this.$route.params.id)
+        this.getVideo()
         this.isReady = true
     },
     beforeDestroy() {

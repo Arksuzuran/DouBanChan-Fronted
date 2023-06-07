@@ -5,15 +5,15 @@
         </div>
         <div class="section-row">
             <div class="choose">
-                <div class="tab" :class="{ active: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
-                |
                 <div class="tab" :class="{ active: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
+                |
+                <div class="tab" :class="{ active: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
             </div>
             <button class="button-35" role="button" @click="$emit('reply')"><i class="el-icon-plus"></i> 我要写{{ title }}</button>
         </div>
 
-        <div v-for="(reviewItem,index) in reviewItems" :key="index">
-            <ReviewSmall :item="reviewItem"></ReviewSmall>
+        <div v-for="reviewItem in reviewItems" :key="reviewItem.textId">
+            <ReviewSmall :item="reviewItem" :key="reviewItem.textID"></ReviewSmall>
         </div>
 
     </div>    

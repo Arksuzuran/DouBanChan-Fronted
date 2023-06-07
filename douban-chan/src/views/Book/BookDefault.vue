@@ -1,7 +1,6 @@
 <template>
   <div>
-    <VideoRow :items="hotMovies" title="热门电影"></VideoRow>
-    <VideoRow :items="hotTVs" title="热门电视剧"></VideoRow>
+    <VideoRow :items="hotBooks" title="热门图书"></VideoRow>
     <HotComments :items="hotComments"></HotComments>
   </div>
 </template>
@@ -17,8 +16,7 @@ export default {
   data() {
     return { 
       hotComments:[],
-      hotMovies:[],
-      hotTVs:[],
+      hotBooks:[]
     }
   },
   methods: {
@@ -27,43 +25,26 @@ export default {
       method: "post",
       data: qs.stringify({
       }),
-      url: "/media/get_heat_comment/",
+      url: "/media/get_heat_comment_for_book/",
       headers: { "content-type": "application/x-www-form-urlencoded" },
       })
       .then((res) => {
           this.hotComments = res.data.heat_comment
-          // console.log(res.data.heat_comment)
       })
       .catch((err) => {
           this.$message.error("网络出错QAQ")
       });
     },
-    getHotMovies(){
+    getHotBook(){
         this.$axios({
         method: "post",
         data: qs.stringify({
         }),
-        url: "/media/get_heat_movie/",
+        url: "/media/get_heat_book/",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         })
         .then((res) => {
-            this.hotMovies = res.data.heat_movie
-        })
-        .catch((err) => {
-            this.$message.error("网络出错QAQ")
-        });
-    },
-    getHotTVs(){
-      this.$axios({
-        method: "post",
-        data: qs.stringify({
-        }),
-        url: "/media/get_heat_series/",
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-        })
-        .then((res) => {
-            this.hotTVs = res.data.heat_series
-            // console.log(res.data.heat_comment)
+            this.hotBooks = res.data.heat_book
         })
         .catch((err) => {
             this.$message.error("网络出错QAQ")
@@ -71,8 +52,7 @@ export default {
     }
   },
   mounted(){
-    this.getHotMovies();
-    this.getHotTVs();
+    this.getHotBook();
     this.getHotComments();
   },  
 }

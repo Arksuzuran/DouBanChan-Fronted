@@ -23,8 +23,11 @@ export default {
   name: 'Rate',
     props:['score'],
     computed: {
-        scoreInFive(){
-            return this.score * 1.0 / 2
+        scoreInFive:{
+          get(){
+              return this.score * 1.0/2
+          },
+          set(val){}
         }
     }
 }

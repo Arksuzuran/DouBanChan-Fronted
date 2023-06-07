@@ -73,7 +73,7 @@
                     <el-input v-model="inputEnrollPassword_2" prefix-icon="el-icon-lock" placeholder="请确认密码" show-password>
                     </el-input>
                 </div>
-                <el-button :disabled="!agreeAll" @click="clickToTransparent" class="login-module-button-right-enroll">
+                <el-button :disabled="disableClick" @click="clickToTransparent" class="login-module-button-right-enroll">
                     注 册
                 </el-button>
                 <div class="login-module-right-enroll-radio">
@@ -91,6 +91,8 @@
 
 <script>
 import LoginBackImage from './LoginBackImage.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import qs from 'qs'
 export default ({
     components: {
         LoginBackImage,
@@ -101,11 +103,6 @@ export default ({
             inputEnrollPassword_1: '',
             inputEnrollPassword_2: '',
             inputEnrollEmail: '',
-            accounts: [
-                { account: '20375337', password: '20375337' },
-                { account: 'CR666', password: 'sb' },
-                // 可以添加更多账号和密码组合
-            ],
             imageUrl_1: 'login-back.jpg',
             imageUrl_2: 'OM.jpg',
             imageUrl_3: 'shadowdie2.jpg',
@@ -148,14 +145,21 @@ export default ({
     },
     //计算属性
     computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
         swiper() {
             return this.$refs.mySwiper.$swiper;
         },
         isLoginDisabled() {
             return this.inputAccount === '' || this.inputPassword === '';
         },
+        disableClick() {
+            if (this.inputEnrollAccount === '' || this.inputEnrollPassword_1 === '' || this.inputEnrollPassword_2 === '' || this.inputEnrollEmail === '' || this.agreeAll == false)
+                return true;
+            else return false;
+        }
     },
     methods: {
+        ...mapMutations('userAbout', ['LOGIN', 'LOGOUT']),
         handleButtonClick() {
             this.start();//开始捏
             this.moveLeft = !this.moveLeft;
@@ -166,89 +170,30 @@ export default ({
                     this.moveRight = !this.moveRight;
                 }, 1000);
             });
-            const enteredAccount = this.inputAccount;
-            const enteredPassword = this.inputPassword;
-            // 验证账号和密码
-            const isCredentialsValid = this.accounts.some(
-                ({ account, password }) => account === enteredAccount && password === enteredPassword
-            );
-            if (isCredentialsValid) {
-                if (this.remember) {
-                    // 如果用户选择记住密码，保存账号和密码到本地存储
-                    localStorage.setItem('inputAccount', this.inputAccount);
-                    localStorage.setItem('inputPassword', this.inputPassword);
-                } else {
-                    // 如果用户取消记住密码，移除本地存储中的账号和密码
-                    localStorage.removeItem('inputAccount');
-                    localStorage.removeItem('inputPassword');
-                }
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.loginSuccess();
-                        this.finish();
-                    }, 2000);
-                    //多余的，后续父子组件通信会删掉
-                    setTimeout(() => {
-                        this.moveLeft = false;
-                        this.fadeOut = false;
-                        this.moveRight = false;
-                    }, 7000);
-                });
-            } else {
-                this.$nextTick(() => {
-                    setTimeout(() => {
-                        this.loginFail();
-                        this.error();
-                        this.moveLeft = false;
-                        this.fadeOut = false;
-                        this.moveRight = false;
-                        this.inputPassword = '';//清空密码
-                        this.remember = false;
-                    }, 2500);
-                });
-            }
+            this.requestLogin();
         },
         clickToTransparent() {
             this.start();
-            if (this.inputEnrollAccount == '') {
-                this.errorUserName();
+            const userNamePattern = /^[a-zA-Z0-9_]{4,12}$/;
+            if (!userNamePattern.test(this.inputEnrollAccount)) {
+                // 用户名不合法，执行相应的逻辑
+                this.invalidUserName();
                 this.error();
                 return;
-            } else if (this.inputEnrollPassword_1 == '' || this.inputEnrollPassword_2 == '') {
-                this.errorPassword();
+            }
+            const emailPattern = /^([a-zA-Z\d][\w-]{2,})@(\w{2,})\.([a-z]{2,})(\.[a-z]{2,})?$/;
+            if (!emailPattern.test(this.inputEnrollEmail)) {
+                // 邮箱地址不合法，执行相应的逻辑
+                this.invalidEmail();
                 this.error();
                 return;
-            } else if (!(this.inputEnrollPassword_1 === this.inputEnrollPassword_2)) {
+            }
+            if (!(this.inputEnrollPassword_1 === this.inputEnrollPassword_2)) {
                 this.errorPasswordMatch();
                 this.error();
                 return;
             }
-            // 使用 find 方法查找数组中是否存在指定 key 的元素
-            const foundElement = this.accounts.find(item => item.account === this.inputEnrollAccount);
-            if (foundElement) {
-                this.notOnlyUserName();
-                this.error();
-                return;
-            }
-
-            this.signUpSuccess();
-            this.finish();
-            this.inputAccount = this.inputEnrollAccount;
-            this.inputPassword = this.inputEnrollPassword_1;
-            this.remember = false;//是否记住呢
-
-            const newAccountObj = { account: this.inputAccount, password: this.inputPassword };
-            this.accounts.push(newAccountObj);//传入数据
-
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.toHighIndex = false;
-                    this.isNotTransparent = false;
-                    this.moveLeft = false;
-                    this.fadeOut = false;
-                    this.moveRight = false;
-                }, 500);
-            });
+            this.requestSignUp();
         },
         backToLogin() {
             this.start();
@@ -281,7 +226,7 @@ export default ({
         },
         signUpSuccess() {
             this.$Notify.success({
-                title: '注册成功',
+                title: '注册成功,请查看邮件',
                 message: '恭喜你注册成功捏',
                 showClose: false,
             })
@@ -300,17 +245,17 @@ export default ({
                 showClose: false,
             })
         },
+        invalidUserName() {
+            this.$Notify.error({
+                title: '用户名不合法',
+                message: '合法用户名格式为4到12位(字母,数字,下划线)',
+                showClose: false,
+            })
+        },
         errorPassword() {
             this.$Notify.error({
                 title: '密码错误',
                 message: '请重新输入密码捏bb',
-                showClose: false,
-            })
-        },
-        errorUserName() {
-            this.$Notify.error({
-                title: '用户名为空',
-                message: '请输入用户名',
                 showClose: false,
             })
         },
@@ -328,6 +273,13 @@ export default ({
                 showClose: false,
             })
         },
+        invalidEmail() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '邮箱格式不正确',
+                showClose: false,
+            })
+        },
         start() {
             this.$Loading.start()
         },
@@ -340,6 +292,107 @@ export default ({
         update() {
             this.$Loading.update(1000)
         },
+        requestSignUp() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    username: this.inputEnrollAccount,
+                    password: this.inputEnrollPassword_1,
+                    email: this.inputEnrollEmail,
+                }),
+                url: "/user/register/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    // 使用 find 方法查找数组中是否存在指定 key 的元素
+                    const foundElement = res.data.msg;
+                    // const foundElement = this.accounts.find(item => item.account === this.inputEnrollAccount);
+                    if (foundElement != 0) {
+                        this.notOnlyUserName();
+                        this.error();
+                        return;
+                    }
+                    this.signUpSuccess();
+                    this.finish();
+                    this.inputAccount = this.inputEnrollAccount;
+                    this.inputPassword = this.inputEnrollPassword_1;
+                    this.remember = false;//是否记住呢
+
+                    this.$nextTick(() => {
+                        setTimeout(() => {
+                            this.toHighIndex = false;
+                            this.isNotTransparent = false;
+                            this.moveLeft = false;
+                            this.fadeOut = false;
+                            this.moveRight = false;
+                        }, 500);
+                    });
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                    this.toHighIndex = false;
+                    this.isNotTransparent = false;
+                    this.moveLeft = false;
+                    this.fadeOut = false;
+                    this.moveRight = false;
+                });
+        },
+        requestLogin() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    username: this.inputAccount,
+                    password: this.inputPassword,
+                }),
+                url: "/user/login/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    // 验证账号和密码
+                    const isCredentialsValid = res.data.msg;
+                    if (isCredentialsValid == 0) {
+                        if (this.remember) {
+                            // 如果用户选择记住密码，保存账号和密码到本地存储
+                            localStorage.setItem('inputAccount', this.inputAccount);
+                            localStorage.setItem('inputPassword', this.inputPassword);
+                        } else {
+                            // 如果用户取消记住密码，移除本地存储中的密码
+                            localStorage.removeItem('inputPassword');
+                        }
+                        this.$nextTick(() => {
+                            setTimeout(() => {
+                                this.LOGIN(res.data.user);
+                                this.loginSuccess();
+                                this.finish();
+                            }, 2000);
+                        });
+                    } else {
+                        this.$nextTick(() => {
+                            setTimeout(() => {
+                                this.loginFail();
+                                this.error();
+                                this.moveLeft = false;
+                                this.fadeOut = false;
+                                this.moveRight = false;
+                                this.inputPassword = '';//清空密码
+                                this.remember = false;
+                            }, 2500);
+                        });
+                    }
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                    this.moveLeft = false;
+                    this.fadeOut = false;
+                    this.moveRight = false;
+                    this.inputPassword = '';//清空密码
+                    this.remember = false;
+                });
+        },
     },
     mounted() {
         // 检查本地存储中是否存在记住的账号和密码
@@ -350,7 +403,15 @@ export default ({
             this.inputPassword = savedPassword;
             this.remember = true;
         }
+        if (savedUsername) {
+            this.inputAccount = savedUsername;
+        }
+        if (this.inputPassword == '') {
+            this.remember = false;
+        }
     },
+
+
 })
 </script>
 

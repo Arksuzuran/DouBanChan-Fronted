@@ -14,8 +14,9 @@ export default {
 
 <style scoped>
 .rateNum{
-    font-size: 16px;
+    font-size: 14px;
     color: orange;
+    font-weight: bold;
 }
 .ten{
     font-size:14px;
