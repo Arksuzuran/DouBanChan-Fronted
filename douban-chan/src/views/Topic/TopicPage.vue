@@ -34,7 +34,8 @@
 
                 <!-- 话题右侧关注按钮 -->
                 <div class="topic-header-button-topic">
-                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userInTopic ? '退出话题' : '加入话题' }}</button>
+                    <button :class="joinButtonClass" @click="jointopic">{{ topicInfo.userInTopic ? '退出话题' : '加入话题'
+                    }}</button>
                 </div>
             </div>
 
@@ -95,7 +96,7 @@ export default {
                     this.$message.error('已取消操作');
                 });
             }
-            else{
+            else {
                 this.$confirm('是否确定退出话题？您仍然可以再次加入该话题。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -114,6 +115,20 @@ export default {
                 });
             }
         },
+        // 由此从后端请求数据
+        async getData(id) {
+            try {
+                await this.getPostListByTopicIdOnline({
+                    userId:  this.userId,
+                    topicId: id,
+                });
+                await this.getTopicListByHotOnline({
+                    userId:  this.userId,
+                });
+            } catch (err) {
+                this.$message.error('网络错误')
+            }
+        },
         //获取话题列表    
         ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline']),
         //获取帖子列表
@@ -129,8 +144,7 @@ export default {
         ...mapGetters('postAbout', ['postList']),
         ...mapGetters('topicAbout', ['topicList', 'topicInfo']),
         ...mapGetters('groupAbout', ['groupList']),
-        showPostCreateBar(){
-            // console.log(this.$route)
+        showPostCreateBar() {
             return this.$route.name == 'topic'
         },
         joinButtonClass() {
@@ -147,12 +161,10 @@ export default {
             console.log('用户发帖成功：', newPost)
         });
 
-        let topicId = this.$route.query.topicId? this.$route.query.topicId : this.$route.params.topicId
+        let topicId = this.$route.query.topicId ? this.$route.query.topicId : this.$route.params.topicId
 
         console.log('已收到路由传递的话题id', topicId)
-        // 从后端获取数据
-        this.getPostListByTopicIdOnline(topicId)
-        this.getTopicListByHotOnline()
+        this.getData(topicId)
     },
 }
 </script>
@@ -377,7 +389,7 @@ export default {
 }
 
 /* 滚动至顶部 */
-.scrollbutton{
+.scrollbutton {
     position: fixed;
     bottom: 150px;
     right: 20px;

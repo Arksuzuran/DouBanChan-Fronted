@@ -108,7 +108,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 限制字符串长度为length
         cutStrByLength(str, length) {
             if (str.length > length) {
@@ -117,7 +117,39 @@ export default {
                 return str;
             }
         },
-
+        async uploadFav(is){
+            try {
+                await this.favPostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 收藏失败')
+            }
+        },
+        async uploadLike(is){
+            try {
+                await this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 点赞失败')
+            }
+        },
+        async uploadDislike(is){
+            try {
+                await this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 点踩失败')
+            }
+        },
         // 处理 点赞 评论 收藏 点踩
         // 处理收藏
         handleFav() {
@@ -125,19 +157,11 @@ export default {
             this.updateFav()
             if (this.userFav) {
                 this.favNumber++;
-                this.favPostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: true,
-                })
+                this.uploadFav(true)
             }
             else {
                 this.favNumber--
-                this.favPostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: true,
-                })
+                this.uploadFav(false)
             }
         },
         updateFav() {
@@ -180,29 +204,17 @@ export default {
             if (this.userDislike) {
                 this.userDislike = false
                 this.dislikeNumber--
-                this.dislikePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: false,
-                })
+                this.uploadDislike(false)
             }
             this.updateDislike()
             this.updateLike()
             if (this.userLike) {
                 this.likeNumber++;
-                this.likePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: true,
-                })
+                this.uploadLike(true)
             }
             else {
                 this.likeNumber--
-                this.likePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: false,
-                })
+                this.uploadLike(false)
             }
         },
         updateLike() {
@@ -223,29 +235,17 @@ export default {
             if (this.userLike) {
                 this.userLike = false
                 this.likeNumber--;
-                this.likePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: false,
-                })
+                this.uploadLike(false)
             }
             this.updateDislike()
             this.updateLike()
             if (this.userDislike) {
                 this.dislikeNumber++;
-                this.dislikePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: true,
-                })
+                this.uploadDislike(true)
             }
             else {
                 this.dislikeNumber--
-                this.dislikePostOnline({
-                    postId: this.info.postId,
-                    userId: this.userId,
-                    is: false,
-                })
+                this.uploadDislike(false)
             }
         },
         updateDislike() {

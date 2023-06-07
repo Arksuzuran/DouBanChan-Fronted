@@ -14,7 +14,8 @@
                 <!-- 来自小组 和 举报按钮 -->
                 <div class="postcard-buttongroup">
                     <PostTopicButton :info="postInfo"></PostTopicButton>
-                    <PostOperateButton :info="postInfo"  v-if="postInfo.userIsAdmin || postInfo.userIsLz"></PostOperateButton>
+                    <PostOperateButton :info="postInfo" v-if="postInfo.userIsAdmin || postInfo.userIsLz">
+                    </PostOperateButton>
                     <PostReportButton :info="postInfo"></PostReportButton>
                 </div>
             </div>
@@ -84,10 +85,24 @@ export default {
             newReply.floor = this.floorList.length + 1
             this.floorList.push(newReply)
         },
+        async getData(id) {
+            // 从后端获取数据
+            try {
+                await this.getPostOnline({
+                    userId: this.userId,
+                    postId: id,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 无法加载帖子信息')
+            }
+        },
         //获取帖子列表 或者一个完整的帖子
         ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostOnline']),
     },
     computed: {
+        //头像路径与用户名
+        //引入vuex的userAbout模块里的 state变量
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
         ...mapGetters('postAbout', ['postInfo']),
         //筛选出当前的列表内容和顺序
         activeFloorList() {
@@ -127,8 +142,7 @@ export default {
     mounted() {
         let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
-        // 从后端获取数据
-        this.getPostOnline(id)
+        this.getData(id)
 
         //监听“只看楼主”改变的事件
         this.$bus.$on('setOnlyLz', (onlyLz) => {
@@ -141,16 +155,6 @@ export default {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
         })
-
-        // 监听CommentReplyInputBox的创建回复事件，在事件回调中向服务器发送请求
-        // this.$bus.$on('commentReplyCreated', (newReply, textId) => {
-        //     this.insertCommentIntoFloor(newReply, textId)
-        // })
-
-        // 监听PostReplyInputBox的创建回复事件，在事件回调中向服务器发送请求
-        // this.$bus.$on('postReplyCreated', (newReply) => {
-        //     this.insertFloorIntoFloor(newReply)
-        // })
     },
     beforeDestroy() {
         //卸载监听

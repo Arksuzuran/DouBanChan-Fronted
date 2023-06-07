@@ -24,6 +24,8 @@ import VideoDefault from "../views/Video/VideoDefault.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
+import GroupAdminMatterList from "../views/Group/GroupAdminMatterList.vue"
+
 //帖子
 import Post from "../views/Post/Post.vue";
 import reviewView from "../views/Review/ReviewView.vue";
@@ -192,6 +194,12 @@ const routes = [
         path:'/group/postList',
         name:'groupTopicList',
         component: TopicHomeTopicSquare
+      },
+      //管理员事务界面
+      {
+        path:'/group/admin',
+        name:'groupAdminMatterList',
+        component: GroupAdminMatterList,
       },
       // 成员列表页面
       // {

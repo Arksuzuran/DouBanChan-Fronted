@@ -9,20 +9,19 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
     name: 'TopicHomePostGroupList',
-    // props: ['postList'],
+    props: ['postList'],
     components: {
         GroupHomePostList,
     },
     methods: {
         //获取帖子列表
-        ...mapActions('postAbout', ['getPostListByRandomOnline', 'getPostListByTagOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+        // ...mapActions('postAbout', ['getPostListByRandomOnline', 'getPostListByTagOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
     },
     computed: {
-        ...mapGetters('postAbout', ['postList']),
+        // ...mapGetters('postAbout', ['postList']),
     },
     mounted() {
-        this.getPostListByHotOnline()
-        console.log(this.postList)
+        // console.log(this.postList)
     }
 
 }

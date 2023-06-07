@@ -18,37 +18,7 @@
                     <textarea type="textarea" v-model="form.text" rows="10" :placeholder="inputPlaceHolderText"></textarea>
 
                     <!-- 缩略图 上传图片 -->
-                    <!-- action 是要上传的地址 -->
-                    <!-- 这里需要根据后端修改! -->
-                    <!-- 这里需要根据后端修改! -->
-                    <!-- 这里需要根据后端修改! -->
-                    <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
-                    <!-- <template>
-                        <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
-                            :on-change="handleUpload" :on-success="handleUpload" :file-list="fileList" :limit="9"
-                            :http-request="handleUploadOnline">
-                            <i slot="default" class="el-icon-plus"></i>
-                            <div slot="file" slot-scope="{ file }">
-                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                                <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                                        <i class="el-icon-zoom-in"></i>
-                                    </span>
-                                    <span v-if="!disabled" class="el-upload-list__item-delete"
-                                        @click="handleDownload(file)">
-                                        <i class="el-icon-download"></i>
-                                    </span>
-                                    <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                                        <i class="el-icon-delete"></i>
-                                    </span>
-                                </span>
-                            </div>
-                        </el-upload>
-                    </template>
-
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog> -->
+                    <PictureChooser :imgIdList="form.imgIdList" :fileList="fileList"></PictureChooser>
 
                     <!-- 结束区 -->
                     <div class="form-footer">
@@ -87,19 +57,12 @@ export default {
             loading: false,
             // 表单收集的数据
             form: {
-                imgUrlList: [],
+                imgIdList: [],
                 text: '',
             },
             timer: null,
 
             fileList: [],
-            // // 向后端传入图片的url
-            // backendImgUrl: "#",
-            // //文件的list
-            // // 查看文件缩略图的弹窗
-            // dialogImageUrl: '',
-            // dialogVisible: false,
-            // disabled: false
         }
     },
     computed: {
@@ -114,7 +77,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 点击我来说两句按钮
         handleStartPost() {
             this.dialog = true
@@ -126,7 +89,7 @@ export default {
             }
             this.$confirm('确定要发表回帖吗？')
                 .then(_ => {
-                    if(!this.form.text){
+                    if (!this.form.text) {
                         this.$message.error("回帖内容不能为空")
                         return;
                     }
@@ -150,36 +113,32 @@ export default {
             clearTimeout(this.timer);
         },
         // 创建回帖
-        createPost() {
+        async createPost() {
             //构造对象
             let newReply = {
-                textId: nanoid(),
                 floor: this.postInfo.comments,
                 userId: this.userId,
                 userName: this.userName,
                 userImageUrl: this.userImgUrl,
-                date: this.getTimeNow(),
                 text: this.form.text,
-                imageUrlList: this.form.imgUrlList,
-                comments: 0,
-                like: 0,
-                dislike: 0,
-                userLike: false,
-                userDislike: false,
-                childFloorList: [],
+                imageUrlList: this.form.imgIdList,
             };
-            this.replyPostOnline({
-                postId: this.postInfo.postId,
-                newReply,
-            })
+            try {
+                await this.replyPostOnline({
+                    newReply,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 发帖失败')
+            }
+
             this.$message.success("成功发表回帖")
 
             // 通过事件总线触发自定义事件，并传递新回复作为参数
             // this.$bus.$emit('postReplyCreated', newReply);
-            
+
             // 清空内容
             this.fileList = []
-            this.form.imgUrlList = []
+            this.form.imgIdList = []
             this.form.text = ''
         },
         // 获取当前时间
@@ -221,7 +180,7 @@ export default {
             //假上传
             let imageUrl = file.url;
             // 将图片URL添加到列表中
-            this.form.imgUrlList.push(imageUrl);
+            this.form.imgIdList.push(imageUrl);
         },
         // 自定义上传 目前应该用不上了
         handleUploadOnline(file) {

@@ -48,13 +48,13 @@
                         <!-- 上传图片 -->
                         <!-- 上传小组封面 -->
                         <el-form-item label="上传小组封面" :label-width="formLabelWidth">
-                            <PictureChooser :imgUrlList="form.avatarUrlList" :fileList="avatarFileList" :maxImgNumber="1">
+                            <PictureChooser :imgIdList="form.avatarImgIdList" :maxImgNumber="1" :fileList="avatarFileList">
                             </PictureChooser>
                         </el-form-item>
 
                         <!-- 上传小组头图 -->
                         <el-form-item label="上传小组头图" :label-width="formLabelWidth">
-                            <PictureChooser :imgUrlList="form.headimgUrlList" :fileList="headimgFileList" :maxImgNumber="1">
+                            <PictureChooser :imgIdList="form.headImgIdList" :maxImgNumber="1" :fileList="headFileList">
                             </PictureChooser>
                         </el-form-item>
                     </el-form>
@@ -82,7 +82,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 import PictureChooser from '../post/PictureChooser.vue'
-
+import qs from "qs";
 export default {
     name: 'GroupCreateBar',
     components: {
@@ -99,10 +99,12 @@ export default {
             form: {
                 name: '',
                 tag: '',
-                avatarUrlList: [],
-                headimgUrlList: [],
+                avatarImgIdList: [],
+                headImgIdList: [],
                 intro: '',
             },
+            avatarFileList: [],
+            headFileList: [],
             formLabelWidth: '120px',
             timer: null,
 
@@ -121,12 +123,6 @@ export default {
                 { value: "无" }
             ],
             timeout: null,
-
-
-            // 封面的list
-            avatarFileList: [],
-            // 头图的list
-            headimgFileList: [],
         }
     },
     computed: {
@@ -156,7 +152,7 @@ export default {
                         this.$message.error("请选择小组所属的标签。如果您不想让小组参与标签分类，请选择“无”。")
                         return;
                     }
-                    if(!this.form.headimgUrlList[0]){
+                    if(!this.form.headimgIdList[0]){
                         this.$message.error("请上传小组的封面头像。")
                         return;
                     }
@@ -164,7 +160,6 @@ export default {
                         this.$message.error("请上传小组的主页头图。")
                         return;
                     }
-
 
                     this.createGroup();
                     this.loading = true;
@@ -185,30 +180,33 @@ export default {
             clearTimeout(this.timer);
         },
         // 创建帖子
-        createGroup() {
+        async createGroup() {
 
             //构造对象
             let newGroup = {
                 userId: this.userId,
-                groupId: nanoid(),
-                groupHeadBgUrl: this.form.headimgUrlList[0],
-                groupAvatarImgUrl: this.form.avatarUrlList[0],
                 groupName: this.form.name,
                 groupIntro: this.form.intro,
                 tag: this.form.tag,
+                avatar: this.form.headImgIdList[0],
+                head: this.form.avatarImgIdList[0],
             };
-            this.createGroupOnline(newGroup)
-            this.$message.success("成功创建小组:" + this.form.name)
+            try {
+                await this.createGroupOnline(newGroup)
+                this.$message.success('成功创建小组: ' + this.form.name)
+            } catch (err) {
+                this.$message.error('网络错误')
+            }
 
             // // 通过事件总线触发自定义事件，并传递新小组作为参数
             // this.$bus.$emit('groupCreated', newGroup);
             // 清空内容
             this.avatarFileList = []
-            this.headimgFileList = []
+            this.headFileList = []
             this.form.name = ''
             this.form.tag = ''
-            this.form.avatarUrlList = []
-            this.form.headimgUrlList = []
+            this.form.avatarImgIdList = []
+            this.form.headImgIdList = []
             this.form.intro = ''
         },
         // 获取当前时间

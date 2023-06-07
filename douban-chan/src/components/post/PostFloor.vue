@@ -35,7 +35,7 @@
             <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName">
             </CommentReplyInputBox>
             <!-- 展示未被折叠的评论 -->
-            <ComentUnderFloor v-for="info in showedchildFloorList" :key="info.textId" :info="info"></ComentUnderFloor>
+            <CommentUnderFloor v-for="comment in showedchildFloorList" :key="comment.textId" :info="comment" :floorTextId="info.textId"></CommentUnderFloor>
         </div>
 
         <!-- 底部被折叠的评论 -->
@@ -50,8 +50,8 @@
                 <!-- 在这里放置余下的评论 -->
                 <!-- 被折叠的评论 -->
                 <div class="postfloor-comment-container">
-                    <ComentUnderFloor v-for="(info, index) in restchildFloorList" :key="index" :info="info">
-                    </ComentUnderFloor>
+                    <CommentUnderFloor v-for="comment in restchildFloorList" :key="comment.textId" :info="comment" :floorTextId="info.textId">
+                    </CommentUnderFloor>
                 </div>
             </el-collapse-item>
         </el-collapse>
@@ -64,7 +64,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import PostCardUserInfo from './PostCardUserInfo.vue';
 import PostCardText from './PostCardText.vue';
 import PostReportButton from './button/PostReportButton.vue';
-import ComentUnderFloor from './ComentUnderFloor.vue';
+import CommentUnderFloor from './CommentUnderFloor.vue';
 import LikeButtonGroup from './button/LikeButtonGroup.vue';
 import CommentReplyInputBox from './button/CommentReplyInputBox.vue';
 
@@ -74,7 +74,7 @@ export default {
         PostCardUserInfo,
         PostCardText,
         PostReportButton,
-        ComentUnderFloor,
+        CommentUnderFloor,
         LikeButtonGroup,
         CommentReplyInputBox,
     },
@@ -118,7 +118,6 @@ export default {
         },
         // 筛选评论
         showedchildFloorList() {
-            console.log(this.info)
             // 获取前两条评论
             return this.info.childFloorList.slice(0, this.maxCommentsNum);
         },
@@ -135,14 +134,6 @@ export default {
         changeReplying() {
             this.isReplying = !this.isReplying
         },
-        //处理点赞
-        // updateLike(cnt) {
-        //     console.log('用户点赞', cnt)
-        // },
-        // //处理点踩
-        // updateDislike(cnt) {
-        //     console.log('用户点踩', cnt)
-        // },
     },
     mounted() {
         this.$bus.$on('commentReplyCreated', (textId) => {
@@ -206,8 +197,15 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-}
 
+    font-size: 16px;
+    color: #2c3e50;
+}
+.postfloor-reply-button:hover{
+    background-color: rgb(247, 93, 93);
+    color: white;
+    transition: 0.5s ease-out;
+}
 .postcard-icon {
     font-size: 18px;
     color: rgb(97, 97, 97);

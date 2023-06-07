@@ -8,6 +8,8 @@ import topicOptions from './topic'
 import postOptions from './post'
 import uploadOptions from './upload'
 
+import qs from "qs";
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({

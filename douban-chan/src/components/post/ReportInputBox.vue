@@ -52,7 +52,7 @@
                             </div>
                         </el-upload>
                     </div> -->
-                    <!-- <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser> -->
+                    <!-- <PictureChooser :imgIdList="form.imgIdList" :fileList="fileList"></PictureChooser> -->
 
                     <!-- <el-dialog :visible.sync="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="">
@@ -102,7 +102,7 @@ export default {
             loading: false,
             // 表单收集的数据
             form: {
-                imgUrlList: [],
+                imgIdList: [],
                 title: '',
                 text: '',
             },
@@ -126,7 +126,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 关闭上拉栏
         handleClose(done) {
             if (this.loading) {
@@ -166,22 +166,27 @@ export default {
             clearTimeout(this.timer);
         },
         // 创建举报
-        createReport() {
+        async createReport() {
             // 在此发送请求
             let report = {
                 title: this.form.title,
                 text: this.form.text,
             }
-            this.reportTextOnline({
+            try {
+                await this.reportTextOnline({
                 textId: this.textId, 
+                userId: this.userId,
                 report,
             })
+            } catch (err) {
+                this.$message.error('网络错误，举报提交失败。')
+            }
             this.$message.success("举报提交成功，您的管理员将会收到举报信息。")
             // console.log('用户发送举报请求', report)
 
             // 清空内容
             this.fileList = []
-            this.form.imgUrlList = []
+            this.form.imgIdList = []
             this.form.text = ''
         },
         // 获取当前时间
@@ -223,7 +228,7 @@ export default {
             //假上传
             let imageUrl = file.url;
             // 将图片URL添加到列表中
-            this.form.imgUrlList.push(imageUrl);
+            this.form.imgIdList.push(imageUrl);
         },
         // 自定义上传 目前应该用不上了
         handleUploadOnline(file) {

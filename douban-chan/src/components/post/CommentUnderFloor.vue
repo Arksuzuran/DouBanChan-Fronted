@@ -24,10 +24,11 @@
                 <div class="postfloor-reply-button" @click="changeReplying">
                     回复
                 </div>
+                <FloorReportButton :info="info"></FloorReportButton>
             </div>
             <div class="postfloor-comment-container">
                 <!-- 撰写评论的区域 -->
-                <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName" :floor2="true">
+                <CommentReplyInputBox v-if="isReplying" :textId="floorTextId" :targetUserName="info.userName" :floor2="true">
                 </CommentReplyInputBox>
             </div>
         </div>
@@ -37,14 +38,16 @@
 <script>
 import LikeButtonGroup from './button/LikeButtonGroup.vue';
 import CommentReplyInputBox from './button/CommentReplyInputBox.vue';
+import FloorReportButton from './button/FloorReportButton.vue';
 
 export default {
     name: 'CommentUnderFloor',
     components: {
         LikeButtonGroup,
         CommentReplyInputBox,
+        FloorReportButton,
     },
-    props: ['info'],
+    props: ['info', 'floorTextId'],
     data() {
         return {
             // 用户是否正在回复评论
@@ -166,6 +169,11 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+.postfloor-reply-button:hover {
+    background-color: rgb(247, 93, 93);
+    color: white;
+    transition: 0.5s ease-out;
 }
 
 /* 未折叠的评论的容器 */

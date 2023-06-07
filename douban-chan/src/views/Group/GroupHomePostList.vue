@@ -66,6 +66,10 @@ export default {
         },
         // 按照指定顺序筛选列表
         activePostList() {
+            if(!this.postList){
+                return []
+            }
+            console.log(this.postList)
             let list = this.postList.slice()
             //只看精品帖子
             if (this.onlyGoodpost) {
@@ -113,7 +117,6 @@ export default {
         this.$bus.$on('sortChanged', (index) => {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
-            console.log('2023-5-02 22:47' > '2023-5-19 23:11')
         })
         console.log('PostCardList已挂载事件sortChanged监听');
 

@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline','replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline','topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline','reportTextOnline', 'deleteTextOnline']),
+...mapActions('postAbout', ['createPostOnline', 'createPostOnline','replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline','topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline','reportTextOnline', 'deleteTextOnline']),
         handleClick() {
             this.show = !this.show
         },

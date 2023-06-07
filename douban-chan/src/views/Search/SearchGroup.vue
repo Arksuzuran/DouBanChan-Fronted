@@ -1,15 +1,15 @@
 <template>
   <div>
-    <GroupHomePostListVue :postList="list" :notShowSelectButton="true" :top="205" title1="搜索结果"></GroupHomePostListVue>
+    <GroupList :groupList="list" title="搜索结果" :top="205" col="3"></GroupList>
   </div>
 </template>
 
 <script>
-import GroupHomePostListVue from '../Group/GroupHomePostList.vue';
+import GroupList from '@/components/group/GroupList.vue';
 export default {
   name: 'SearchTopic',
   components: {
-    GroupHomePostListVue,
+    GroupList,
   },
   data() {
     return {

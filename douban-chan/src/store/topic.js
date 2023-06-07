@@ -1,4 +1,6 @@
 //话题信息管理
+import qs from 'qs'
+import axios from 'axios'
 export default {
     namespaced: true,
     actions: {
@@ -6,18 +8,54 @@ export default {
         //请求数据
         //
         //搜索框接口 根据指定输入内容返回话题列表
-        getTopicListSearchOnline(context, input){
-            if (input) {
-                console.log("依据指定tag获取话题列表，指定搜索内容：", input);
+        getTopicListSearchOnline(context, info){
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            if (info.input) {
+                console.log("依据指定tag获取话题列表，指定搜索内容：", info.input);
             } else {
                 console.log("随机获取话题列表");
             }
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
         //获取热榜话题列表 如果传入tag则以tag为标准筛选
-        getTopicListByHotOnline(context, tag) {
-            if(tag){
-                console.log("依据指定tag获取热榜话题列表，指定tag：", tag);
+        getTopicListByHotOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            if(info.tag){
+                console.log("依据指定tag获取热榜话题列表，指定tag：", info.tag);
             }
             else{
                 console.log("获取热榜话题列表");
@@ -25,9 +63,27 @@ export default {
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
         //随机获取话题列表 如果传入tag则以tag为标准筛选
-        getTopicListOnline(context, tag) {
-            if(tag){
-                console.log("依据指定tag获取话题列表，指定tag：", tag);
+        getTopicListOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            if(info.tag){
+                console.log("依据指定tag获取话题列表，指定tag：", info.tag);
             }
             else{
                 console.log("随机获取话题列表");
@@ -35,25 +91,125 @@ export default {
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
         //获取指定小组的话题列表
-        getTopicListByGroupIdOnline(context, id) {
-            console.log("依据指定小组id获取热榜话题列表，指定id：", id);
+        getTopicListMineIdOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            console.log("依据指定小组id获取热榜话题列表，指定id：", info.groupId);
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
+        //获取指定小组的话题列表
+        getTopicListByGroupIdOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            console.log("依据指定小组id获取热榜话题列表，指定id：", info.groupId);
+            context.commit('SET_TOPICLIST', context.state.topicList)
+        },
+        //获取指定小组内可以参与的话题列表
         //获取指定id的话题信息
-        getTopicInfoOnline(context, id) {
-            console.log("依据指定id获取话题信息，指定id：", id);
+        getTopicInfoOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });/
+            // });
+            console.log("依据指定id获取话题信息，指定id：", info.topicId);
             context.commit('SET_TOPICINFO', context.state.topicInfo)
         },
 
         //
         //上传数据
         //
-        //创建话题1
+        //创建话题12
         createTopicOnline(context, newTopic){
-            console.log("创建话题", newTopic);
+            console.log("开始执行创建话题的请求", newTopic);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: 'post',
+                    data: qs.stringify({
+                        // u_id: 1,
+                        u_id: newTopic.userId,
+                        c_name: newTopic.name,
+                        c_description: newTopic.intro,
+                        c_tag: newTopic.tag,
+                        avatar: newTopic.avatar,//头像
+                        head: newTopic.head,//头图
+                    }),
+                    url: '/chat/create/',
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                })
+                    .then((res) => {
+                        resolve(res); console.log(res); console.log(res)
+                    })
+                    .catch((err) => {
+                        reject(err)
+                    });
+            });
         },
         //加入话题
         joinTopicOnline(context, info){
+            let url = info.is ? '/media/join_group/' : '/media/quit_group/'
+            console.log("开始处理加入话题", info.groupId, info.userId, info.is);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: 'post',
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        g_id: info.groupId,
+                    }),
+                    url,
+                    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                })
+                    .then((res) => {
+                        resolve(res); console.log(res); console.log(res)
+                    })
+                    .catch((err) => {
+                        reject(err)
+                    });
+            });
             if(info.is){
                 console.log("加入话题", info.topicId, info.userId, info.is);
             }
