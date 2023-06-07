@@ -35,8 +35,9 @@
                 <div class="group-header-button-group">
                     <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出小组' : '加入小组'
                     }}</button>
-                    <button :class="applyButtonClass" @click="applyForAdmin">{{ groupInfo.userIsAdmin ? '解除管理员' : '申请管理员'
-                    }}</button>
+                    <button :class="applyButtonClass" @click="applyForAdmin"><i class="fa-solid fa-user-group"
+                            v-if="groupInfo.userIsAdmin"></i>{{ groupInfo.userIsAdmin ? '管理员' : '申请管理员'
+                            }}</button>
                 </div>
             </div>
 
@@ -46,13 +47,15 @@
                 <el-menu-item index="groupPostList">看帖</el-menu-item>
                 <el-menu-item index="groupGoodPostList">精华</el-menu-item>
                 <el-menu-item index="groupTopicList">小组话题</el-menu-item>
+                <el-menu-item index="groupAdminMatterList" v-if="groupInfo.userIsAdmin">管理员事务</el-menu-item>
                 <!-- <el-menu-item index="groupMemberList">小组成员</el-menu-item> -->
             </el-menu>
 
             <!-- 当前页面展示内容 -->
             <!-- 对于默认路由 应该直接传递进postList作为参数 -->
             <div class="group-content-container">
-                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题" top="64"></router-view>
+                <router-view :postList="inPostList" :topicList="topicList" title1="小组参与的话题" top="64" :groupInfo="groupInfo"
+                    :msgList="msgList"></router-view>
             </div>
         </div>
         <!-- 发帖上拉框 -->
@@ -66,6 +69,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import PostCreateBar from '@/components/post/PostCreateBar.vue';
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue';
@@ -79,10 +83,11 @@ export default {
     data() {
         return {
             activeIndex: 'groupPostList',
+            msgList: [],
         }
     },
     methods: {
-        ...mapActions('groupAbout', ['createGroupOnline', 'joinGroupOnline','applyAdminOnline']),
+        ...mapActions('groupAbout', ['createGroupOnline', 'joinGroupOnline', 'applyAdminOnline']),
         joinGroup() {
             if (!this.groupInfo.userInGroup) {
                 this.$confirm('是否确定加入小组?加入小组后即可在小组内发表帖子。', '提示', {
@@ -102,7 +107,7 @@ export default {
                     this.$message.error('已取消操作');
                 });
             }
-            else{
+            else {
                 this.$confirm('是否确定退出小组？您仍然可以再次加入该小组', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -120,28 +125,43 @@ export default {
                     this.$message.error('已取消操作');
                 });
             }
-            
+
         },
         applyForAdmin() {
             if (!this.groupInfo.userIsAdmin) {
-                this.$confirm('是否确定申请小组管理员?您的申请需要等待小组管理员同意。', '提示', {
+                this.$prompt('申请理由', '申请成为管理员', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
-                    // type: 'warning',
-                }).then(() => {
+                }).then(({ value }) => {
+                    console.log(value)
                     this.applyAdminOnline({
                         groupId: this.groupInfo.groupId,
                         userId: this.userId,
+                        text: value,
                         is: true,
                     })
-
-                    this.$message.success('请求已提交!');
-                    // this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                    this.$message.success('请求已提交!请等待管理员审核');
                 }).catch(() => {
-                    this.$message.error('已取消操作');
+                    this.$message.info('已取消操作');
                 });
+                // this.$confirm('是否确定申请小组管理员?您的申请需要等待小组管理员同意。', '提示', {
+                //     confirmButtonText: '确定',
+                //     cancelButtonText: '取消',
+                //     // type: 'warning',
+                // }).then(() => {
+                //     this.applyAdminOnline({
+                //         groupId: this.groupInfo.groupId,
+                //         userId: this.userId,
+                //         is: true,
+                //     })
+
+                //     this.$message.success('请求已提交!');
+                //     this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                // }).catch(() => {
+                //     this.$message.error('已取消操作');
+                // });
             }
-            else{
+            else {
                 this.$confirm('是否确定卸任小组管理员?该操作无法撤回。', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -152,14 +172,13 @@ export default {
                         userId: this.userId,
                         is: false,
                     })
-
                     this.$message.success('操作成功');
-                    // this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
+                    this.groupInfo.userIsAdmin = !this.groupInfo.userIsAdmin
                 }).catch(() => {
-                    this.$message.error('已取消操作');
+                    this.$message.info('已取消操作');
                 });
             }
-            
+
         },
         //选中二级导航栏
         handleSelect(index) {
@@ -192,7 +211,21 @@ export default {
                 })
             }
         },
-
+        // 根据路径决定导航栏的显示
+        updateLabelByRoute() {
+            if (this.$route.path == '/group') {
+                this.activeIndex = "groupPostList";
+            }
+            else if (this.$route.path == '/group' && this.$route.query) {
+                this.activeIndex = "groupGoodPostList";
+            }
+            else if (this.$route.path == '/group/postList') {
+                this.activeIndex = "groupTopicList";
+            }
+            else if (this.$route.path == '/group/admin') {
+                this.activeIndex = "groupAdminMatterList";
+            }
+        },
         // 返回精华帖列表
         getGoodPostList() {
             let goodPostList = []
@@ -203,12 +236,50 @@ export default {
             }
             return goodPostList
         },
+        async getData(id) {
+            // 从后端获取数据
+            try {
+                // 小组信息
+                await this.getGroupInfoOnline({
+                    userId: this.userId,
+                    groupId: id,
+                });
+                // 展示的帖子列表
+                await this.getPostListByGroupIdOnline({
+                    userId: this.userId,
+                    groupId: id,
+                });
+                // 小组参与的话题列表
+                await this.getTopicListByGroupIdOnline({
+                    userId: this.userId,
+                    groupId: id,
+                });
+                // 加载当前小组的管理员事务
+                await this.$axios({
+                    method: "post",
+                    data: qs.stringify({
+                        g_id: id,
+                    }),
+                    url: "group/query_apply/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('加载当前小组的管理员事务成功', res)
+                        this.msgList = res.data.li
+                    })
+                    .catch((err) => {
+                        this.$message.error("网络出错");
+                    });
+            } catch (err) {
+                this.$message.error('网络错误')
+            }
+        },
         //获取话题列表
-        ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline']),
-        //获取帖子列表
-        ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+        ...mapActions('topicAbout', ['getTopicListSearchOnline', 'getTopicListOnline', 'getTopicListByHotOnline', 'getTopicListMineOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline', 'getTopicListSearchOnline']),
+        //获取帖子列表 或者一个完整的帖子
+        ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostListMineOnline', 'getPostOnline', 'getPostListSearchOnline']),
         //获取小组列表    
-        ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline', 'getGroupInfoOnline']),
+        ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline', 'getAdminMatterOnline']),
     },
     computed: {
         //头像路径与用户名
@@ -218,7 +289,7 @@ export default {
         ...mapGetters('postAbout', ['postList']),
         ...mapGetters('topicAbout', ['topicList']),
         ...mapGetters('groupAbout', ['groupInfo']),
-        showPostCreateBar(){
+        showPostCreateBar() {
             // console.log(this.$route)
             return this.$route.name == 'group' || this.$route.name == 'groupTopicList'
         },
@@ -230,6 +301,9 @@ export default {
         },
         //要传递的帖子列表
         inPostList() {
+            if (!this.postList) {
+                return []
+            }
             if (this.activeIndex == 'groupPostList') {
                 return this.postList.slice()
             }
@@ -241,6 +315,7 @@ export default {
             }
         },
     },
+
     mounted() {
         // 监听PostCreateBar的创建帖子事件，在事件回调中将新帖子添加到列表
         this.$bus.$on('postCreated', (newPost) => {
@@ -249,11 +324,10 @@ export default {
         });
         let id = this.$route.query.groupId ? this.$route.query.groupId : this.$route.params.groupId
 
-        // 从后端获取数据
-        this.getPostListByGroupIdOnline(id)
-        this.getTopicListByGroupIdOnline(id)
-        this.getGroupInfoOnline(id)
+        this.getData(id)
         console.log('已收到路由传递的小组id', id)
+
+        this.updateLabelByRoute()
     },
 }
 </script>
@@ -466,8 +540,9 @@ export default {
     margin: 0 auto;
     margin-top: 20px;
 }
+
 /* 滚动至顶部 */
-.scrollbutton{
+.scrollbutton {
     position: fixed;
     bottom: 150px;
     right: 20px;

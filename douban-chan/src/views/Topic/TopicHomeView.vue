@@ -134,26 +134,58 @@ export default {
 
     //重要！
     // 根据当前导航栏选择状态来更新数据
-    updateData() {
+    async updateData() {
       let index = this.activeTopLabel
-      // 选择浏览发现 则随机推荐
-      if (index == 0) {
-        console.log(this.tag)
-        this.getPostListOnline(this.tag)
-        this.getTopicListOnline(this.tag)
-        this.getGroupListOnline(this.tag)
+      try {
+        // 选择浏览发现 则随机推荐
+        if (index == 0) {
+          console.log(this.tag)
+          await this.getPostListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          await this.getTopicListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          await this.getGroupListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+        }
+        // 选择今日热榜 则推荐热榜相关
+        else if (index == 1) {
+          await this.getPostListByHotOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          await this.getTopicListByHotOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          await this.getGroupListByHotOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+        }
+        else {
+          this.getPostListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          this.getGroupListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+          this.getGroupListOnline({
+            tag: this.tag,
+            userId:  this.userId,
+          })
+        }
+      } catch (err) {
+        this.$message.error('网络错误')
       }
-      // 选择今日热榜 则推荐热榜相关
-      else if (index == 1) {
-        this.getPostListByHotOnline(this.tag)
-        this.getTopicListByHotOnline(this.tag)
-        this.getGroupListByHotOnline(this.tag)
-      }
-      else {
-        this.getPostListOnline(this.tag)
-        this.getGroupListOnline(this.tag)
-        this.getGroupListOnline(this.tag)
-      }
+
     },
 
     // 更新被选中标签的属性

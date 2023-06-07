@@ -8,12 +8,15 @@
 -->
 <template>
   <div class="grouplist-container">
-    <div class="grouplist-header-container">
+    <div class="grouplist-header-container" :style="distanceToTop">
       <div class="color-block"></div>
       <span class="grouplist-header-title">{{ title }}</span>
     </div>
     <!-- 根据传入参数来确定使用何种组件 -->
-    <component v-for="group in groupList" :key="group.groupId" :group="group" :is="getComponentType()"></component>
+    <div :class="colClass">
+      <component v-for="group in groupList" :key="group.groupId" :group="group" :is="getComponentType()"></component>
+    </div>
+
   </div>
 </template>
 
@@ -22,14 +25,25 @@ import GroupCard from '@/components/group/GroupCard.vue'
 import GroupCardWithTopic from './GroupCardWithTopic.vue';
 
 export default {
-  props: ['groupList', 'title', 'DIYCardComponentName'],
+  props: ['groupList', 'title', 'DIYCardComponentName', 'col', 'top'],
   name: 'GroupList',
   components: {
     GroupCard,
     GroupCardWithTopic,
   },
   computed: {
-
+    colClass() {
+      return this.col ? 'col-' + this.col : ''
+    },
+    // 动态设置到顶部的距离
+    distanceToTop() {
+      if (this.top) {
+        return {
+          top: this.top + 'px',
+        }
+      }
+      return {}
+    }
   },
   methods: {
     // 选择需要调用的组件
@@ -48,9 +62,34 @@ export default {
 </script>
 
 <style scoped>
-.grouplist-container{
+.grouplist-container {
   margin: 0 20px;
 }
+
+.col-2 {
+  display: grid;
+  gap: 40px;
+  /* 可根据需要调整间距 */
+  grid-template-columns: repeat(2, minmax(400px, 1fr));
+  /* 根据需要调整列宽度 */
+}
+
+.col-3 {
+  display: grid;
+  gap: 30px;
+  /* 可根据需要调整间距 */
+  grid-template-columns: repeat(3, minmax(400px, 1fr));
+  /* 根据需要调整列宽度 */
+}
+
+.col-4 {
+  display: grid;
+  gap: 20px;
+  /* 可根据需要调整间距 */
+  grid-template-columns: repeat(4, minmax(300px, 1fr));
+  /* 根据需要调整列宽度 */
+}
+
 /* 顶部标题 */
 .grouplist-header-container {
   position: sticky;

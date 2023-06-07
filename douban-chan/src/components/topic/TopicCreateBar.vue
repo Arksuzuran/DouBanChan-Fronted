@@ -26,8 +26,7 @@
                         <!-- 标签选择框 -->
                         <el-form-item label="选择标签" :label-width="formLabelWidth">
                             <el-select v-model="form.tag" placeholder="请选择标签" style="width: 100%;">
-                                <el-option v-for="tag in tagList" :key="tag.value" :label="tag.value"
-                                    :value="tag.value" >
+                                <el-option v-for="tag in tagList" :key="tag.value" :label="tag.value" :value="tag.value">
                                 </el-option>
                             </el-select>
                             <!-- <el-autocomplete v-model="form.tag" :fetch-suggestions="querySearchAsync" placeholder="请选择标签"
@@ -49,13 +48,13 @@
                         <!-- 上传图片 -->
                         <!-- 上传话题封面 -->
                         <el-form-item label="上传话题封面" :label-width="formLabelWidth">
-                            <PictureChooser :imgUrlList="form.avatarUrlList" :fileList="avatarFileList" :maxImgNumber="1">
+                            <PictureChooser :imgIdList="form.avatarImgIdList" :fileList="avatarFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
 
                         <!-- 上传话题头图 -->
                         <el-form-item label="上传话题头图" :label-width="formLabelWidth">
-                            <PictureChooser :imgUrlList="form.headimgUrlList" :fileList="headimgFileList" :maxImgNumber="1">
+                            <PictureChooser :imgIdList="form.headImgIdList" :fileList="headFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
                     </el-form>
@@ -100,8 +99,8 @@ export default {
             form: {
                 name: '',
                 "value": '',
-                avatarUrlList: [],
-                headimgUrlList: [],
+                avatarImgIdList: [],
+                headImgIdList: [],
                 intro: '',
             },
             formLabelWidth: '120px',
@@ -126,7 +125,7 @@ export default {
             // 封面的list
             avatarFileList: [],
             // 头图的list
-            headimgFileList: [],
+            headFileList: [],
         }
     },
     computed: {
@@ -148,11 +147,11 @@ export default {
             }
             this.$confirm('确定要创建话题吗？')
                 .then(_ => {
-                    if(!this.form.name){
+                    if (!this.form.name) {
                         this.$message.error("话题名称不能为空。")
                         return;
                     }
-                    if(!this.form.tag){
+                    if (!this.form.tag) {
                         this.$message.error("请选择话题所属的标签。如果您不想让话题参与标签分类，请选择“无”。")
                         return;
                     }
@@ -175,32 +174,33 @@ export default {
             this.dialog = false;
             clearTimeout(this.timer);
         },
+        
         // 创建帖子
-        createTopic() {
+        async createTopic() {
             //构造对象
             let newTopic = {
-                topicId: nanoid(),
-                topicHeadBgUrl: this.form.headimgUrlList[0],
-                topicAvatarUrl: this.form.avatarUrlList[0],
-                topicName: this.form.name,
-                topicIntro: this.form.intro,
-                follow: 1,
-                post: 0,
-                date: this.getTimeNow(),    //发帖时间
-                userInTopic: true,
-                //话题标签
+                userId: this.userId,
+                head: this.form.headImgIdList[0],
+                avatar: this.form.avatarImgIdList[0],
+                name: this.form.name,
+                intro: this.form.intro,
                 tag: this.form.tag,
             };
-            this.createTopicOnline(newTopic)
-            this.$message.success("成功创建话题:" + this.form.name)
+            // 创建话题
+            try {
+                await this.createTopicOnline(newTopic)
+                this.$message.success("成功创建话题:" + this.form.name)
+            } catch (err) {
+                this.$message.error('网络错误, 发帖失败')
+            }
 
             // 清空内容
             this.avatarFileList = []
-            this.headimgFileList = []
+            this.headFileList = []
             this.form.name = ''
             this.form.tag = ''
-            this.form.avatarUrlList = []
-            this.form.headimgUrlList = []
+            this.form.avatarImgIdList = []
+            this.form.headImgIdList = []
             this.form.intro = ''
         },
         // 获取当前时间

@@ -73,7 +73,7 @@ export default {
         { id: 8, label: '时尚', tag: '时尚' },
         { id: 9, label: '游戏', tag: '游戏' },
         { id: 10, label: '二刺螈', tag: '二刺螈' },
-        { id: 11, label: '我的话题', tag: '我的话题' },
+        { id: 11, label: '我的小组', tag: '我的小组' },
       ],
     }
   },
@@ -96,9 +96,30 @@ export default {
 
     //重要！
     // 根据当前导航栏选择状态来更新数据
-    updateData() {
-      this.getPostListOnline(this.tag)
-      this.getGroupListOnline(this.tag)
+    async updateData() {
+      console.log(this.tag)
+      try {
+        if (this.tag == '我的小组') {
+          await this.getPostListMineOnline({
+            userId: this.userId,
+          })
+          await this.getGroupListMineOnline({
+            userId: this.userId,
+          })
+        }
+        else {
+          await this.getPostListOnline({
+            tag: this.tag,
+            userId: this.userId,
+          })
+          await this.getGroupListOnline({
+            tag: this.tag,
+            userId: this.userId,
+          })
+        }
+      } catch (err) {
+        this.$message.error('网络错误')
+      }
     },
 
     // 更新被选中标签的属性
@@ -108,10 +129,12 @@ export default {
       }
       return ''
     },
-    //获取帖子列表
-    ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+    //获取话题列表
+    ...mapActions('topicAbout', ['getTopicListSearchOnline', 'getTopicListOnline', 'getTopicListByHotOnline', 'getTopicListMineOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline', 'getTopicListSearchOnline']),
+    //获取帖子列表 或者一个完整的帖子
+    ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostOnline', 'getPostListSearchOnline']),
     //获取小组列表    
-    ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
+    ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
   },
   computed: {
     // 根据用户是否选中了'我的小组' 来决定groupList组件的标题

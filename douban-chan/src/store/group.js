@@ -1,4 +1,6 @@
 //帖子信息管理
+import qs from "qs";
+import axios from "axios";
 export default {
     namespaced: true,
     actions: {
@@ -6,36 +8,136 @@ export default {
         //请求数据
         //
         //搜索框接口 根据指定输入内容返回小组列表
-        getGroupListSearchOnline(context, input) {
-            if (input) {
-                console.log("依据指定tag获取小组列表，指定搜索内容：", input);
+        getGroupListSearchOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            if (info.input) {
+                console.log("依据指定tag获取小组列表，指定搜索内容：", info.input);
             } else {
                 console.log("随机获取小组列表");
             }
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
-        //随机获取列表
-        getGroupListOnline(context, tag) {
-            if (tag) {
-                console.log("依据指定tag获取小组列表，指定tag：", tag);
-            } else {
-                console.log("获取小组列表");
-            }
+        //根据info.tag 获取小组列表12
+        getGroupListOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        // u_id: 1,
+                        u_id: info.userId,
+                        g_tag: info.tag,
+                    }),
+                    url: "group/query_group_by_tag/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log(res);
+                        let groupList = res.data.groupList;
+                        context.commit("SET_GROUPLIST", groupList);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            context.commit("SET_GROUPLIST", context.state.groupList);
+        },
+        //获取我的小组
+        getGroupListMineOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                    }),
+                    url: "group/query_group_by_tag/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log(res);
+                        let groupList = res.data.groupList;
+                        context.commit("SET_GROUPLIST", groupList);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
         //获取热榜小组列表
-        getGroupListByHotOnline(context, tag) {
-            if (tag) {
-                console.log("依据指定tag获取热榜小组列表，指定tag：", tag);
+        getGroupListByHotOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             // u_id: 1,
+            //             u_id: info.userId,
+            //             g_tag: info.tag,
+            //         }),
+            //         url: "group/query_group_by_tag/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             let groupList = res.data.groupList;
+            //             context.commit("SET_GROUPLIST", groupList);
+            //             resolve(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            if (info.tag) {
+                console.log("依据指定tag获取热榜小组列表，指定tag：", info.tag);
             } else {
                 console.log("获取热榜小组列表");
             }
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
 
-        //获取指定id的小组信息
-        getGroupInfoOnline(context, id) {
-            console.log("依据指定id获取小组信息，指定id：", id);
+        //获取指定id的小组信息12
+        getGroupInfoOnline(context, info) {
+            console.log("依据指定id获取小组信息", info);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        g_id: info.groupId,
+                        // u_id: 1,
+                        // g_id: 3,
+                    }),
+                    url: "/group/group_brief/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        let groupInfo = res.data;
+                        context.commit("SET_GROUPINFO", groupInfo);
+                        resolve(res);
+                        console.log(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             context.commit("SET_GROUPINFO", context.state.groupInfo);
         },
 
@@ -43,50 +145,78 @@ export default {
         //上传数据
         //
 
-        //创建小组1
+        //创建小组12
         createGroupOnline(context, newGroup) {
-            this.$axios({
-                method: "post",
-                data: qs.stringify({
-                    u_id: newGroup.userId,
-                    g_name: newGroup.groupId,
-                    g_description: newGroup.groupIntro,
-
-                }),
-                url: "/media/query_single/",
-                headers: { "content-type": "application/x-www-form-urlencoded" },
-            })
-                .then((res) => {
-                    this.item = res.data.media;
-                    if (this.item.m_profile_photo !== "") {
-                        this.item.m_profile_photo =
-                            this.$axios.defaults.baseURL + this.item.m_profile_photo; //这里是对图片的url进行拼接，地址是ip地址+端口号+接收到的url，html中就可以直接使用该url
-                        console.log(this.item.m_profile_photo);
-                    }
+            console.log("尝试创建小组", newGroup);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: newGroup.userId,
+                        g_name: newGroup.groupName,
+                        g_description: newGroup.groupIntro,
+                        g_tag: newGroup.tag,
+                        avatar: newGroup.avatar, //头像
+                        head: newGroup.head, //头图
+                    }),
+                    url: "/group/create/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
-                .catch((err) => {
-                    this.$message({
-                        type: "error",
-                        message: "网络出错QAQ",
+                    .then((res) => {
+                        resolve(res);
+                        console.log(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
                     });
-                });
-            console.log("创建小组", newGroup);
+            });
         },
         //加入小组1
         joinGroupOnline(context, info) {
-            if (info.is) {
-                console.log("加入小组", info.groupId, info.userId, info.is);
-            } else {
-                console.log("退出小组", info.groupId, info.userId, info.is);
-            }
+            let url = info.is ? "group/join_group/" : "/group/quit_group/";
+            console.log("加入小组", info.groupId, info.userId, info.is);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        g_id: info.groupId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log(info.is ? "加入小组成功" : "退出小组成功",res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
         //申请管理员1
         applyAdminOnline(context, info) {
-            if (info.is) {
-                console.log("申请成为管理员", info.groupId, info.userId, info.is);
-            } else {
-                console.log("卸任管理员", info.groupId, info.userId, info.is);
-            }
+            let url = info.is ? "/group/apply_admin/" : "group/cancel_admin/";
+            console.log("开始处理申请或卸任管理员", info.groupId, info.userId, info.is);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        g_id: info.groupId,
+                        text: info.text,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log(info.is ? "申请管理员成功" : "卸任管理员成功", res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
     },
     mutations: {
@@ -101,7 +231,7 @@ export default {
         groupList: [
             //一个大括号是一个对象，对应一个小组
             {
-                groupId: "g001",
+                groupId: 1,
                 groupHeadBgUrl: require("../assets/user-image-7.jpg"), //小组头图路径
                 groupAvatarImgUrl: require("../assets/group-avatar-1.jpg"), //小组头像路径
                 groupName: "集美小组集美小组集美小组", //小组名称
@@ -127,7 +257,7 @@ export default {
                 userInGroup: true,
             },
             {
-                groupId: "g002",
+                groupId: 2,
                 groupHeadBgUrl: require("../assets/user-bg-4.jpg"),
                 groupAvatarImgUrl: require("../assets/group-avatar-2.jpg"),
                 groupName: "coding小组",
@@ -146,7 +276,7 @@ export default {
                 userInGroup: true,
             },
             {
-                groupId: "g003",
+                groupId: 3,
                 groupHeadBgUrl: require("../assets/group-img-8.jpg"),
                 groupAvatarImgUrl: require("../assets/group-avatar-3.jpg"),
                 groupName: "蔚蓝档案小组",
@@ -166,16 +296,16 @@ export default {
             },
         ],
         groupInfo: {
-            groupId: "g001",
+            groupId: 4,
             groupHeadBgUrl: require("../assets/user-bg-2.jpg"),
             groupAvatarImgUrl: require("../assets/group-avatar-1.jpg"),
-            groupName: "我是小组名称",
+            groupName: "集美小组",
             groupIntro:
-                "我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介，我是小组简介。",
+                "家人们谁懂啊",
             groupFollowNumber: 165949,
             groupPostNumber: 49526148,
             userInGroup: true,
-            userIsAdmin: false,
+            userIsAdmin: true,
             //小组标签
             tag: "生活",
             //小组成员列表

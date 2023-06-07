@@ -24,63 +24,31 @@
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
+                            <el-select v-model="form.topicId" filterable :placeholder="topicPlaceHolder" style="width: 100%;"
+                                :disabled="topicLocked">
+                                <el-option v-for="item in topicList" :key="item.topicId" :label="item.topicName"
+                                    :value="item.topicId">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <!-- <el-form-item label="选择话题" :label-width="formLabelWidth">
                             <el-autocomplete v-model="form.topic" :fetch-suggestions="querySearchAsync"
                                 :placeholder="topicPlaceHolder" @select="handleSelect" style="width: 100%;"
                                 :disabled="topicLocked"></el-autocomplete>
-                        </el-form-item>
+                        </el-form-item> -->
 
                         <!-- 正文输入框 -->
                         <el-form-item label="帖子正文" :label-width="formLabelWidth">
                             <el-input type="textarea" v-model="form.text" :autosize="{ minRows: 10, maxRows: 10 }"
-                                :rows="20">
+                                :rows="20" placeholder="请输入不少于25字符的正文" show-word-limit>
                             </el-input>
                         </el-form-item>
 
                         <el-form-item label="上传帖子图片" :label-width="formLabelWidth + 80">
-                            <PictureChooser :imgUrlList="form.imgUrlList" :fileList="fileList"></PictureChooser>
+                            <PictureChooser :imgIdList="form.imgIdList" :fileList="fileList"></PictureChooser>
                         </el-form-item>
                     </el-form>
-
-                    <!-- 缩略图 上传图片 -->
-                    <!-- action 是要上传的地址 -->
-                    <!-- 这里需要根据后端修改! -->
-                    <!-- 这里需要根据后端修改! -->
-                    <!-- 这里需要根据后端修改! -->
-                    <!-- 上传图片 -->
-                    <!-- <template>
-                        <el-upload :action="backendImgUrl" list-type="picture-card" :auto-upload="false"
-                            :on-change="handleUpload" :on-success="handleUpload" :file-list="fileList" :limit="9"
-                            :http-request="handleUploadOnline">
-                            <i slot="default" class="el-icon-plus"></i>
-                            <div slot="file" slot-scope="{ file }">
-                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-                                <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                                        <i class="el-icon-zoom-in"></i>
-                                    </span>
-                                    <span v-if="!disabled" class="el-upload-list__item-delete"
-                                        @click="handleDownload(file)">
-                                        <i class="el-icon-download"></i>
-                                    </span>
-                                    <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                                        <i class="el-icon-delete"></i>
-                                    </span>
-                                </span>
-                            </div>
-                        </el-upload>
-                    </template> -->
-                    <!-- <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card"
-                        :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
-                        :auto-upload="false">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog> -->
-
-                    <!-- <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                    </el-dialog> -->
 
                     <!-- 结束区 -->
                     <div class="form-footer">
@@ -102,6 +70,7 @@ import PictureChooser from './PictureChooser.vue'
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
+import qs from 'qs'
 
 export default {
     props: ['groupInfo', 'topicInfo'],
@@ -119,28 +88,17 @@ export default {
             // 表单收集的数据
             form: {
                 title: '',
-                topic: '',
                 topicId: '',
-                imgUrlList: [],
+                imgIdList: [],
                 text: '',
             },
             formLabelWidth: '80px',
-            timer: null,
 
             // 话题选择框的数据
             topicList: [],
-            timeout: null,
-
 
             // 图片的list
             fileList: [],
-            // // 图片发送相关
-            // // 向后端传入图片的url
-            // backendImgUrl: "#",
-            // // 查看文件缩略图的弹窗
-            // dialogImageUrl: '',
-            // dialogVisible: false,
-            // disabled: false
         }
     },
     computed: {
@@ -162,7 +120,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         // 点击我要发帖按钮
         handleStartPost() {
             this.dialog = true
@@ -174,15 +132,15 @@ export default {
             }
             this.$confirm('确定要创建帖子吗？')
                 .then(_ => {
-                    if(!this.form.title){
+                    if (!this.form.title) {
                         this.$message.error("帖子标题不能为空。")
                         return;
                     }
-                    if(!this.form.topicId){
-                        this.$message.error("请为帖子选择一个话题。如果您选定的话题并不存在，我们会自动为您创建一个新话题。")
+                    if (!this.form.topicId) {
+                        this.$message.error("请为帖子选择一个话题。")
                         return;
                     }
-                    if(!this.form.text || this.form.text.length < 25){
+                    if (!this.form.text || this.form.text.length < 25) {
                         this.$message.error("帖子正文内容不能少于25个字符。")
                         return;
                     }
@@ -206,216 +164,63 @@ export default {
             clearTimeout(this.timer);
         },
         // 创建帖子
-        createPost() {
+        async createPost() {
             //构造对象
             let newPost = {
-                postId: nanoid(),
-                lzId: this.userId,
-                lzName: this.userName,
-                lzImageUrl: this.userImgUrl,
-                date: this.getTimeNow(),
+                userId: this.userId,
+                topicId: this.form.topicId, //帖子所属的话题的id
+                groupId: this.groupId1,
                 title: this.form.title,
                 text: this.form.text,
-                postImageUrlList: this.form.imgUrlList,
-                topic: this.form.topicName,
-                topicId: this.form.topicId, //帖子所属的话题的id
-                visits: 1,
-                fav: 0,
-                comments: 0,
-                like: 0,
-                dislike: 0,
-                isTopped: false,
-                isGoodPost: false,
-                userIsAdmin: false, //当前用户是否是帖子所属小组的管理员
-                userIsLz: true, //当前用户是否是发帖人
-                userLike: false,
-                userDislike: false,
-                userFav: false,
-                //如果该小组不来自于一个小组 那么下面的字段均填 ''
-                groupName: this.groupName1, //来自的小组的名称
-                groupId: this.groupId1,
-                floorList: [
-                    {
-                        textId: 'f001',
-                        floor: 1,
-                        userId: this.userId,
-                        userName: this.userName,
-                        userImageUrl: this.userImgUrl,
-                        date: this.getTimeNow(),
-                        text: this.form.text,
-                        imageUrlList: this.form.text,
-                        comments: 0,
-                        like: 0,
-                        dislike: 0,
-                        userLike: false,
-                        userDislike: false,
-                        childFloorList: [],
-                    }
-                ]
+                postImageUrlList: this.form.imgIdList,
             };
-            // 只在话题中发表的帖子
-            if (this.topicInfo) {
-                this.createTopicPostOnline(newPost)
-                this.$message.success("成功在话题下创建帖子")
+            console.log(newPost)
+            // 发表帖子
+            try {
+                await this.createPostOnline(newPost);
+            } catch (err) {
+                this.$message.error('网络错误, 发帖失败')
             }
-            // 在小组中发表的帖子
-            else {
-                this.createGroupPostOnline(newPost)
-                this.$message.success("成功在小组内创建帖子")
-            }
-            
-            console.log('用户发帖',newPost)
+
             // 通过事件总线触发自定义事件，并传递新帖子作为参数
             // this.$bus.$emit('postCreated', newPost);
             // 清空内容
             this.fileList = []
             this.form.title = ''
-            this.form.topic = ''
             this.form.topicId = ''
-            this.form.imgUrlList = []
+            this.form.imgIdList = []
             this.form.text = ''
         },
 
         //加载全部话题
-        loadAll() {
-            return [
-                { "value": "三全鲜食（北新泾店）", "topicId": "长宁区新渔路144号" },
-                { "value": "Hot honey 首尔炸鸡（仙霞路）", "topicId": "上海市长宁区淞虹路661号" },
-                { "value": "新旺角茶餐厅", "topicId": "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-                { "value": "泷千家(天山西路店)", "topicId": "天山西路438号" },
-                { "value": "胖仙女纸杯蛋糕（上海凌空店）", "topicId": "上海市长宁区金钟路968号1幢18号楼一层商铺18-101" },
-                { "value": "贡茶", "topicId": "上海市长宁区金钟路633号" },
-                { "value": "豪大大香鸡排超级奶爸", "topicId": "上海市嘉定区曹安公路曹安路1685号" },
-                { "value": "茶芝兰（奶茶，手抓饼）", "topicId": "上海市普陀区同普路1435号" },
-                { "value": "十二泷町", "topicId": "上海市北翟路1444弄81号B幢-107" },
-            ];
+        async getData() {
+            // 加载当前小组可以参与的话题
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    g_id: this.groupInfo.groupId
+                }),
+                url: "/chat/query_free_chat/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log('加载当前小组可参与的话题成功',res)
+                    this.topicList = res.data.chatList
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错");
+                });
+            // this.topicList = list
         },
-        //从服务器按照输入的queryString搜索话题
-        querySearchAsync(queryString, cb) {
-            var topicList = this.topicList;
-            var results = queryString ? topicList.filter(this.createStateFilter(queryString)) : topicList;
-
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                cb(results);
-            }, 100 * Math.random());
-        },
-        // 搜索算法 目前是只匹配开头字符串
-        createStateFilter(queryString) {
-            return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        // 选中某话题时
-        handleSelect(item) {
-            this.form.topicName = item.value
-            this.form.topicId = item.topicId
-            console.log(item.topicId);
-        },
-        // 获取当前时间
-        getTimeNow() {
-            var date = new Date();
-            var sign2 = ":";
-            var year = date.getFullYear() // 年
-            var month = date.getMonth() + 1; // 月
-            var day = date.getDate(); // 日
-            var hour = date.getHours(); // 时
-            var minutes = date.getMinutes(); // 分
-            var seconds = date.getSeconds() //秒
-            var weekArr = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
-            var week = weekArr[date.getDay()];
-            // 给一位数的数据前面加 “0”
-            if (month >= 1 && month <= 9) {
-                month = "0" + month;
-            }
-            if (day >= 0 && day <= 9) {
-                day = "0" + day;
-            }
-            if (hour >= 0 && hour <= 9) {
-                hour = "0" + hour;
-            }
-            if (minutes >= 0 && minutes <= 9) {
-                minutes = "0" + minutes;
-            }
-            if (seconds >= 0 && seconds <= 9) {
-                seconds = "0" + seconds;
-            }
-            return year + "-" + month + "-" + day + " " + hour + sign2 + minutes + sign2 + seconds;
-        },
-        // // 上传成功 这里需要修改
-        // // 实现假上传
-        // handleUpload(file) {
-        //     // 从上传成功的响应中获取图片URL
-        //     console.log('状态改变,file: ', file)
-        //     console.log('状态改变,file.raw: ', file.raw)
-        //     //假上传
-        //     let imageUrl = file.url;
-        //     // 将图片URL添加到列表中
-        //     this.form.imgUrlList.push(imageUrl);
-        // },
-        // handleUploadOnline(file) {
-        //     // 从上传成功的响应中获取图片URL
-        //     console.log('自定义上传函数,file: ', file)
-        //     console.log('自定义上传函数,file.file: ', file.file)
-        //     console.log('自定义上传函数,fileList ', this.fileList)
-        //     // // 手动更新fileList
-        //     this.fileList.push({
-        //         name: file.name,
-        //         url: '',
-        //         status: 'success',
-        //         uid: file.uid
-        //     });
-
-        //     return new Promise((resolve, reject) => {
-        //         const formData = new FormData();
-        //         formData.append('file', file.file); // 将文件对象添加到FormData中，key可以根据后端接口的要求进行修改
-
-        //         // 填入具体的url
-        //         axios.post('/upload', formData, {
-        //             headers: {
-        //                 //文件类型
-        //                 'Content-Type': 'multipart/form-data'
-        //             }
-        //         })
-        //             .then(response => {
-        //                 // 根据上传接口返回的结果处理上传成功或失败的情况
-        //                 const { data } = response;
-        //                 if (data.success) {
-        //                     resolve({ success: true, message: '上传成功', imageUrl: data.imageUrl });
-        //                 } else {
-        //                     reject({ success: false, message: '上传失败' });
-        //                 }
-        //             })
-        //             .catch(error => {
-        //                 reject({ success: false, message: '上传出错' });
-        //             });
-        //     });
-        // },
-        // handleRemove(file) {
-        //     console.log(file);
-        //     // fileList.remove(file)
-        //     // const fileList = this.$refs.upload.uploadFiles; // 获取上传组件的文件列表
-        //     // 找到对应的文件索引
-        //     let index = this.fileList.findIndex(f => f.uid === file.uid);
-        //     if (index !== -1) {
-        //         this.fileList.splice(index, 1); // 从文件列表中移除该文件
-        //     }
-        // },
-        // handlePictureCardPreview(file) {
-        //     this.dialogImageUrl = file.url;
-        //     this.dialogVisible = true;
-        // },
-        // handleDownload(file) {
-        //     console.log(file);
-        // }
     },
     mounted() {
         console.log(this.topicInfo)
-        this.topicList = this.loadAll();
-
         if (this.topicInfo) {
-            this.form.topicName = this.topicInfo.value
             this.form.topicId = this.topicInfo.topicId
+        }
+        else if (this.groupInfo) {
+            this.getData();
+            console.log(this.topicList)
         }
     },
 }

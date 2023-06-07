@@ -1,4 +1,6 @@
 //用户信息管理
+import qs from 'qs'
+import axios from 'axios'
 export default {
 	namespaced: true,
 	actions:{
@@ -24,7 +26,7 @@ export default {
 		//用户昵称
 		userName: "羽毛笔",
 		//用户id
-		userId: "001",
+		userId: 1,
 	},
 	getters:{
 

@@ -6,7 +6,7 @@
       <!-- <el-input placeholder="请输入内容" v-model="input" class="search-inputbox">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input> -->
-      <input class="input-area" type="search" v-model="input" placeholder="输入关键字进行全站检索" />
+      <input class="input-area" type="search" v-model="input" placeholder="输入关键字进行全站检索" @keyup.enter="handleSearch" />
       <button class="search-input-button" type="button" @click="handleSearch">
         搜索
       </button>
@@ -59,20 +59,36 @@ export default {
         }
       })
     },
-    handleSearch() {
+    async handleSearch() {
       if (!this.input) {
         this.$message.error('请输入搜索内容')
         return
       }
       this.searched = true
       // 在此请求数据
-      this.getPostListSearchOnline(this.input)
-      this.getGroupListSearchOnline(this.input)
-      this.getTopicListSearchOnline(this.input)
+      try {
+        await this.getPostListSearchOnline({
+          input,
+          userId: this.userId,
+        })
+        await this.getGroupListSearchOnline({
+          input,
+          userId: this.userId,
+        })
+        await this.getTopicListSearchOnline({
+          input,
+          userId: this.userId,
+        })
+      } catch (err) {
+        this.$message.error('网络错误')
+      }
+
 
       this.allResult.searchTopic = this.topicList.slice()
       this.allResult.searchGroup = this.groupList.slice()
       this.allResult.searchPost = this.postList.slice()
+      this.allResult.searchVideo = []
+      this.allResult.searchBook = []
 
       this.handleJump()
     },

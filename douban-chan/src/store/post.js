@@ -1,4 +1,6 @@
 //帖子信息管理
+import qs from "qs";
+import axios from "axios";
 export default {
     namespaced: true,
     actions: {
@@ -6,9 +8,27 @@ export default {
         //请求数据
         //
         //搜索框接口 根据指定输入内容返回帖子列表
-        getPostListSearchOnline(context, input){
-            if (input) {
-                console.log("依据指定tag获取帖子列表，指定搜索内容：", input);
+        getPostListSearchOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             input: info.input,
+            //         }),
+            //         url: "/group/create/",
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            if (info.input) {
+                console.log("依据指定tag获取帖子列表，指定搜索内容：", info.input);
             } else {
                 console.log("随机获取帖子列表");
             }
@@ -16,69 +36,318 @@ export default {
         },
 
         //获得帖子列表 如果传入tag则以tag为标准筛选
-        getPostListOnline(context, tag) {
-            if (tag) {
-                console.log("依据指定tag获取帖子列表，指定tag：", tag);
+        getPostListOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        // u_id: 1,
+                        u_id: info.userId,
+                        c_tag: info.tag,
+                    }),
+                    url: "/group/query_posts_by_tag/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('根据tag获得帖子列表成功',res);
+                        context.commit("SET_POSTLIST", res.data);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            if (info.tag) {
+                console.log("依据指定tag获取帖子列表，指定tag：", info.tag);
             } else {
                 console.log("随机获取帖子列表");
             }
             context.commit("SET_POSTLIST", context.state.postList);
         },
+        //获得帖子列表 如果传入tag则以tag为标准筛选12
+        getPostListMineOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                    }),
+                    url: '666',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('获得我的小组所属的帖子列表',res);
+                        let postList = res.data;
+                        context.commit("SET_POSTLIST", postList);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        },
         //获得话题热榜相关的帖子列表 如果传入tag则以tag为标准筛选
-        getPostListByHotOnline(context, tag) {
-            if (tag) {
-                console.log("依据指定tag获取热榜帖子列表，指定tag：", tag);
+        getPostListByHotOnline(context, info) {
+            let url = info.tag
+                ? "/group/query_group_by_tag/"
+                : "/group/query_group_by_tag/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             // u_id: 1,
+            //             u_id: info.userId,
+            //             tag: info.tag,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             let postList = res.data;
+            //             context.commit("SET_POSTLIST", postList);
+            //             resolve(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            if (info.tag) {
+                console.log("依据指定tag获取热榜帖子列表，指定tag：", info.tag);
             } else {
                 console.log("获取热榜帖子列表");
             }
             context.commit("SET_POSTLIST", context.state.postList);
         },
-        //根据小组id获取帖子列表
-        getPostListByGroupIdOnline(context, id) {
-            console.log("依据小组id获取帖子列表，小组id：", id);
+        //根据小组id获取帖子列表12
+        getPostListByGroupIdOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        g_id: info.groupId,
+                    }),
+                    url: 'post/query_group_posts/',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('获取小组内的帖子列表成功', res);
+                        context.commit("SET_POSTLIST", res.data.postList);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            console.log("依据小组id获取帖子列表，小组id：", info.g_id);
             context.commit("SET_POSTLIST", context.state.postList);
         },
         //根据话题id获取帖子列表
-        getPostListByTopicIdOnline(context, id) {
-            console.log("依据话题id获取帖子列表，话题id：", id);
+        getPostListByTopicIdOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        c_id: info.topicId,
+                    }),
+                    url: 'post/query_topic_posts/',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('获取话题内的帖子列表成功', res);
+                        context.commit("SET_POSTLIST", res.data.postList);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            console.log("依据话题id获取帖子列表，话题id：", info.c_id);
             context.commit("SET_POSTLIST", context.state.postList);
         },
 
         //根据帖子id获取帖子的全部信息（含楼层列表）
-        getPostOnline(context, id) {
-            console.log("依据帖子id获取帖子，id：", id);
+        getPostOnline(context, info) {
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             // u_id: 1,
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url: '111',
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             let post = res.data;
+            //             context.commit("SET_POSTINFO", postInfo);
+            //             resolve(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            console.log("依据帖子id获取帖子，id：", info.p_id);
             context.commit("SET_POSTINFO", context.state.postInfo);
-        },  
+        },
 
         //
         //上传数据
         //
-        //在小组内创建帖子1
-        createGroupPostOnline(context, newPost) {
+        //在小组内创建帖子12
+        createPostOnline(context, newPost) {
+            console.log("用户发帖请求", newPost);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify(
+                        {
+                            u_id: newPost.userId,
+                            g_id: newPost.groupId,
+                            topicId: newPost.topicId,
+                            title: newPost.title,
+                            text: newPost.text,
+                            picture_list: newPost.postImageUrlList,
+                        },
+                        { arrayFormat: 'comma' }
+                        // { arrayFormat: "repeat" }
+                    ),
+                    url: "post/add_post/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log(res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("小组创建帖子", newPost);
         },
-        //在话题内创建帖子1
-        createTopicPostOnline(context, newPost) {
-            console.log("话题创建帖子", newPost);
-        },
         //回复帖子1
-        replyPostOnline(context, info) {
-            console.log("回复帖子", info.postId, info.newReply);
+        replyPostOnline(context, newReply) {
+            console.log("回复帖子", newReply);
+            // let url = "/text/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             t_description,
+            //             t_father_text_id,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
         },
         //点赞帖子1
         likePostOnline(context, info) {
             console.log("点赞帖子", info.postId, info.userId, info.is);
+            // let url = info.is ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
         },
         //点踩帖子1
         dislikePostOnline(context, info) {
             console.log("点踩帖子", info.postId, info.userId, info.is);
+            // let url = info.is ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
         },
         //收藏帖子1
         favPostOnline(context, info) {
             console.log("收藏帖子", info.postId, info.userId, info.is);
+            // let url = info.is ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            console.log("收藏帖子", info.postId, info.userId, info.is);
         },
         //置顶帖子1
         topPostOnline(context, info) {
+            console.log("点赞帖子", info.postId, info.userId, info.is);
+            // let url = info.is ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
             if (info.top) {
                 console.log("置顶帖子", info.postId);
             } else {
@@ -87,6 +356,26 @@ export default {
         },
         //设置为精华1
         goodPostOnline(context, info) {
+            // let url = info.good ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
             if (info.good) {
                 console.log("精华帖子", info.postId);
             } else {
@@ -96,6 +385,26 @@ export default {
 
         //回复文本1
         replyTextOnline(context, info) {
+            // let url = info.good ? "/post/reply/" : "/post/reply/";
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url,
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
             console.log("回复text", info.textId, info.newReply);
         },
         //点赞文本 is:为真则点赞 为假则取消点赞
@@ -108,7 +417,26 @@ export default {
         },
         //举报文本1
         reportTextOnline(context, info) {
-            console.log("举报text", info.textId, info.report);
+            // return new Promise((resolve, reject) => {
+            //     axios({
+            //         method: "post",
+            //         data: qs.stringify({
+            //             u_id: info.userId,
+            //             p_id: info.postId,
+            //         }),
+            //         url: '1111',
+            //         headers: { "content-type": "application/x-www-form-urlencoded" },
+            //     })
+            //         .then((res) => {
+            //             console.log(res);
+            //             resolve(res);
+            //             console.log(res);
+            //         })
+            //         .catch((err) => {
+            //             reject(err);
+            //         });
+            // });
+            console.log("举报text", info.textId, info.report, info.userId);
         },
         //删除文本1
         deleteTextOnline(context, textId) {
@@ -283,7 +611,7 @@ export default {
                 {
                     textId: "f001",
                     floor: 1,
-                    userId: "004",
+                    u_id: "004",
                     userName: "bochi",
                     userImageUrl: require("../assets/user-image-7.jpg"),
                     date: "2023-5-19 23:06",
@@ -301,7 +629,7 @@ export default {
                     childFloorList: [
                         {
                             textId: "fr003",
-                            userId: "003",
+                            u_id: "003",
                             userName: "_Karasu_",
                             userImageUrl: require("../assets/user-image-6.jpg"),
                             date: "2023-5-22 12:08",
@@ -313,7 +641,7 @@ export default {
                         },
                         {
                             textId: "fr001",
-                            userId: "001",
+                            u_id: "001",
                             userName: "羽毛笔",
                             userImageUrl: require("../assets/user-image-1.jpg"),
                             date: "2023-5-19 23:07",
@@ -325,7 +653,7 @@ export default {
                         },
                         {
                             textId: "fr002",
-                            userId: "002",
+                            u_id: "002",
                             userName: "Chino",
                             userImageUrl: require("../assets/user-image-8.jpg"),
                             date: "2023-5-19 23:08",
@@ -340,7 +668,7 @@ export default {
                 {
                     textId: "f000",
                     floor: 2,
-                    userId: "003",
+                    u_id: "003",
                     userName: "_Karasu_",
                     userImageUrl: require("../assets/user-image-6.jpg"),
                     date: "2023-5-19 23:07",
@@ -357,7 +685,7 @@ export default {
                     childFloorList: [
                         {
                             textId: "fr004",
-                            userId: "001",
+                            u_id: "001",
                             userName: "羽毛笔",
                             userImageUrl: require("../assets/user-image-1.jpg"),
                             date: "2023-5-19 23:08",
@@ -372,7 +700,7 @@ export default {
                 {
                     textId: "f002",
                     floor: 3,
-                    userId: "004",
+                    u_id: "004",
                     userName: "bochi",
                     userImageUrl: require("../assets/user-image-7.jpg"),
                     date: "2023-5-19 23:10",
@@ -390,7 +718,7 @@ export default {
                     childFloorList: [
                         {
                             textId: "fr004",
-                            userId: "001",
+                            u_id: "001",
                             userName: "羽毛笔",
                             userImageUrl: require("../assets/user-image-1.jpg"),
                             date: "2023-5-19 23:07",
@@ -402,7 +730,7 @@ export default {
                         },
                         {
                             textId: "fr005",
-                            userId: "002",
+                            u_id: "002",
                             userName: "Chino",
                             userImageUrl: require("../assets/user-image-8.jpg"),
                             date: "2023-5-19 23:08",
@@ -417,7 +745,7 @@ export default {
                 {
                     textId: "f003",
                     floor: 4,
-                    userId: "004",
+                    u_id: "004",
                     userName: "bochi",
                     userImageUrl: require("../assets/user-image-7.jpg"),
                     date: "2023-5-19 23:30",
@@ -434,7 +762,7 @@ export default {
                     childFloorList: [
                         {
                             textId: "fr006",
-                            userId: "001",
+                            u_id: "001",
                             userName: "羽毛笔",
                             userImageUrl: require("../assets/user-image-1.jpg"),
                             date: "2023-5-19 23:07",
@@ -446,7 +774,7 @@ export default {
                         },
                         {
                             textId: "fr007",
-                            userId: "002",
+                            u_id: "002",
                             userName: "Chino",
                             userImageUrl: require("../assets/user-image-8.jpg"),
                             date: "2023-5-19 23:08",
@@ -458,7 +786,7 @@ export default {
                         },
                         {
                             textId: "fr008",
-                            userId: "003",
+                            u_id: "003",
                             userName: "待兼诗歌剧",
                             userImageUrl: require("../assets/user-image-9.jpg"),
                             date: "2023-5-22 3:38",
@@ -473,7 +801,7 @@ export default {
                 {
                     textId: "f004",
                     floor: 5,
-                    userId: "002",
+                    u_id: "002",
                     userName: "Chino",
                     userImageUrl: require("../assets/user-image-8.jpg"),
                     date: "2023-5-19 23:19",
@@ -491,7 +819,7 @@ export default {
                     childFloorList: [
                         {
                             textId: "fr003",
-                            userId: "003",
+                            u_id: "003",
                             userName: "_Karasu_",
                             userImageUrl: require("../assets/user-image-6.jpg"),
                             date: "2023-5-22 12:08",
@@ -503,7 +831,7 @@ export default {
                         },
                         {
                             textId: "fr008",
-                            userId: "003",
+                            u_id: "003",
                             userName: "待兼诗歌剧",
                             userImageUrl: require("../assets/user-image-9.jpg"),
                             date: "2023-5-22 3:38",

@@ -33,7 +33,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createGroupPostOnline', 'createTopicPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
         handleFocus() {
             this.isFocused = true;
         },
@@ -41,31 +41,28 @@ export default {
             this.isFocused = false;
         },
         // 提交
-        submit() {
+        async submit() {
             if (!this.text) {
                 this.$message.error("回复内容不能为空。")
                 return;
             }
             let newReply = {
-                textId: nanoid(),
+                textId,
                 userId: this.userId,
-                userName: this.userName,
-                userImageUrl: this.userImgUrl,
-                date: this.getTimeNow(),
                 text: this.text,
-                like: 0,
-                dislike: 0,
-                userLike: false,
-                userDislike: false,
             }
             // 回复楼中楼 额外字符串
             if (this.floor2) {
                 newReply.text = this.replyHeaderStr + newReply.text
             }
-            this.replyTextOnline({
-                textId: this.textId,
-                newReply,
-            })
+            try {
+                this.replyTextOnline({
+                    textId: this.textId,
+                    newReply,
+                })
+            } catch (err) {
+                this.$message.error('网络错误')
+            }
             this.$message.success("成功发表回复")
 
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
