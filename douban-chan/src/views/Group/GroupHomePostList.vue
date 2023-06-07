@@ -69,7 +69,6 @@ export default {
             if(!this.postList){
                 return []
             }
-            console.log(this.postList)
             let list = this.postList.slice()
             //只看精品帖子
             if (this.onlyGoodpost) {
@@ -99,7 +98,6 @@ export default {
                     }
                 })
             }
-            console.log(list)
             return list
         },
         // 动态设置到顶部的距离
@@ -136,6 +134,10 @@ export default {
 </script>
 
 <style scoped>
+.postlist-main-container{
+    max-width: 850px;
+    margin: 0 auto;
+}
 .postlist-title {
     display: flex;
     flex-flow: row wrap;

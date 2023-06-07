@@ -12,6 +12,7 @@
         :class="getActiveButtonClass(button.id)" @click="handleSelect(button.id)">
         {{ button.label }}
       </div>
+      <SearchBar index="searchTopic"></SearchBar>
     </div>
 
     <!-- 下部内容区 -->
@@ -43,8 +44,11 @@ import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue'
 import GroupList from '@/components/group/GroupList.vue'
 import GroupCreateBar from '@/components/group/GroupCreateBar.vue'
 
+import SearchBar from '../Search/SearchBar.vue'
+
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import SearchBarVue from '../Search/SearchBar.vue'
 export default {
   name: 'GroupHomeView',
   components: {
@@ -54,6 +58,7 @@ export default {
     GroupHomePostList,
     GroupList,
     GroupCreateBar,
+    SearchBar,
   },
   data() {
     return {
@@ -80,7 +85,6 @@ export default {
   methods: {
     // 处理顶部标签选择事件 当前选中的是哪个标签
     handleSelect(index) {
-      console.log(index)
       console.log('用户点击标签', this.buttons[index].label)
       // 如果重复选择某个标签 那么视为取消选中 则默认退回到“精选”标签下
       if (this.activeHeaderLabel == index) {
@@ -97,7 +101,6 @@ export default {
     //重要！
     // 根据当前导航栏选择状态来更新数据
     async updateData() {
-      console.log(this.tag)
       try {
         if (this.tag == '我的小组') {
           await this.getPostListMineOnline({
@@ -151,15 +154,15 @@ export default {
   },
 
   mounted() {
-    // 获取数据
-    this.updateData()
-
     // 监听GroupCreateBar的创建小组事件，在事件回调中将新小组添加到列表
     this.$bus.$on('groupCreated', (newGroup) => {
       // this.groupList.push(newGroup);
       console.log('用户创建小组成功：', newGroup)
     });
     console.log(this.groupList)
+
+    // 获取数据
+    this.updateData()
   },
 
 }
@@ -176,7 +179,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
-  flex-flow: row wrap;
+  flex-flow: row;
 }
 
 /* 内容区左侧容器 */
@@ -187,7 +190,7 @@ export default {
 
 .grouphome-right-container {
   flex: 1;
-  margin: 0 35px;
+  margin: 0 20px;
 }
 
 
@@ -209,7 +212,7 @@ export default {
 
 /* 顶部二级导航栏容器 */
 .grouphome-header-container {
-  padding: 0 9%;
+  padding: 0 6%;
   position: sticky;
   top: 65px;
   z-index: 11;
@@ -241,7 +244,7 @@ export default {
   font-size: 18px;
   background: transparent;
   border: none;
-  padding: 10px 14px;
+  padding: 10px 12px;
   color: rgba(255, 133, 133, 0.9);
   text-transform: uppercase;
   position: relative;
@@ -297,4 +300,6 @@ export default {
   transition-delay: 0.4s;
   color: aliceblue;
 }
+
+
 </style>

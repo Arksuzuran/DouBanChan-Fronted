@@ -113,6 +113,8 @@ export default {
     margin: 5px 0 15px 0;
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0px 2px 4px 0px rgba(247, 61, 61, 0.2);
+
+    /* max-width: 900px; */
 }
 
 .groupcard-infos {

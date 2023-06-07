@@ -86,6 +86,7 @@ export default {
             this.floorList.push(newReply)
         },
         async getData(id) {
+            console.log('尝试向后端发送数据',id)
             // 从后端获取数据
             try {
                 await this.getPostOnline({

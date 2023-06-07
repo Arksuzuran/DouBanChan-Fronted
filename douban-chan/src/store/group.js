@@ -7,31 +7,28 @@ export default {
         //
         //请求数据
         //
-        //搜索框接口 根据指定输入内容返回小组列表
+        //搜索框接口 根据指定输入内容返回小组列表12
         getGroupListSearchOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
-            if (info.input) {
-                console.log("依据指定tag获取小组列表，指定搜索内容：", info.input);
-            } else {
-                console.log("随机获取小组列表");
-            }
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        qstr: info.input,
+                    }),
+                    url: "/base/query_group/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取搜索结果', res);
+                        context.commit("SET_GROUPLIST", res.data);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            console.log("全站搜索小组", info.input);
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
         //根据info.tag 获取小组列表12
@@ -48,9 +45,8 @@ export default {
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        console.log(res);
-                        let groupList = res.data.groupList;
-                        context.commit("SET_GROUPLIST", groupList);
+                        console.log('根据tag获取小组列表成功',res);
+                        context.commit("SET_GROUPLIST", res.data.groupList);
                         resolve(res);
                     })
                     .catch((err) => {
@@ -122,17 +118,14 @@ export default {
                     data: qs.stringify({
                         u_id: info.userId,
                         g_id: info.groupId,
-                        // u_id: 1,
-                        // g_id: 3,
                     }),
                     url: "/group/group_brief/",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        let groupInfo = res.data;
-                        context.commit("SET_GROUPINFO", groupInfo);
+                        console.log('成功获取小组详细信息',res);
+                        context.commit("SET_GROUPINFO", res.data);
                         resolve(res);
-                        console.log(res);
                     })
                     .catch((err) => {
                         reject(err);
@@ -171,7 +164,7 @@ export default {
                     });
             });
         },
-        //加入小组1
+        //加入小组12
         joinGroupOnline(context, info) {
             let url = info.is ? "group/join_group/" : "/group/quit_group/";
             console.log("加入小组", info.groupId, info.userId, info.is);
@@ -194,7 +187,7 @@ export default {
                     });
             });
         },
-        //申请管理员1
+        //申请管理员12
         applyAdminOnline(context, info) {
             let url = info.is ? "/group/apply_admin/" : "group/cancel_admin/";
             console.log("开始处理申请或卸任管理员", info.groupId, info.userId, info.is);

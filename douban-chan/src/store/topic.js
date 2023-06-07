@@ -7,90 +7,81 @@ export default {
         //
         //请求数据
         //
-        //搜索框接口 根据指定输入内容返回话题列表
+        //搜索框接口 根据指定输入内容返回话题列表12
         getTopicListSearchOnline(context, info){
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });/
-            // });
-            if (info.input) {
-                console.log("依据指定tag获取话题列表，指定搜索内容：", info.input);
-            } else {
-                console.log("随机获取话题列表");
-            }
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        qstr: info.input,
+                    }),
+                    url: "/base/query_chat/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取搜索结果',res);
+                        context.commit('SET_TOPICLIST', res.data)
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+            console.log("全站搜索话题", info.input);
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
-        //获取热榜话题列表 如果传入tag则以tag为标准筛选
+        //获取热榜话题列表 如果传入tag则以tag为标准筛选12
         getTopicListByHotOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });/
-            // });
-            if(info.tag){
-                console.log("依据指定tag获取热榜话题列表，指定tag：", info.tag);
-            }
-            else{
-                console.log("获取热榜话题列表");
-            }
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        c_tag: info.tag
+                    }),
+                    url: "/chat/query_chat_by_heat/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取热榜话题',res);
+                        context.commit('SET_TOPICLIST', res.data.chatList)
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
-        //随机获取话题列表 如果传入tag则以tag为标准筛选
+        //随机获取话题列表 如果传入tag则以tag为标准筛选12
         getTopicListOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });/
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        c_tag: info.tag
+                    }),
+                    url: "/chat/query_chat_by_tag/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功根据tag获得话题列表',res);
+                        context.commit('SET_TOPICLIST', res.data.chatList)
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             if(info.tag){
                 console.log("依据指定tag获取话题列表，指定tag：", info.tag);
             }
             else{
                 console.log("随机获取话题列表");
             }
-            context.commit('SET_TOPICLIST', context.state.topicList)
+            
         },
-        //获取指定小组的话题列表
+        //获取我的小组的话题列表
         getTopicListMineIdOnline(context, info) {
             // return new Promise((resolve, reject) => {
             //     axios({
@@ -135,27 +126,27 @@ export default {
             console.log("依据指定小组id获取热榜话题列表，指定id：", info.groupId);
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
-        //获取指定小组内可以参与的话题列表
-        //获取指定id的话题信息
+        //获取指定id的话题信息12
         getTopicInfoOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });/
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        c_id: info.topicId,
+                    }),
+                    url: "/chat/chat_brief/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取话题详情',res);
+                        context.commit('SET_TOPICINFO', res.data)
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("依据指定id获取话题信息，指定id：", info.topicId);
             context.commit('SET_TOPICINFO', context.state.topicInfo)
         },

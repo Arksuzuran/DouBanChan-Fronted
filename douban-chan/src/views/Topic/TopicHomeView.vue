@@ -12,6 +12,7 @@
         :class="getActiveButtonClass(label.id)" @click="handleSelect1(label.id)">
         {{ label.label }}
       </div>
+      <SearchBar index="searchTopic"></SearchBar>
     </div>
 
     <!-- 下部内容区 -->
@@ -48,7 +49,7 @@ import GroupList from '@/components/group/GroupList.vue'
 import ScrollToTopButton from '@/components/post/button/ScrollToTopButton.vue'
 import TopicCreateBar from '@/components/topic/TopicCreateBar.vue'
 
-
+import SearchBar from '../Search/SearchBar.vue'
 
 // 在需要使用vuex的场合下引入vuex
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
@@ -63,6 +64,7 @@ export default {
     //底部
     ScrollToTopButton,
     TopicCreateBar,
+    SearchBar,
   },
   data() {
     return {
@@ -136,50 +138,36 @@ export default {
     // 根据当前导航栏选择状态来更新数据
     async updateData() {
       let index = this.activeTopLabel
+      console.log('顶部index',index)
       try {
         // 选择浏览发现 则随机推荐
-        if (index == 0) {
+        if (index == 0 || index == 2) {
           console.log(this.tag)
-          await this.getPostListOnline({
-            tag: this.tag,
-            userId:  this.userId,
-          })
           await this.getTopicListOnline({
             tag: this.tag,
-            userId:  this.userId,
           })
           await this.getGroupListOnline({
             tag: this.tag,
-            userId:  this.userId,
+            userId: this.userId,
+          })
+          await this.getPostListOnline({
+            tag: this.tag,
+            userId: this.userId,
           })
         }
         // 选择今日热榜 则推荐热榜相关
         else if (index == 1) {
-          await this.getPostListByHotOnline({
-            tag: this.tag,
-            userId:  this.userId,
-          })
+          console.log('尝试获取今日热榜')
           await this.getTopicListByHotOnline({
             tag: this.tag,
-            userId:  this.userId,
           })
           await this.getGroupListByHotOnline({
             tag: this.tag,
-            userId:  this.userId,
+            userId: this.userId,
           })
-        }
-        else {
-          this.getPostListOnline({
+          await this.getPostListByHotOnline({
             tag: this.tag,
-            userId:  this.userId,
-          })
-          this.getGroupListOnline({
-            tag: this.tag,
-            userId:  this.userId,
-          })
-          this.getGroupListOnline({
-            tag: this.tag,
-            userId:  this.userId,
+            userId: this.userId,
           })
         }
       } catch (err) {
@@ -221,6 +209,7 @@ export default {
   },
 
   mounted() {
+    this.updateLabelByRoute()
     this.updateData()
     // 监听GroupCreateBar的创建小组事件，在事件回调中将新小组添加到列表
     // this.$bus.$on('groupCreated', (newGroup) => {
@@ -231,7 +220,7 @@ export default {
     this.$bus.$on('leftNavChanged', (index) => {
       this.handleSelect2(index)
     });
-    this.updateLabelByRoute()
+    
   },
 
 }
@@ -249,9 +238,10 @@ export default {
   grid-template-columns: 2fr 10fr 4fr;
   grid-gap: 15px; */
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
   justify-content: space-around;
   align-items: flex-start;
+  /* display: inline; */
 }
 
 /* 左侧导航栏 */
@@ -262,16 +252,19 @@ export default {
   padding: 0 3%;
   /* width: 12%; */
   flex: 2;
+  /* max-width: 200px; */
 }
 
 /* 中部内容区 */
 .topichome-mid-container {
   flex: 10;
+  /* max-width: 900px; */
 }
 
 /* 右侧随机推荐区 */
 .topichome-right-container {
   flex: 4;
+  /* max-width: 400px; */
 }
 
 /* 滚动至顶部 */
