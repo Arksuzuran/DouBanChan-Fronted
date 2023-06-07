@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import BookHomeView from '../views/BookHomeView.vue'
+import BookHomeView from '../views/Book/BookHomeView.vue'
 import TopicHomeView from '../views/Topic/TopicHomeView.vue'
 import GroupHomeView from '../views/Group/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
@@ -22,6 +22,10 @@ import VideoDetail from "../views/Video/VideoDetail.vue"
 import VideoRankBoard from "../views/Video/VideoRankBoard.vue"
 import VideoCategory from "../views/Video/VideoCategory.vue"
 import VideoDefault from "../views/Video/VideoDefault.vue"
+//图书
+import BookRankBoard from "../views/Book/BookRankBoard.vue"
+import BookCategory from "../views/Book/BookCategory.vue"
+import BookDefault from "../views/Book/BookDefault.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
@@ -33,7 +37,7 @@ import TopicHomePostGroupList from '../views/Topic/TopicHomePostGroupList.vue';
 import TopicHomeTopicSquare from '../views/Topic/TopicHomeTopicSquare.vue';
 import TopicHomeTodaysHot from '../views/Topic/TopicHomeTodaysHot.vue';
 import TopicPage from '../views/Topic/TopicPage.vue';
-import TopicPostList from '../views/Topic/TopicPostList.vue';//写影评
+import TopicPostList from '../views/Topic/TopicPostList.vue';
 import WriteReview from "../views/Review/WriteReview.vue"
 
 Vue.use(VueRouter);
@@ -47,9 +51,30 @@ const routes = [
   },
   //图书版块主页
   {
-    path: "/bookHome",
+    path: "/book",
     name: "bookHome",
     component: BookHomeView,
+    children: [
+      {
+        path: 'home',
+        name: 'bookDefault',
+        component: BookDefault
+      },
+      {
+        path: "rankboard",
+        name: "bookRankBoard",
+        component: BookRankBoard
+      },
+      {
+        path: "category",
+        name: "bookCategory",
+        component: BookCategory
+      },
+      {
+        path: '',
+        redirect: 'home' // 设置空路由路径的重定向到默认子路由
+      }
+    ]
   },
   //话题版块主页
   {
@@ -110,7 +135,7 @@ const routes = [
       },
       {
         path: "rankboard",
-        name: "rankBoard",
+        name: "videoRankBoard",
         component: VideoRankBoard
       },
       {
@@ -155,21 +180,21 @@ const routes = [
       // },
     ]
   },
-  //影视详情页面
+  //影视/图书详情页面
   {
-    path: "/video/detail/:id",
+    path: "/subject/:id",
     name: "videoDetail",
     component: VideoDetail,
   },
-  //写影评页面
+  //写评论页面
   {
-    path: "/video/detail/:id/write_review",
+    path: "/subject/:id/write_review",
     name: "writeReview",
     component: WriteReview,
   },
   //评论详情页面
   {
-    path: "/video/review/:id",
+    path: "/subject/:m_id/review/:t_id",
     name: "review",
     component: reviewView,
   },

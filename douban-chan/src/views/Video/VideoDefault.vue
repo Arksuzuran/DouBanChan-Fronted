@@ -48,7 +48,6 @@ export default {
         })
         .then((res) => {
             this.hotMovies = res.data.heat_movie
-            // console.log(res.data.heat_comment)
         })
         .catch((err) => {
             this.$message.error("网络出错QAQ")

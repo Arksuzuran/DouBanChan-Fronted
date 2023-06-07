@@ -13,19 +13,19 @@
                     </span>
                 </button>
             </div>
-            <div class="image-container">
-                <img :src="book.image" class="image">
+            <div class="image-container" @click="toDetailPage(book.m_id)">
+                <img :src="book.m_profile_photo" class="image">
             </div>
             <div class="content">
                 <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ book.rate
+                <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;color: #ffffff;">{{ book.m_rate
                 }}</span>
                 <button class="star-button" @click="showRate">
                     <i class="fa-solid fa-star star-button-color-1"></i>
                 </button>
             </div>
             <div style="margin-top: -8px;text-align: left;margin-left: 10px;">
-                <span class="card-name" style="display: inline-block;">{{ book.name }}</span>
+                <span class="card-name" style="display: inline-block;">{{ book.m_name }}</span>
             </div>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
@@ -43,24 +43,24 @@
             <div class="modal-overlay" @click="closeModal"></div> <!-- 遮罩层 -->
             <div class="modal-content">
                 <div>
-                    <img :src="book.image" class="image-modal">
+                    <img :src="book.m_profile_photo" class="image-modal">
                 </div>
-                <button class="modal-name">{{ book.name }}</button>
+                <button class="modal-name">{{ book.m_name }}</button>
                 <button class="close-button" @click="closeModal"><i class="fa-solid fa-xmark"></i></button>
                 <div class="modal-detail">
                     <div class="modal-info-1">
-                        <span class="info-value-1"><i class="el-icon-date"></i> {{ book.year }} &nbsp<i
-                                class="el-icon-document"> </i> {{ book.page }} &nbsp<i class="el-icon-location-outline">
+                        <span class="info-value-1"><i class="el-icon-date"></i> {{ book.m_year }} &nbsp<i
+                                class="el-icon-document"> </i> {{ book.m_page }} &nbsp<i class="el-icon-location-outline">
                             </i>
-                            {{ book.from }}</span>
+                            {{ book.m_region }}</span>
                     </div>
                     <div class="modal-info-2">
-                        <span class="info-value-2"><i class="fa-solid fa-book"> </i> {{ book.type }}</span>
+                        <span class="info-value-2"><i class="fa-solid fa-book"> </i> {{ book.m_genre }}</span>
                     </div>
                 </div>
                 <div class="modal-rate">
                     <i class="fa-solid fa-star" style="color: #ffdd00;"></i>
-                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ book.rate }}</span>
+                    <span style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 3px;">{{ book.m_rate }}</span>
                     <span
                         style="letter-spacing: -0.5px; vertical-align: middle;margin-left: 2px;color: rgba(0, 0, 0, 0.5);">/10</span>
                     <button class="modal-rating" @click="showRate"><i class="fa-solid fa-star" style="color: #dcdde0;"></i>
@@ -68,17 +68,17 @@
                 </div>
                 <div class="modal-introduction">
                     <span class="modal-introduction-text">
-                        {{ book.text }}
+                        {{ book.m_description }}
                     </span>
                 </div>
                 <div class="modal-people-d">
                     <span>
-                        作者：<span class="modal-people-d-text">{{ book.dir }}</span>
+                        作者：<span class="modal-people-d-text">{{ book.m_author }}</span>
                     </span>
                 </div>
                 <div class="modal-people-s">
                     <span>
-                        主角：<span class="modal-people-s-text">{{ book.star }}</span>
+                        出版社：<span class="modal-people-s-text">{{ book.m_publisher }}</span>
                     </span>
                 </div>
                 <el-button type="info" plain
@@ -109,7 +109,7 @@
                     </div>
                     <div class="rate-block">
                         <span class="rate-this">RATE THIS</span>
-                        <span class="rate-name">{{ book.name }}</span>
+                        <span class="rate-name">{{ book.m_name }}</span>
                         <!-- <span class="demonstration">区分颜色</span> -->
                         <el-rate class="book-rate-ten-star" style="margin-top: 3%;" v-model="value" :colors="colors"
                             :max="10">
@@ -164,6 +164,9 @@ export default {
                 document.body.style.overflow = 'auto'; // 恢复滚动条
             document.removeEventListener('scroll', this.disableScroll); // 移除禁用滚动事件
         },
+        toDetailPage(bookId) {
+            this.$router.push({ name: 'videoDetail', params: { id: bookId } })
+        }
     },
     computed: {
         starSize() {
@@ -226,6 +229,7 @@ export default {
     overflow: hidden;
     border: black;
     background-color: black;
+    cursor: pointer
 }
 
 .image {

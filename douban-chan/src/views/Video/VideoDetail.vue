@@ -29,6 +29,17 @@
                   <div class="little-button">豆瓣酱评分</div>
                   <Rate :score="item.m_rate"></Rate>
                   <div class="little-button">我的评分</div>
+                  <div style="margin-top: 10px;">
+                    <i class="fa-solid fa-star" style="color: #70d4f5; font-size: 30px"></i>
+                    <span>{{ myRate}}</span>
+                  </div>
+                  <!-- 收藏按钮 -->
+                  <div>
+                    <button v-bind:class="{ active: isActive }" v-on:click="handleCollect">
+                      {{buttonText}}
+                    </button>
+                  </div>
+
                 </div>
               </el-col>
             </div>
@@ -43,13 +54,13 @@
             </div>
           </div>
 
-          <el-divider></el-divider>
-
-          <div class="section-title">
+          <el-divider v-if="item.m_type !== 3"></el-divider>
+          
+          <div class="section-title" v-if="item.m_type !== 3">
             -- 剧照 --
           </div>
 
-          <VueSlickCarousel v-bind="settings" v-if="photos.length > 0">
+          <VueSlickCarousel v-bind="settings" v-if="photos.length > 0 && item.m_type !== 3">
             <div v-for="(imageUrl, index) in photos" :key="index"><img :src="imageUrl" :style="{ 'width': '90%' }"></div>
           </VueSlickCarousel>
 
@@ -59,17 +70,25 @@
 
           <!-- 影评区 -->
           <div>
-            <div class="section-title">
+            <div class="section-title" v-if="item.m_type !== 3">
               -- 影评 --
             </div>
+            <div class="section-title" v-else>
+              -- 书评 -- 
+            </div>
+
             <div class="section-row">
               <div class="choose">
-                <div class="tab" :class="{ active: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
+                <div class="tab" :class="{ activeTab: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
                 |
-                <div class="tab" :class="{ active: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
+                <div class="tab" :class="{ activeTab: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
+                
               </div>
-              <button class="button-35" role="button" @click="toWriteReviewPage"><i class="el-icon-plus"></i>
+              <button class="button-35" role="button" @click="toWriteReviewPage" v-if="item.m_type !== 3"><i class="el-icon-plus"></i>
                 我要写影评</button>
+              
+              <button class="button-35" role="button" @click="toWriteReviewPage" v-else><i class="el-icon-plus"></i>
+                我要写书评</button>
             </div>
 
             <div v-for="(reviewItem, index) in reviewItems" :key="index">
@@ -149,9 +168,18 @@ export default {
       recommendTopics: [],
       recommendGroups: [],
 
-      activeTab: 'latest',
+      activeTab: 'hottest',
       photos: [
       ],  //剧照
+
+      myRate: 0,
+
+      isActive: false,
+      buttonText: '收藏',
+      
+      isCollected: false, //是否收藏
+      myRate: 0,  //我对这个影视的评分
+      isRated: false, //是否评分
     }
   },
   methods: {
@@ -263,11 +291,62 @@ export default {
         }
       ]
     },
+    // 处理收藏，op为1表示收藏，op为0表示取消收藏
+    handleCollect(){
+      var op = (this.isActive === false ? 1 : 0)
+      console.log(op)
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          u_id: 2,
+          m_id: this.$route.params.id,
+          op: op
+        }),
+        url: "/media/set_favourite/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data.msg)
+          this.isActive = !this.isActive
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
+    },
+    //一开始调用这个函数，判断是否已经收藏和已经评分, 改变isActive
+    getMediaStatus()
+    {
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          u_id: 2,
+          m_id: this.$route.params.id
+        }),
+        url: "/media/get_media_status/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data.rate)
+          if (res.data.rate === 0)
+            this.isRated = false
+          else
+            this.myRate = res.data.rate
+          if (res.data.is_in_collection === 0)
+            this.isCollected = false
+          else {
+            this.isActive = true
+          }
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
+    }
   },
   mounted() {
     this.getVideo(this.$route.params.id);
     this.getGroups();
     this.getTopics();
+    this.getMediaStatus();
   }
 }
 </script>
@@ -426,6 +505,7 @@ ul li span {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  font-size: 22px;
 }
 
 .section-title {
@@ -480,5 +560,13 @@ ul li span {
 
 .button-35:hover {
   box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
+}
+
+.active {
+  background-color: green;
+  color: white;
+}
+.activeTab {
+  font-weight: bold;
 }
 </style>

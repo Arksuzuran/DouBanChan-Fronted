@@ -61,7 +61,7 @@ export default {
                 },
                 {
                     name: "年份",
-                    details: ["全部", "2020年代", "2023", "2022", "2021", "2020", "2019", "2010年代", "2000年代", "90年代", "80年代", "70年代", "60年代", "更早"]
+                    details: ["全部", "2020年代", "2010年代", "2000年代", "1990年代", "1980年代"]
                 },
             ],
             selected: {
@@ -149,8 +149,8 @@ export default {
 }
 .card-wrapper{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     flex-wrap: wrap;
 }
 .buttons{

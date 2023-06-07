@@ -45,7 +45,7 @@ export default {
     handleSelect(index) {
       if (index === 0) {
         this.$router.push({
-          name: "rankBoard"
+          name: "videoRankBoard"
         });
       } else if (index === 1) {
         this.$router.push({

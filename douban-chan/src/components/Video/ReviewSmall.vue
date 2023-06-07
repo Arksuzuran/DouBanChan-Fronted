@@ -1,30 +1,32 @@
 <template>
     <div style="margin: 25px 0px">
         <div class="header">
-            <div class="review-row clearfix">
+        </div>
+
+        <div class="body">
+            <div class="review-row">
                 <el-image
-                    style="width: 50px; height: 50px;float: left"
+                    style="width: 30px; height: 30px;"
                     :src="item.userImageUrl"></el-image>
                     <div class="reviewer">
                         {{ item.userName }}
                     </div>
                     &nbsp;
-                    <RateWithNumber :score="item.t_rate" style="float:left"></RateWithNumber>
+                    <RateWithNumber_M :score="item.t_rate" style="float:left"></RateWithNumber_M>
                     <div class="time">
                         {{ item.date }}
                     </div>
             </div>
-        </div>
-
-        <div class="body">
-            <div class="title" @click="toReviewPage(item.textId)">{{ item.t_topic }}</div>
-            <div class="wrapper">
-                <input id="exp1" class="exp"  type="checkbox">
-                <div class="text" @click="toReviewPage(item.textId)">
-                    <label class="btn" for="exp1"></label>
-                    {{ item.text }}
+            <div style="text-align: left;">
+                <div class="title" @click="toReviewPage(item.textId)">{{ item.t_topic }}</div>
+                <div class="wrapper">
+                    <input id="exp1" class="exp"  type="checkbox">
+                    <div class="text" @click="toReviewPage(item.textId)">
+                        {{ textContent }}
+                    </div>
                 </div>
             </div>
+            
             <div class="postcard-dataicon-group">
                 <div class="postcard-dataicon-wrapper" @click="handleLike">
                     <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
@@ -49,12 +51,12 @@
 </template>
 
 <script>
-import RateWithNumber from '../Video/RateWithNumber.vue'
+import RateWithNumber_M from '../Video/RateWithNumber_M.vue'
 import qs from "qs"
 export default {
     name: 'ReviewSmall',
     components: {
-        RateWithNumber,
+        RateWithNumber_M,
     },
     props: ['item'],
     data() {
@@ -63,6 +65,7 @@ export default {
             userDislike: false,
             userFav: false,
             reviewer: null,
+            textContent: ''
         }
     },
     methods: {
@@ -152,11 +155,11 @@ export default {
         },
 
         toReviewPage(id){
-            console.log(id)
             this.$router.push({
                 name: 'review',
                 params: {
-                    id: id
+                    m_id: this.$route.params.id,
+                    t_id: id
                 }
             })
         },
@@ -186,7 +189,7 @@ export default {
             if (this.userDislike) {
                 this.userDislike = false
                 this.item.dislike -- 
-                this.clickCancelDislike()
+                // this.clickCancelDislike()
             }
             this.updateDislike()
             this.updateLike()
@@ -214,7 +217,7 @@ export default {
             if (this.userLike) {
                 this.userLike = false
                 this.item.like--;
-                this.clickCancelLike()
+                // this.clickCancelLike()
             }
             this.updateDislike()
             this.updateLike()
@@ -253,14 +256,20 @@ export default {
                 this.userLike = res.data.is_liked
                 this.userDislike = res.data.is_disliked
                 this.userFav = res.data.is_favorite
+                this.updateLike()
+                this.updateDislike()
+                this.updateFav()
             })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
         }
     },
     mounted(){
         this.getStatus();
+        var htmlContent = this.item.text;
+        var regExp = /<[^>]+>/g;
+        this.textContent = htmlContent.replace(regExp, "");
     }
 
 }
@@ -269,7 +278,6 @@ export default {
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
     .reviewer{
-        float: left;
         margin: 0px 10px;
     }
     .time{
@@ -278,13 +286,8 @@ export default {
         margin-left: 10px;
     }
     .review-row {
-        line-height: 50px; /* 将行高设置为元素的高度，实现元素垂直居中 */
-        height: 50px;
-        text-align: center; /* 将文本水平居中对齐 */
-    }
-    .review-row div{
-        height: 50px;
-        line-height: 50px;
+        display: flex;
+        font-size: 16px;
     }
     .clearfix::after {
         content: "";
@@ -300,15 +303,12 @@ export default {
         background-color: white;
         padding: 10px;
         box-shadow: 10px 10px 30px #bebebe;
-        transition: all 0.3s ease-in-out; 
-    }
-    .body:hover {
-        color: gray;
     }
     .title{
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
         cursor: pointer;
+        margin-top: 10px;
     }
 
     .content {
@@ -352,15 +352,16 @@ export default {
   overflow: hidden;
   margin-top: 10px;
 background-color: white;
+text-align: left;
 }
 .text {
-  font-size: 15px;
+  font-size: 18px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: justify;
   /* display: flex; */
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   position: relative;
   cursor: pointer;
