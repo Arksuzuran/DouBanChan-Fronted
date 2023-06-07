@@ -32,6 +32,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import qs from "qs"
 export default {
   name: 'SearchView',
   data() {
@@ -59,6 +60,42 @@ export default {
         }
       })
     },
+    getBookListSearchOnline(){
+      this.$axios({
+            method: "post",
+            data: qs.stringify({
+                qstr: this.input,
+                op: '3'
+            }),
+            url: "/base/query_media/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.allResult.searchBook = res.data.data
+                console.log(res.data.data)
+            })
+            .catch((err) => {
+                this.$message.error("网络出错了QAQ")
+            });
+    },
+    getVideoListSearchOnline(){
+      this.$axios({
+            method: "post",
+            data: qs.stringify({
+                qstr: this.input,
+                op: '1'
+            }),
+            url: "/base/query_media/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.allResult.searchVideo = res.data.data
+                console.log(res.data.data)
+            })
+            .catch((err) => {
+                this.$message.error("网络出错了QAQ")
+            });
+    },
     async handleSearch() {
       if (!this.input) {
         this.$message.error('请输入搜索内容')
@@ -79,6 +116,7 @@ export default {
           input: this.input,
           userId: this.userId,
         })
+
       } catch (err) {
         this.$message.error('网络错误')
       }
@@ -86,8 +124,8 @@ export default {
       this.allResult.searchTopic = this.topicList.slice()
       this.allResult.searchGroup = this.groupList.slice()
       this.allResult.searchPost = this.postList.slice()
-      this.allResult.searchVideo = []
-      this.allResult.searchBook = []
+      this.getBookListSearchOnline()
+      this.getVideoListSearchOnline()
 
       this.handleJump()
     },

@@ -14,6 +14,8 @@
           <el-col :span="6">
             <div>
               <img :src="item.m_profile_photo" style="float: left; width: 200px;height: 100%;border-radius: 5px">
+              <el-button v-bind:class="{active: isActive }" v-on:click="handleCollect"
+                  type="warning" icon="el-icon-star-off" circle style="position: absolute; margin-top: 290px; margin-left: -40px;"></el-button>
             </div>
           </el-col>
           <el-col :span="18">
@@ -28,25 +30,36 @@
                 <div class="rate-board">
                   <div class="little-button">豆瓣酱评分</div>
                   <Rate :score="item.m_rate"></Rate>
+                  
+                  <!-- 图表 -->
+                  <!-- <div>
+                    <div ref="chart" style="width: 600px; height: 400px;"></div>
+                  </div> -->
+
                   <div class="little-button">我的评分</div>
-                  <div style="margin-top: 10px;">
-                    <i class="fa-solid fa-star" style="color: #70d4f5; font-size: 30px"></i>
-                    <span>{{ myRate}}</span>
-                  </div>
                   <!-- 收藏按钮 -->
-                  <div>
+                  <!-- <div>
                     <button v-bind:class="{ active: isActive }" v-on:click="handleCollect">
                       {{buttonText}}
                     </button>
+                  </div> -->
+
+                  <div style="display: flex">
+                    <button class="Btn" @click="showRate">打分
+                      <svg class="svg" viewBox="0 0 512 512">
+                        <path
+                          d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                        </path>
+                      </svg>
+                    </button>
+                    <div style="position:absolute; margin-left: -520px;margin-top: 170px; font-size: 30px; font-weight: bold;
+                                background-color: rgba(234, 109, 25, 0.5); width: 40px; color: white; border-radius: 10px;">
+                      {{ value }}
+                    </div>
                   </div>
 
-                  <button class="Btn" @click="showRate">打分
-                    <svg class="svg" viewBox="0 0 512 512">
-                      <path
-                        d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
-                      </path>
-                    </svg>
-                  </button>
+
+
                 </div>
               </el-col>
             </div>
@@ -75,7 +88,7 @@
                   <el-rate style="margin-top: 3%;" v-model="value" :colors="colors" :max="10">
                   </el-rate>
                   <button class="universal-rate-button" :disabled="value === 0"
-                    :class="{ 'disabled': value === 0 }">打分</button>
+                    :class="{ 'disabled': value === 0 }" @click="rate">打分</button>
                 </div>
               </div>
             </div>
@@ -144,8 +157,8 @@
             <div class="right-section-title">
               相关的小组
             </div>
-            <div class="group-card-container" v-if="recommendTopics !== null">
-              <GroupCard v-for="(groupItem, index) in this.recommendGroups" :key="index" :groupItem="groupItem">
+            <div class="group-card-container" v-if="recommendGroups.length !== 0">
+              <GroupCard v-for="(groupItem, index) in recommendGroups" :key="index" :groupItem="groupItem">
               </GroupCard>
             </div>
             <div v-else>
@@ -154,8 +167,8 @@
             <div class="right-section-title topic">
               相关的话题
             </div>
-            <div class="topic-card-container" v-if="recommendTopics !== null">
-              <TopicCard :topicItems="recommendTopics"></TopicCard>
+            <div class="topic-card-container" v-if="recommendChats.length !== 0">
+              <TopicCard :topicItems="recommendChats"></TopicCard>
             </div>
             <div v-else>
               暂时还没有没有相关的话题哦~
@@ -168,6 +181,7 @@
 </template>
 
 <script>
+import echarts from 'echarts'
 import qs from "qs"
 import ReviewSection from '@/components/Video/ReviewSection.vue'
 import ItemInfo from '@/components/Video/ItemInfo.vue'
@@ -180,6 +194,7 @@ import ReviewSmall from '@/components/Video/ReviewSmall.vue'
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 // optional style for arrows & dots
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ReviewSection, ItemInfo, Rate, GroupCard, TopicCard, VideoEditor, VueSlickCarousel, ReviewSmall
@@ -204,8 +219,10 @@ export default {
       reviewsOrderedByTime: [],
       reviewsOrderedByLike: [],
 
-      recommendTopics: [],
+      recommendChats: [],
       recommendGroups: [],
+
+      ratios: [],
 
       activeTab: 'hottest',
       photos: [
@@ -219,9 +236,55 @@ export default {
       isCollected: false, //是否收藏
       myRate: 0,  //我对这个影视的评分
       isRated: false, //是否评分
+
+      chart: null, // 存储 ECharts 实例的变量
+      chartData: { // 图表数据
+        xAxis: ['9~10星', '7~8星', '5~6星', '3~4星', '1~2星'],
+        series: [15, 25, 30, 20, 10]
+      }
     }
   },
+  created () {
+    // 创建 ECharts 实例
+    this.chart = echarts.init(this.$refs.chart)
+    // 设置图表选项
+    this.chart.setOption({
+      xAxis: {
+        type: 'category',
+        data: this.chartData.xAxis
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        data: this.chartData.series,
+        type: 'bar'
+      }]
+    })
+  },
   methods: {
+    getRatio(){
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          m_id: this.$route.params.id,
+        }),
+        url: "/media/get_ratio/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data)
+          this.ratios.push(res.data['12'])
+          this.ratios.push(res.data['34'])
+          this.ratios.push(res.data['56'])
+          this.ratios.push(res.data['78'])
+          this.ratios.push(res.data['90'])
+          console.log(this.ratios)
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
+    },
     showRate() {
       this.isRateVisible = true;
       if (!this.isModalVisible)
@@ -229,7 +292,7 @@ export default {
       document.addEventListener('scroll', this.disableScroll, { passive: false }); // 禁用滚动事件
     },
     closeRate() {
-      this.value = 0;
+
       this.isRateVisible = false;
       if (!this.isModalVisible)
         document.body.style.overflow = 'auto'; // 恢复滚动条
@@ -280,69 +343,6 @@ export default {
           this.$message.error("网络出错QAQ")
         });
     },
-    //得到相关话题
-    getTopics() {
-      this.recommendTopics = [
-        {
-          topicContent: "cr锐评北航软工",
-          topicId: 1,
-          topicDiscussNumbers: 123456
-        },
-        {
-          topicContent: "czx锐评北航软工",
-          topicId: 2,
-          topicDiscussNumbers: 123456
-        },
-        {
-          topicContent: "adk锐评北航软工",
-          topicId: 3,
-          topicDiscussNumbers: 123456
-        },
-        {
-          topicContent: "czx锐评北航软工",
-          topicId: 4,
-          topicDiscussNumbers: 123456
-        },
-        {
-          topicContent: "adk锐评北航软工",
-          topicId: 5,
-          topicDiscussNumbers: 123456
-        }
-      ]
-    },
-    //得到相关小组
-    getGroups() {
-      this.recommendGroups = [
-        {
-          groupName: "豆瓣电影小组",
-          groupPersonNumbers: 123456,
-          groupDiscussNumbers: 123456,
-          groupImage: require('../../assets/movie/avatar.webp'),
-          groupIntro: "这是关于电影的小组，欢迎大家加入讨论",
-        },
-        {
-          groupName: "豆瓣动漫小组",
-          groupPersonNumbers: 123456,
-          groupDiscussNumbers: 123456,
-          groupImage: require('../../assets/movie/1.jpg'),
-          groupIntro: "这是关于电影的小组，欢迎大家加入讨论",
-        },
-        {
-          groupName: "豆瓣动漫小组",
-          groupPersonNumbers: 123456,
-          groupDiscussNumbers: 123456,
-          groupImage: require('../../assets/movie/2.jpg'),
-          groupIntro: "这是关于电影的小组，欢迎大家加入讨论",
-        },
-        {
-          groupName: "豆瓣动漫小组",
-          groupPersonNumbers: 123456,
-          groupDiscussNumbers: 123456,
-          groupImage: require('../../assets/movie/3.jpg'),
-          groupIntro: "这是关于电影的小组，欢迎大家加入讨论",
-        }
-      ]
-    },
     // 处理收藏，op为1表示收藏，op为0表示取消收藏
     handleCollect(){
       var op = (this.isActive === false ? 1 : 0)
@@ -392,14 +392,74 @@ export default {
         .catch((err) => {
           this.$message.error("网络出错QAQ")
         });
+    },
+    rate(){
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          u_id: this.userId,
+          m_id: this.$route.params.id,
+          rate: this.value
+        }),
+        url: "/media/rate_media/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data.msg)
+          if (res.data.msg === 0)
+          {
+            this.closeRate()
+            console.log(this.value)
+            this.$message.success("评分成功！")
+          }
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
+    },
+    getRecommendGroups(){
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          m_id: this.$route.params.id,
+        }),
+        url: "/media/related_group/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data)
+          this.recommendGroups = res.data.groups
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
+    },
+    getRecommendChats(){
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          m_id: this.$route.params.id,
+        }),
+        url: "/media/related_chat/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data)
+          this.recommendChats = res.data.chats
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
     }
   },
   mounted() {
     this.getVideo(this.$route.params.id);
-    this.getGroups();
-    this.getTopics();
+    this.getRecommendGroups()
+    this.getRecommendChats()
+    this.getRatio()
   },
   computed: {
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     starSize() {
       return this.value * 2 + 100 + 'px';
       this.getMediaStatus();
@@ -773,8 +833,8 @@ ul li span {
   border-radius: 10px;
   box-shadow: 5px 5px 0px rgb(177, 94, 91);
   transition-duration: .3s;
-  margin-top: 60px;
-  margin-left: 50px;
+  margin-top: 170px;
+  margin-left: -630px;
 }
 
 .svg {

@@ -10,6 +10,7 @@
 import qs from "qs"
 import VideoRow from '@/components/Video/VideoRow.vue';
 import HotComments from '@/components/Video/HotComments.vue'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
   components:{
     VideoRow, HotComments
@@ -42,12 +43,14 @@ export default {
         this.$axios({
         method: "post",
         data: qs.stringify({
+          u_id: this.userId
         }),
         url: "/media/get_heat_movie/",
         headers: { "content-type": "application/x-www-form-urlencoded" },
         })
         .then((res) => {
             this.hotMovies = res.data.heat_movie
+            console.log(this.hotMovies)
         })
         .catch((err) => {
             this.$message.error("网络出错QAQ")
@@ -57,6 +60,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
+          u_id: this.userId
         }),
         url: "/media/get_heat_series/",
         headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -69,6 +73,9 @@ export default {
             this.$message.error("网络出错QAQ")
         });
     }
+  },
+  computed: {
+    ...mapState('userAbout', ['userId']),
   },
   mounted(){
     this.getHotMovies();

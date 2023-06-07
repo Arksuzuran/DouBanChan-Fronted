@@ -48,12 +48,8 @@ export default {
         return {
             labels:[
                 {
-                    name:"影or视",
-                    details: ['电影', '电视剧']
-                },
-                {
                     name: "类型",
-                    details: ["全部","喜剧", "爱情", "动作", "科幻", "动画", "悬疑", "犯罪", "惊悚", "冒险", "音乐", "历史", "奇幻", "恐怖", "战争", "传记", "歌舞", "武侠", "情色", "灾难", "西部", "纪录片", "短片"]
+                    details: ["全部", "文学", "流行", "文化", "生活",  "科技"]
                 },
                 {
                     name: "地区",
@@ -65,7 +61,7 @@ export default {
                 },
             ],
             selected: {
-                '影or视': '电影',
+                 '图书': '图书',
                 '类型': '全部',
                 '地区': '全部',
                 '年份': '全部',
@@ -80,7 +76,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                m_type: this.selected['影or视'], 
+                m_type: this.selected['图书'], 
                 m_genre: this.selected['类型'],
                 m_region: this.selected['地区'],
                 m_year: this.selected['年份'],

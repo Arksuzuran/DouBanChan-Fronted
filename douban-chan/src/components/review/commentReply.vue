@@ -45,7 +45,7 @@ export default {
                 t_father_text_id: this.textId,
                 u_id: 2
             }),
-            url: "/text/reply/",
+            url: "/text/reply_text/",
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             .then((res) => {

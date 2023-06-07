@@ -179,8 +179,8 @@ export default {
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 .book-card {
-    width: 190px;
-    height: 380px;
+    width: 200px;
+    height: 375px;
     display: flex;
     flex-direction: column;
     position: relative;

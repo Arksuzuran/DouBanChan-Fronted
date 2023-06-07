@@ -2,10 +2,10 @@
   <div class="card">
     <div class="card-border-top">
     </div>
-    <el-image class="img" :src="groupItem.groupImage" style="width: 60px; height: 60px; margin: auto; margin-top: 5px; border-radius: 30px"></el-image>
+    <el-image class="img" :src="groupItem.groupAvatarImgUrl" style="width: 60px; height: 60px; margin: auto; margin-top: 5px; border-radius: 30px"></el-image>
     <span class="groupTitle"> {{ groupItem.groupName }}</span>
-    <div class="info"> {{groupItem.groupPersonNumbers}}<span class="add">人参与</span></div>
-    <div class="info"> {{groupItem.groupDiscussNumbers}}<span class="add">个帖子</span></div>
+    <div class="info"> {{groupItem.groupFollowNumber}}<span class="add">人参与</span></div>
+    <div class="info"> {{groupItem.groupPostNumber}}<span class="add">个帖子</span></div>
 </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
 }
 .card {
  width: 110px;
- height: 150px;
+ height: 170px;
  background: white;
  border-radius: 8px;
  box-shadow: 1px 5px 10px 0px gray;
