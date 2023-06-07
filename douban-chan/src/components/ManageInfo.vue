@@ -6,10 +6,10 @@
                         status }})
                 </i> {{ manage.title }}
             </div>
-            <div class="manage-info-time">2023年6月4日 17:51</div>
+            <div class="manage-info-time">{{ manage.time }}</div>
             <div class="manage-info-delete" style="cursor: pointer;" @click="deleteManage()"><i
                     class="fa-regular fa-trash-can delete-icon" style="color: #929292;"></i>
-                删除该通知
+                忽略该通知
             </div>
         </div>
         <div class="manage-info-text">
@@ -22,12 +22,14 @@
         </div>
         <div v-if="isHandle" style="height: 24px;"></div>
         <div class="manage-info-outcome-success" :style="{ opacity: success ? 1 : 0 }">举报成功</div>
-        <div class="manage-info-outcome-fail" :style="{ opacity: fail ? 1 : 0 }">举报失败</div>
+        <div class="manage-info-outcome-fail" :style="{ opacity: fail ? 1 : 0 }">驳回举报</div>
         <div style="height: 20px;"></div>
     </div>
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default ({
     props: ['manage'],
     data() {
@@ -39,12 +41,44 @@ export default ({
     },
     methods: {
         showSuccess() {
-            this.isHandle = true;
-            this.success = true;
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    id: this.manage.id,
+                    p_id: this.manage.p_id,
+                    handle: 1,
+                }),
+                url: "/report/handle_report_post/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.isHandle = true;
+                    this.success = true;
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
         },
         showFail() {
-            this.isHandle = true;
-            this.fail = true;
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    id: this.manage.id,
+                    p_id: this.manage.p_id,
+                    handle: 2,
+                }),
+                url: "/report/handle_report_post/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.isHandle = true;
+                    this.fail = true;
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
         },
         deleteManage() {
             this.$emit('delete', this.manage.id);
@@ -65,13 +99,13 @@ export default ({
         },
     },
     mounted() {
-        if (this.manage.handled == 0) {
+        if (this.manage.handled === '0') {
             this.isHandle = false;
-        } else if (this.manage.handled == 1) {
+        } else if (this.manage.handled === '1') {
             this.isHandle = true;
             this.success = true;
         }
-        else if (this.manage.handled == 2) {
+        else if (this.manage.handled === '2') {
             this.isHandle = true;
             this.fail = true;
         }

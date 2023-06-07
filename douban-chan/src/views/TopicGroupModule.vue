@@ -18,7 +18,6 @@
                     <div class="topic-module-card-container">
                         <topic-card v-for="topic in topics" :key="topic.id" :topic="topic"
                             style="margin-bottom: 20px;"></topic-card>
-
                     </div>
                 </el-main>
             </el-container>
@@ -70,6 +69,8 @@ import GroupShowCard from './GroupShowCard.vue';
 import GroupMiniCard from './GroupMiniCard.vue';
 import GroupCartoon from './GroupCartoon.vue';
 import GroupNewCartoon from './GroupNewCartoon.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default ({
     components: {
         TopicCard,
@@ -168,7 +169,49 @@ export default ({
                 },
             ]
         }
-    }
+    },
+    computed: {
+        ...mapState('userAbout', ['userId']),
+    },
+    methods: {
+        //请求话题栏目数据
+        requestTopicList() {
+            this.$axios({
+                method: "post",
+                url: "/base/col_chat/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.topics = res.data.chats;
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        //请求小组栏目数据
+        requestGroupList() {
+            this.$axios({
+                method: "post",
+                url: "/base/col_group/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.groups = res.data.groups;
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+    },
+    created() {
+        this.requestTopicList();
+        this.requestGroupList()
+    },
+
 })
 </script>
 <style scoped>

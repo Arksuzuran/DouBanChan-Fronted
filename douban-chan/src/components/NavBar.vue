@@ -107,7 +107,6 @@ export default {
             document.removeEventListener('scroll', this.disableScroll); // 移除禁用滚动事件
         },
         gotoUserHome() {
-            // 在这里根据需求更换circleUrl的值
             if (this.isLogin) {
                 this.$router.push('/userHome/home')
             }

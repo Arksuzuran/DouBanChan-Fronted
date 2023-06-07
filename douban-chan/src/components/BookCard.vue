@@ -2,13 +2,14 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" class="book-card">
             <div class="flag">
-                <button class="favorite-button" @click="mark = !mark">
+                <button class="favorite-button" @click="wantFavBook">
                     <span class="fa-layers fa-fw" style="background:transparent position: absolute; top: 0px; left: 0px;">
-                        <i v-if="!mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
-                        <i v-if="!mark" class="fa-duotone fa-plus fa-xs"
+                        <i v-if="!book.is_fav" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px;"></i>
+                        <i v-if="!book.is_fav" class="fa-duotone fa-plus fa-xs"
                             style="position: absolute; top: 50%; left: 50%; transform: translate(-55%, -300%); color: #ffffff; font-size: 30px;"></i>
-                        <i v-if="mark" class="fas fa-bookmark" style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
-                        <i v-if="mark" class="fa-solid fa-check fa-xs"
+                        <i v-if="book.is_fav" class="fas fa-bookmark"
+                            style="opacity: 0.3 font-size: 30px; color: #ff8b32;"></i>
+                        <i v-if="book.is_fav" class="fa-solid fa-check fa-xs"
                             style="position: absolute; top: 50%; left: 55%; transform: translate(-55%, -300%); color: #000000; font-size: 24px;"></i>
                     </span>
                 </button>
@@ -29,11 +30,11 @@
             </div>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 110px;font-weight: bold;float: left;">
+                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 120px;font-weight: bold;float: left;">
                     <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> 查看详情
                 </el-button>
-                <el-button circle style="border: none;margin-top: 2px;background-color:#002333;" @click="showModal"><i
-                        class="fa-solid fa-circle-info custom-icon"></i></el-button>
+                <el-button circle style="border: none;margin-left: -5px;margin-top: 2px;background-color:#002333;"
+                    @click="showModal"><i class="fa-solid fa-circle-info custom-icon"></i></el-button>
             </div>
         </el-card>
 
@@ -123,12 +124,13 @@
 </template>
 
 <script>
-
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default {
     props: ['book'],
     data() {
         return {
-            mark: false,
+            tempMark: false,
             isModalVisible: false, // 控制弹窗的显示与隐藏
             isRateVisible: false,
             value: 0,
@@ -165,9 +167,86 @@ export default {
         },
         toDetailPage(bookId) {
             this.$router.push({ name: 'videoDetail', params: { id: bookId } })
-        }
+        },
+        //当前用户想要收藏或者取消收藏
+        wantFavBook() {
+            //提醒用户先登录
+            if (this.userId == 1) {
+                this.favError();
+                return;
+            }
+            this.tempMark = !this.book.is_fav;
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    m_id: this.book.m_id,
+                    op: this.tempMark ? 1 : 0,
+                }),
+                url: "/media/set_favourite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    if (this.tempMark) {
+                        if (res.data.msg == 0) {
+                            this.book.is_fav = !this.book.is_fav;
+                            this.favSuccess();
+                        } else {
+                            this.favFail();
+                        }
+                    } else {
+                        if (res.data.msg == 0) {
+                            this.book.is_fav = !this.book.is_fav;
+                            this.cancelSuccess();
+                        } else {
+                            this.cancelFail();
+                        }
+                    }
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        favSuccess() {
+            this.$Notify.success({
+                title: 'Success',
+                message: '恭喜你订阅成功！',
+                showClose: false,
+            })
+        },
+        cancelSuccess() {
+            this.$Notify.success({
+                title: 'Success',
+                message: '取消订阅成功！',
+                showClose: false,
+            })
+        },
+        favError() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '请您先登录',
+                showClose: false,
+            })
+        },
+        favFail() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '订阅失败,请您重新尝试',
+                showClose: false,
+            })
+        },
+        cancelFail() {
+            this.$Notify.error({
+                title: 'Error',
+                message: '取消订阅失败，请你重新尝试',
+                showClose: false,
+            })
+        },
     },
     computed: {
+        ...mapState('userAbout', ['userId']),
         starSize() {
             return this.value * 2 + 100 + 'px';
         }

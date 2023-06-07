@@ -4,12 +4,12 @@
     <film-module></film-module>
     <book-module></book-module>
     <topic-group-module></topic-group-module>
-    <div class="test1">
+    <!-- <div class="test1">
       <self-information></self-information>
     </div>
     <div class="test2">
       <upload-image></upload-image>
-    </div>
+    </div> -->
     <br>
     <br>
     <br>

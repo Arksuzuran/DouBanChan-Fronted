@@ -1,10 +1,10 @@
 <template>
     <div class="sub-card-block">
         <div class="sub-card-image-block">
-            <img :src="subscribe.image" class="sub-card-image">
+            <img :src="temp1" class="sub-card-image">
         </div>
 
-        <div class="sub-card-name">{{ subscribe.name }}</div>
+        <div class="sub-card-name">{{ subscribe.m_name }}</div>
         <button class="sub-card-skip">
             <span class="circle1"></span>
             <span class="circle2"></span>
@@ -13,8 +13,8 @@
             <span class="circle5"></span>
             <span class="text">查看详情</span>
         </button>
-        <div class="sub-card-star">{{ subscribe.star }}</div>
-        <div class="sub-card-text">{{ subscribe.text }}</div>
+        <div class="sub-card-star">{{ temp2 }}</div>
+        <div class="sub-card-text">{{ subscribe.m_description }}</div>
     </div>
 </template>
 
@@ -23,8 +23,19 @@ export default ({
     props: ['subscribe'],
     data() {
         return {
+            temp1: '',
+            temp2: '',
         }
-    }
+    },
+    mounted() {
+        if (this.subscribe.m_type == 3) {
+            this.temp1 = this.subscribe.m_profile_photo;
+            this.temp2 = this.subscribe.m_author;
+        } else {
+            this.temp1 = this.subscribe.m_first_preview;
+            this.temp2 = this.subscribe.m_director;
+        }
+    },
 })
 </script>
 

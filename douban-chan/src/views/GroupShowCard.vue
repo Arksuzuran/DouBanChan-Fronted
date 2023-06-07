@@ -6,12 +6,12 @@
             <span class="green"></span>
         </div>
         <div class="img">
-            <img :src="group.image" class="image">
+            <img :src="group.groupAvatarImgUrl" class="image">
         </div>
-        <h1>{{ group.name }}</h1>
+        <h1>{{ group.groupName }}</h1>
         <div>
-            <span style="color: black;">小组成员: {{ group.number }} 人</span><br>
-            <span class="group-text">{{ group.text }}</span>
+            <span style="color: black;">小组人数: {{ group.groupPostNumber }} 人</span><br>
+            <span class="group-text">{{ group.groupIntro }}</span>
         </div>
     </div>
 </template>
@@ -76,6 +76,12 @@ export default ({
 }
 
 .card h1 {
+    max-width: 90%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: center;
     margin: 0rem;
     color: rgb(0, 0, 0);
@@ -98,14 +104,16 @@ export default ({
 }
 
 .group-text {
+    max-width: 90%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 4;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
-    margin-top: 5px;
+    margin-top: 7px;
     color: rgb(29, 29, 29);
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
 }
 </style>

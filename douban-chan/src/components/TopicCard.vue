@@ -3,19 +3,18 @@
 
         <div class="textBox">
             <div class="textContent">
-                <p class="h1">{{ topic.title }}</p>
+                <p class="h1">#{{ topic.topicName }}#</p>
             </div>
             <div class="container">
-                <p class="text">{{ topic.text }}</p>
+                <p class="text">{{ topic.c_description }}</p>
             </div>
             <div class="num">
-                <span class="span1">阅读:{{ topic.read }}</span>
-                <span class="span2">讨论:{{ topic.discuss }}</span>
+                <span class="span1">帖子:{{ topic.post }}</span>
+                <span class="span2">参与人数:{{ topic.follow }}</span>
             </div>
-
         </div>
         <div class="img">
-            <img :src="topic.image" class="image">
+            <img :src="topic.topicAvatarUrl" class="image">
         </div>
     </div>
 </template>
