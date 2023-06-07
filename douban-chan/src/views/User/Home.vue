@@ -5,7 +5,7 @@
             <div class="user-home-like">
                 <span class="user-home-text">我的订阅</span>
                 <div class="user-home-like-list">
-                    <SubscribeCard v-for="subscribe in subscribes" :key="subscribe.id" :subscribe="subscribe">
+                    <SubscribeCard v-for="subscribe in subscribes" :key="subscribe.m_id" :subscribe="subscribe">
                     </SubscribeCard>
                 </div>
                 <el-divider></el-divider>
@@ -106,6 +106,23 @@ export default {
         }
     },
     methods: {
+        getSubscribesOnline() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/user/user_collection_media/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    this.subscribes = res.data;
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
         getFavListOnline() {
             this.$axios({
                 method: "post",
@@ -147,8 +164,9 @@ export default {
         }
     },
     mounted() {
-        this.favList = this.getFavListOnline();
-        this.groupList = this.getGroupListOnline();
+        this.subscribes = this.getSubscribesOnline();
+        // this.favList = this.getFavListOnline();
+        // this.groupList = this.getGroupListOnline();
     },
     computed: {
         ...mapState('userAbout', ['userId', 'userBirthday', 'userSex']),

@@ -8,21 +8,21 @@
       </div>
     </div>
 
+
     <el-row>
       <el-col :span="18">
         <div>
           <el-col :span="6">
             <div>
               <img :src="item.m_profile_photo" style="float: left; width: 200px;height: 100%;border-radius: 5px">
-              <el-button v-bind:class="{active: isActive }" v-on:click="handleCollect"
-                  type="warning" icon="el-icon-star-off" circle style="position: absolute; margin-top: 290px; margin-left: -40px;"></el-button>
             </div>
           </el-col>
           <el-col :span="18">
             <div style="height:300px;">
               <el-col :span="16">
-                <div>
-                  <ItemInfo :item="item"></ItemInfo>
+                <div style="width: 240px">
+                  <div v-if="!Skeleton" class="skeleton"></div>
+                  <ItemInfo v-if="Skeleton" :item="item"></ItemInfo>
                 </div>
               </el-col>
 
@@ -30,7 +30,7 @@
                 <div class="rate-board">
                   <div class="little-button">豆瓣酱评分</div>
                   <Rate :score="item.m_rate"></Rate>
-                  
+
                   <!-- 图表 -->
                   <!-- <div>
                     <div ref="chart" style="width: 600px; height: 400px;"></div>
@@ -52,10 +52,14 @@
                         </path>
                       </svg>
                     </button>
-                    <div style="position:absolute; margin-left: -520px;margin-top: 170px; font-size: 30px; font-weight: bold;
+                    <div
+                      style="position:absolute; margin-left: 110px;margin-top: 19px; font-size: 30px; font-weight: bold;
                                 background-color: rgba(234, 109, 25, 0.5); width: 40px; color: white; border-radius: 10px;">
                       {{ value }}
                     </div>
+                    <el-button v-bind:class="{ active: isActive }" v-on:click="handleCollect" type="warning"
+                      icon="el-icon-star-off" circle
+                      style="position: absolute; margin-top: 22px; margin-left: 170px;"></el-button>
                   </div>
 
 
@@ -87,8 +91,8 @@
                   <!-- <span class="demonstration">区分颜色</span> -->
                   <el-rate style="margin-top: 3%;" v-model="value" :colors="colors" :max="10">
                   </el-rate>
-                  <button class="universal-rate-button" :disabled="value === 0"
-                    :class="{ 'disabled': value === 0 }" @click="rate">打分</button>
+                  <button class="universal-rate-button" :disabled="value === 0" :class="{ 'disabled': value === 0 }"
+                    @click="rate">打分</button>
                 </div>
               </div>
             </div>
@@ -104,7 +108,7 @@
           </div>
 
           <el-divider v-if="item.m_type !== 3"></el-divider>
-          
+
           <div class="section-title" v-if="item.m_type !== 3">
             -- 剧照 --
           </div>
@@ -123,7 +127,7 @@
               -- 影评 --
             </div>
             <div class="section-title" v-else>
-              -- 书评 -- 
+              -- 书评 --
             </div>
 
             <div class="section-row">
@@ -131,11 +135,12 @@
                 <div class="tab" :class="{ activeTab: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
                 |
                 <div class="tab" :class="{ activeTab: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
-                
+
               </div>
-              <button class="button-35" role="button" @click="toWriteReviewPage" v-if="item.m_type !== 3"><i class="el-icon-plus"></i>
+              <button class="button-35" role="button" @click="toWriteReviewPage" v-if="item.m_type !== 3"><i
+                  class="el-icon-plus"></i>
                 我要写影评</button>
-              
+
               <button class="button-35" role="button" @click="toWriteReviewPage" v-else><i class="el-icon-plus"></i>
                 我要写书评</button>
             </div>
@@ -153,7 +158,8 @@
       </el-col>
       <el-col :span="6" class="right-side">
         <div>
-          <div class="">
+          <div class="right-block">
+            <div style="height: 40px;"></div>
             <div class="right-section-title">
               相关的小组
             </div>
@@ -164,6 +170,7 @@
             <div v-else>
               暂时还没有没有相关的小组哦~
             </div>
+            <div style="height: 40px;"></div>
             <div class="right-section-title topic">
               相关的话题
             </div>
@@ -202,6 +209,7 @@ export default {
   name: 'VideoDetail',
   data() {
     return {
+      Skeleton: false,
       isRateVisible: false,
       value: 0,
       colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -232,7 +240,7 @@ export default {
 
       isActive: false,
       buttonText: '收藏',
-      
+
       isCollected: false, //是否收藏
       myRate: 0,  //我对这个影视的评分
       isRated: false, //是否评分
@@ -244,7 +252,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     // 创建 ECharts 实例
     this.chart = echarts.init(this.$refs.chart)
     // 设置图表选项
@@ -263,7 +271,12 @@ export default {
     })
   },
   methods: {
-    getRatio(){
+    changeSkeleton() {
+      setTimeout(() => {
+        this.Skeleton = true;
+      }, 500);
+    },
+    getRatio() {
       this.$axios({
         method: "post",
         data: qs.stringify({
@@ -344,7 +357,7 @@ export default {
         });
     },
     // 处理收藏，op为1表示收藏，op为0表示取消收藏
-    handleCollect(){
+    handleCollect() {
       var op = (this.isActive === false ? 1 : 0)
       console.log(op)
       this.$axios({
@@ -366,8 +379,7 @@ export default {
         });
     },
     //一开始调用这个函数，判断是否已经收藏和已经评分, 改变isActive
-    getMediaStatus()
-    {
+    getMediaStatus() {
       this.$axios({
         method: "post",
         data: qs.stringify({
@@ -393,7 +405,7 @@ export default {
           this.$message.error("网络出错QAQ")
         });
     },
-    rate(){
+    rate() {
       this.$axios({
         method: "post",
         data: qs.stringify({
@@ -406,8 +418,7 @@ export default {
       })
         .then((res) => {
           console.log(res.data.msg)
-          if (res.data.msg === 0)
-          {
+          if (res.data.msg === 0) {
             this.closeRate()
             console.log(this.value)
             this.$message.success("评分成功！")
@@ -417,7 +428,7 @@ export default {
           this.$message.error("网络出错QAQ")
         });
     },
-    getRecommendGroups(){
+    getRecommendGroups() {
       this.$axios({
         method: "post",
         data: qs.stringify({
@@ -434,7 +445,7 @@ export default {
           this.$message.error("网络出错QAQ")
         });
     },
-    getRecommendChats(){
+    getRecommendChats() {
       this.$axios({
         method: "post",
         data: qs.stringify({
@@ -454,21 +465,43 @@ export default {
   },
   mounted() {
     this.getVideo(this.$route.params.id);
-    this.getRecommendGroups()
-    this.getRecommendChats()
-    this.getRatio()
+    this.getRecommendGroups();
+    this.getRecommendChats();
+    this.getRatio();
+    this.changeSkeleton();
   },
   computed: {
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     starSize() {
       return this.value * 2 + 100 + 'px';
       this.getMediaStatus();
-  }
+    },
+
   },
 }
 </script>
 
 <style scoped>
+.skeleton {
+  position: absolute;
+  width: 200px;
+  height: 300px;
+  /* margin-top: -10px; */
+  margin-left: -210px;
+  /* 调整骨架屏的高度 */
+  background-color: #f0f0f0;
+}
+
+
+.right-block {
+  height: 600px;
+  margin-top: -50px;
+  border-radius: 10px;
+  margin-left: 5%;
+  width: 95%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
 .brief {
   text-align: left;
 }
@@ -833,8 +866,8 @@ ul li span {
   border-radius: 10px;
   box-shadow: 5px 5px 0px rgb(177, 94, 91);
   transition-duration: .3s;
-  margin-top: 170px;
-  margin-left: -630px;
+  margin-top: 20px;
+  margin-left: 0px;
 }
 
 .svg {
@@ -869,6 +902,7 @@ ul li span {
   background-color: green;
   color: white;
 }
+
 .activeTab {
   font-weight: bold;
 }

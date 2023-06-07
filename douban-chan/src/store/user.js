@@ -8,11 +8,6 @@ export default {
 
 	},
 	mutations: {
-		// 更新状态，并保存到本地存储
-		updateState(state, newState) {
-			Object.assign(state, newState);
-			localStorage.setItem('state', JSON.stringify(state));
-		},
 		//转换为已登录
 		LOGIN(state, value) {
 			console.log('user mutations中的LOGIN被调用了')
@@ -26,14 +21,11 @@ export default {
 			state.userSex = value.u_gender;
 			state.userSignature = value.u_signature;
 			state.userImgUrl = value.u_profile_photo;
-			localStorage.setItem('state', JSON.stringify(state));
 		},
 		//转换为登出
 		LOGOUT(state, value) {
 			console.log('user mutations中的LOGOUT被调用了')
 			state.isLogin = false;
-			localStorage.removeItem('isLogin');
-			localStorage.removeItem('userId');
 		},
 		//清除新回复数量
 		ClearUserReplyNum(state) {
@@ -60,9 +52,12 @@ export default {
 		ModifyUserImgUrl(state, img) {
 			state.userImgUrl = img;
 		},
+		//更新用户收到的管理信息
+		requestManageInfo(state, value) {
+			state.userManages = value;
+		}
 	},
 	state: {
-		...initialState,
 		//当前是否登录
 		isLogin: false,
 		//头像路径

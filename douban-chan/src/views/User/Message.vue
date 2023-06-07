@@ -68,6 +68,7 @@ import MessageGood from '../MessageGood.vue';
 import SystemInfoVue from '../SystemInfo.vue';
 import ManageInfo from '../../components/ManageInfo.vue';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import qs from 'qs'
 export default {
     components: {
         MessageCardReply,
@@ -97,12 +98,12 @@ export default {
         this.messages = this.userMessages;
         this.goods = this.userGoods;
         this.infos = this.userInfos;
-        this.manages = this.userManages;
+        this.manages = this.requestManage();
     },
     created() {
-        this.ClearUserReplyNum();
-        this.ClearUserMessageNum();
-        this.ClearUserGoodNum();
+        // this.ClearUserReplyNum();
+        // this.ClearUserMessageNum();
+        // this.ClearUserGoodNum();
         this.checkMessageEmpty();
         this.checkGoodEmpty();
         this.checkInfoEmpty();
@@ -122,7 +123,7 @@ export default {
             // 默认情况
             return '回复我的';
         },
-        ...mapState('userAbout', ['userMessages', 'userGoods', 'userInfos', 'userManages']),
+        ...mapState('userAbout', ['userMessages', 'userGoods', 'userInfos', 'userManages', 'userId']),
     },
     methods: {
         ...mapMutations('userAbout', ['ClearUserReplyNum', 'ClearUserMessageNum', 'ClearUserGoodNum']),
@@ -165,6 +166,23 @@ export default {
                 this.manages.splice(index, 1);
             }
             this.checkManageEmpty(); // 在删除消息后再次检查数组是否为空
+        },
+        requestManage() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_report/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.manages = res.data.report_list;
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
         },
     },
 
