@@ -153,10 +153,10 @@ export default {
 
 
 .group-list-for-switch {
-  margin-top: 15px;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   /* 在一行中放置两列 */
-  gap: 15px;
+  gap: 10px;
 }
 </style>

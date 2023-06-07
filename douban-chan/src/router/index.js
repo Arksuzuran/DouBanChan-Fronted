@@ -15,6 +15,7 @@ import UserHomeHome from "../views/User/Home.vue";
 import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
+import UserHomeSetting from "../views/User/Setting.vue";
 
 //影视
 import VideoDetail from "../views/Video/VideoDetail.vue"
@@ -106,14 +107,14 @@ const routes = [
       },
       //话题广场
       {
-        path:'/topicHome/topicSquare',
-        name:'topicSquare',
+        path: '/topicHome/topicSquare',
+        name: 'topicSquare',
         component: TopicHomeTopicSquare
       },
       //热榜
       {
-        path:'/topicHome/todaysHot',
-        name:'todaysHot',
+        path: '/topicHome/todaysHot',
+        name: 'todaysHot',
         component: TopicHomeTodaysHot
       },
     ]
@@ -130,8 +131,8 @@ const routes = [
       },
       // 帖子的页面
       {
-        path:'/topic/post',
-        name:'topicPost',
+        path: '/topic/post',
+        name: 'topicPost',
         component: Post
       },
       //
@@ -183,14 +184,14 @@ const routes = [
       },
       // 帖子的页面
       {
-        path:'/group/post',
-        name:'groupPost',
+        path: '/group/post',
+        name: 'groupPost',
         component: Post
       },
       //groupTopicList
       {
-        path:'/group/postList',
-        name:'groupTopicList',
+        path: '/group/postList',
+        name: 'groupTopicList',
         component: TopicHomeTopicSquare
       },
       // 成员列表页面
@@ -260,6 +261,12 @@ const routes = [
         path: "message",
         name: "userpageMessage",
         component: UserHomeMessage,
+      },
+      //修改资料
+      {
+        path: "setting",
+        name: "userpageSetting",
+        component: UserHomeSetting,
       },
     ],
   },

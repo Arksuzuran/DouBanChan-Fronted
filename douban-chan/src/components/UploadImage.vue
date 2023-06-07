@@ -1,67 +1,327 @@
 <template>
-    <el-upload class="avatar-uploader" action="#" :show-file-list="false" :on-change="handleChange">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar-upload">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+    <div>
+        <div class="main">
+            <div class="left">
+                <span class="left-status">{{ statusName }}</span>
+                <div v-if="avatar != ''" class="cropper-pre">
+                    <img :src="avatar" alt="">
+                </div>
+                <div v-if="avatar == ''" class="image-now">
+                    <img :src="require('../assets/conroy_img/qq.jpg')" alt="">
+                </div>
+            </div>
+            <div class="right">
+                <div class="cropper-con">
+                    <vue-cropper ref="cropper" :img="option.img" :outputSize="option.outputSize"
+                        :outputType="option.outputType" :info="option.info" :canScale="option.canScale"
+                        :autoCrop="option.autoCrop" :autoCropWidth="option.autoCropWidth"
+                        :autoCropHeight="option.autoCropHeight" :fixed="option.fixed" :fixedNumber="option.fixedNumber"
+                        :full="option.full" :fixedBox="option.fixedBox" :canMove="option.canMove"
+                        :canMoveBox="option.canMoveBox" :original="option.original" :centerBox="option.centerBox"
+                        :height="option.height" :infoTrue="option.infoTrue" :maxImgSize="option.maxImgSize"
+                        :enlarge="option.enlarge" :mode="option.mode" @realTime="realTime" @imgLoad="imgLoad">
+                    </vue-cropper>
+                </div>
+                <div class="btn">
+                    <input id="upload" type="file" @change="selectImg">
+                    <label for="upload" class="icon-btn add-btn">
+                        <div class="add-icon"></div>
+                        <div class="btn-txt">上传图片</div>
+                    </label>
+                    <div class="save">
+                        <button>
+                            确认更换
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+        </div>
+    </div>
 </template>
 
 <script>
+import { VueCropper } from 'vue-cropper'
 export default {
+    name: "CropperImage",
+    components: {
+        VueCropper
+    },
     data() {
         return {
-            imageUrl: ''
+            previews: {},
+            avatar: '',
+            option: {
+                img: '',             //裁剪图片的地址
+                outputSize: 1,       //裁剪生成图片的质量(可选0.1 - 1)
+                outputType: 'jpeg',  //裁剪生成图片的格式（jpeg || png || webp）
+                info: true,          //图片大小信息
+                canScale: true,      //图片是否允许滚轮缩放
+                autoCrop: true,      //是否默认生成截图框
+                autoCropWidth: 145,  //默认生成截图框宽度
+                autoCropHeight: 145, //默认生成截图框高度
+                fixed: true,         //是否开启截图框宽高固定比例
+                fixedNumber: [1, 1], //截图框的宽高比例
+                full: false,         //false按原比例裁切图片，不失真
+                fixedBox: true,      //固定截图框大小，不允许改变
+                canMove: false,      //上传图片是否可以移动
+                canMoveBox: true,    //截图框能否拖动
+                original: false,     //上传图片按照原始比例渲染
+                centerBox: false,    //截图框是否被限制在图片里面
+                height: true,        //是否按照设备的dpr 输出等比例图片
+                infoTrue: false,     //true为展示真实输出图片宽高，false展示看到的截图框宽高
+                maxImgSize: 3000,    //限制图片最大宽度和高度
+                enlarge: 1,          //图片根据截图框输出比例倍数
+                mode: '150px 150px'  //图片默认渲染方式
+            }
         };
     },
     methods: {
-        handleChange(file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                this.imageUrl = e.target.result;
-            };
-            reader.readAsDataURL(file.raw);
+        //初始化函数
+        imgLoad(msg) {
+            console.log('载入成功...')
+        },
+        //实时预览函数
+        realTime(data) {
+            console.log(data)
+            this.previews = data;
+            this.$refs.cropper.getCropData(async (data) => {
+                this.avatar = data
+            })
+        },
+        //选择图片
+        selectImg(e) {
+            let file = e.target.files[0]
+            if (!file) {
+                return false
+            }
+            if (!/\.(jpg|jpeg|png|JPG|PNG)$/.test(e.target.value)) {
+                alert("图片类型要求：jpeg、jpg、png")
+                return false
+            }
+            //转化为blob
+            let reader = new FileReader()
+            reader.onload = (e) => {
+                let data
+                if (typeof e.target.result === 'object') {
+                    data = window.URL.createObjectURL(new Blob([e.target.result]))
+                } else {
+                    data = e.target.result
+                }
+                this.option.img = data
+            }
+            //转化为base64
+            reader.readAsDataURL(file)
+        },
+        //上传图片
+        uploadImg(type) {
+            let _this = this;
+            //获取截图的blob数据
+            this.$refs.cropper.getCropBlob(async (data) => {
+                let formData = new FormData();
+                formData.append('file', data, "DX.jpg")
+                console.log('data：', data)
+                // 上传到服务端
+                // doSomething
+            })
+        },
+    },
+    computed: {
+        statusName() {
+            if (this.avatar == '') {
+                return '当前头像'
+            } else return '预览头像'
         }
     }
 }
 </script>
 
 <style scoped>
-.avatar-uploader {
+.header {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 178px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
+}
+
+.header .title {
+    font-size: 18px;
+    font-weight: 550;
+}
+
+.main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.left {
+    width: 250px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.image-now {
+    position: absolute;
+    width: 250px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.left img {
+    margin-top: 30px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    margin-left: 17.5px;
+    margin-top: 25px;
+}
+
+.cropper-con {
+    width: 200px;
+    height: 200px;
+    margin-right: 50px;
+    margin-top: -30px;
+}
+
+.btn {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    margin-top: 240px;
+    margin-left: -160px;
+}
+
+.btn #upload {
+    display: none;
+}
+
+.icon-btn {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #cdcdcd;
+    background: white;
+    border-radius: 25px;
     overflow: hidden;
+    position: relative;
+    transition: width 0.2s ease-in-out;
+    font-weight: 500;
+    font-family: inherit;
+}
+
+.add-btn:hover {
+    width: 120px;
+}
+
+.add-btn::before,
+.add-btn::after {
+    transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 4px;
+    width: 10px;
+    top: calc(50% - 2px);
+    background: rgb(0, 0, 0);
+}
+
+.add-btn::after {
+    right: 14px;
+    overflow: hidden;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.add-btn::before {
+    left: 14px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.icon-btn:focus {
+    outline: none;
+}
+
+.btn-txt {
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-top: 14px;
+}
+
+.add-btn:hover::before,
+.add-btn:hover::after {
+    width: 4px;
+    border-radius: 2px;
+}
+
+.add-btn:hover .btn-txt {
+    opacity: 1;
+}
+
+.add-icon::after,
+.add-icon::before {
+    transition: all 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 2px;
+    top: calc(50% - 10px);
+    background: rgb(0, 0, 0);
+    overflow: hidden;
+}
+
+.add-icon::before {
+    left: 22px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.add-icon::after {
+    right: 22px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.add-btn:hover .add-icon::before {
+    left: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+
+.add-btn:hover .add-icon::after {
+    right: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+
+.save button {
+    background-color: white;
+    color: black;
+    border-radius: 10em;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0.8em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid black;
+    box-shadow: 0 0 0 0 black;
+}
+
+.save button:hover {
+    transform: translateY(-4px) translateX(-2px);
+    box-shadow: 2px 5px 0 0 black;
+}
+
+.save button:active {
+    transform: translateY(2px) translateX(1px);
+    box-shadow: 0 0 0 0 black;
+}
+
+.save {
+    width: 100%;
     margin-left: 120px;
-}
-
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9 !important;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-}
-
-.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-}
-
-.avatar-upload {
-    width: 178px;
-    height: 178px;
-    display: block;
+    margin-top: -50px;
 }
 </style>

@@ -230,11 +230,13 @@ export default ({
                 this.error();
                 return;
             }
+
             this.signUpSuccess();
             this.finish();
             this.inputAccount = this.inputEnrollAccount;
             this.inputPassword = this.inputEnrollPassword_1;
             this.remember = false;//是否记住呢
+
             const newAccountObj = { account: this.inputAccount, password: this.inputPassword };
             this.accounts.push(newAccountObj);//传入数据
 
