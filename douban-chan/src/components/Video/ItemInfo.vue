@@ -1,6 +1,6 @@
 <template>
   <div class="info">
-    <div>
+    <div v-if="item.m_type !== 3">
         <ul>
             <li><span class="item-properties">导演</span><span>{{ item.m_director }}</span></li>
             <li><span class="item-properties">编剧</span><span>{{ item.m_writer }}</span></li>
@@ -10,6 +10,17 @@
             <li><span class="item-properties">国家</span><span>{{ item.m_region }}</span></li>
             <li><span class="item-properties">片长</span><span>{{ item.m_duration }}</span></li>
             <li><span class="item-properties">年份</span><span>{{ item.m_year }}</span></li>
+        </ul>
+    </div>
+
+    <div v-else>
+        <ul>
+            <li><span class="item-properties">作者</span><span>{{ item.m_author }}</span></li>
+            <li><span class="item-properties">类型</span><span>{{ item.m_genre }}</span></li>
+            <li><span class="item-properties">页数</span><span>{{ item.m_page }}</span></li>
+            <li><span class="item-properties">国家</span><span>{{ item.m_region }} </span></li>
+            <li><span class="item-properties">语言</span><span>{{ item.m_language }}</span></li>
+            <li><span class="item-properties">出版年</span><span>{{ item.m_year }}</span></li>
         </ul>
     </div>
   </div>

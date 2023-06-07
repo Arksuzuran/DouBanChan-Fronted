@@ -3,16 +3,17 @@
     <div class="postcard-dataicon-group">
         <div class="postcard-dataicon-wrapper" @click="handleLike">
             <i class="fa-solid fa-thumbs-up" :class="iconClass" ref="likeIcon"></i>
-            <span :class="fontClass">{{ getLikeNumber }}</span>
+            <span :class="fontClass">{{ like }}</span>
         </div>
         <div class="postcard-dataicon-wrapper" @click="handleDislike">
             <i class="fa-solid fa-thumbs-down" :class="iconClass" ref="dislikeIcon"></i>
-            <span :class="fontClass">{{ getDislikeNumber }}</span>
+            <span :class="fontClass">{{ dislike }}</span>
         </div>
     </div>
 </template>
 
 <script>
+import qs from 'qs'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'LikeButtonGroup',
@@ -21,8 +22,8 @@ export default {
         return {
             userLike: false,
             userDislike: false,
-            basicLikeNumber: this.info.like,
-            basicDislikeNumber: this.info.dislike,
+            like: this.info.like,
+            dislike: this.info.dislike
         }
     },
     computed: {
@@ -35,92 +36,84 @@ export default {
         iconClass() {
             return this.small ? 'postcard-icon-small' : 'postcard-icon'
         },
-        getLikeNumber() {
-            if (this.userLike) {
-                return this.basicLikeNumber + 1;
-            }
-            else {
-                return this.basicLikeNumber;
-            }
-        },
-        getDislikeNumber() {
-            if (this.userDislike) {
-                return this.basicDislikeNumber + 1;
-            }
-            else {
-                return this.basicDislikeNumber;
-            }
-        },
     },
-    methods: {
-        //帖子 文本相关
-        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
-        // 改变点赞数
-        uploadLike(num) {
-            //在此向后端发送请求
-            this.likeTextOnline({
-                textId: this.info.textId,
-                userId: this.userId,
-                is: num>0
+    methods:{
+        clickLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.info.textId,
+            }),
+            url: "/text/like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
             })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
         },
-        //改变点踩数
-        uploadDislike(num) {
-            //在此向后端发送请求
-            this.dislikeTextOnline({
-                textId: this.info.textId,
-                userId: this.userId,
-                is: num>0
+        clickCancelLike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.info.textId,
+            }),
+            url: "/text/cancel_like/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
             })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
         },
-        // 准备向后端发送点赞信息
-        prepareUploadLike() {
-            if (this.userLike) {
-                this.uploadLike(1)
-            }
-            else {
-                this.uploadLike(-1)
-            }
+        clickDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.info.textId,
+            }),
+            url: "/text/dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
         },
-        // 准备向后端发送点踩信息
-        prepareUploadDislike() {
-            if (this.userDislike) {
-                this.uploadDislike(1)
-            }
-            else {
-                this.uploadDislike(-1)
-            }
+        clickCancelDislike(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.info.textId,
+            }),
+            url: "/text/cancel_dislike/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
         },
-        // 处理点赞
         handleLike() {
-            // 更新点赞
             this.userLike = !this.userLike
-            this.prepareUploadLike()
-            // 点赞与点踩只能有一个
+            //点赞与点踩只能有一个
             if (this.userDislike) {
                 this.userDislike = false
-                this.prepareUploadDislike()
+                this.dislike -- 
+                // this.clickCancelDislike()
             }
-            // 更新css类
-            this.updateDislikeClass()
-            this.updateLikeClass()
-        },
-        // 处理点踩
-        handleDislike() {
-            // 更新点踩
-            this.userDislike = !this.userDislike
-            this.prepareUploadDislike()
-            // 点赞与点踩只能有一个
+            this.updateDislike()
+            this.updateLike()
             if (this.userLike) {
-                this.userLike = false
-                this.prepareUploadLike()
+                this.like++;
+                this.clickLike()
             }
-            // 更新css类
-            this.updateDislikeClass()
-            this.updateLikeClass()
+            else {
+                this.like--
+                this.clickCancelLike()
+            }
         },
-        // 根据点赞来修改css类
-        updateLikeClass() {
+        updateLike() {
             if (this.userLike) {
                 this.$refs.likeIcon.classList.add('postcard-icon-like')
             }
@@ -128,8 +121,27 @@ export default {
                 this.$refs.likeIcon.classList.remove('postcard-icon-like')
             }
         },
-        // 根据点踩来修改css类
-        updateDislikeClass() {
+        // 处理点踩
+        handleDislike() {
+            this.userDislike = !this.userDislike
+            //点赞与点踩只能有一个
+            if (this.userLike) {
+                this.userLike = false
+                this.like--;
+                // this.clickCancelLike()
+            }
+            this.updateDislike()
+            this.updateLike()
+            if (this.userDislike) {
+                this.dislike++;
+                this.clickDislike()
+            }
+            else {
+                this.dislike--
+                this.clickCancelDislike()
+            }
+        },
+        updateDislike() {
             if (this.userDislike) {
                 this.$refs.dislikeIcon.classList.add('postcard-icon-dislike')
             }
@@ -137,10 +149,34 @@ export default {
                 this.$refs.dislikeIcon.classList.remove('postcard-icon-dislike')
             }
         },
+        getStatus(){
+            this.$axios({
+            method: "post",
+            data: qs.stringify({
+                u_id: 2,
+                t_id: this.info.textId
+            }),
+            url: "/media/get_status/",
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            .then((res) => {
+                this.userLike = res.data.is_liked
+                this.userDislike = res.data.is_disliked
+                this.userFav = res.data.is_favorite
+                this.updateLike()
+                this.updateDislike()
+                // this.updateFav()
+                console.log(this.userLike)
+                console.log(this.userDislike)
+                console.log(this.userFav)
+            })
+            .catch((err) => {
+                this.$message.error("网络出错QAQ")
+            });
+        }
     },
     mounted() {
-        this.updateLikeClass()
-        this.updateDislikeClass()
+        this.getStatus()
     },
 }
 </script>

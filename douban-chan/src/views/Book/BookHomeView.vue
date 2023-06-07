@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="grouphome-header-container">
-      <div class="grouphome-header-title" @click="toVideoDefault">豆瓣影视酱</div>
+      <div class="grouphome-header-title" @click="toVideoDefault">豆瓣图书酱</div>
       <!-- 按钮组 -->
       <div v-for="button in buttons" :key="button.id" class="grouphome-header-btn"
         :class="getActiveButtonClass(button.id)" @click="handleSelect(button.id)">
@@ -45,17 +45,17 @@ export default {
     handleSelect(index) {
       if (index === 0) {
         this.$router.push({
-          name: "videoRankBoard"
+          name: "bookRankBoard"
         });
       } else if (index === 1) {
         this.$router.push({
-          name: "videoCategory"
+          name: "bookCategory"
         });
       }
     },
     toVideoDefault(){
       this.$router.push({
-        name:"videoDefault"
+        name:"bookDefault"
       })
     },
     

@@ -5,7 +5,16 @@
             <i class="el-icon-chat-dot-round" style="font-size: 30px; margin-right: 10px;"></i><div class="sectionTitle">评论区</div>
             <div class="commentNum">{{ commentNum }}条</div>
         </div>
+        <div class="section-row">
+            <div class="choose">
+                <div class="tab" :class="{ active: activeTab === 'latest' }" @click="setActiveTab('latest')">最新</div>
+                |
+                <div class="tab" :class="{ active: activeTab === 'hottest' }" @click="setActiveTab('hottest')">最热</div>
+            </div>
+        </div>
+        
         <div class="write-comment"><el-button type="primary" icon="el-icon-edit" @click="changeReplying">写评论</el-button></div>
+        
     </div>
     
     <CommentReplyInputBox v-if="isReplying" :textId="textId" :targetUserName="reviewerName">
@@ -18,6 +27,7 @@
 <script>
 import commentFirstLevel from '@/components/review/commentFirstLevel.vue'
 import CommentReplyInputBox from '@/components/post/button/CommentReplyInputBox.vue';
+import qs from 'qs'
 export default {
     name: 'CommentSection',
     components: {
@@ -61,6 +71,19 @@ export default {
         }
     },
     methods:{
+        setActiveTab(tab) {
+            if (this.activeTab != tab) {
+                this.activeTab = tab;
+                if (tab === 'latest') {
+                console.log('最新');
+                this.reviewItems = this.reviewsOrderedByTime
+                }
+                else if (tab === 'hottest') {
+                console.log('最热');
+                this.reviewItems = this.reviewsOrderedByLike
+                }
+            }
+        },
         changeReplying() {
             this.isReplying = !this.isReplying;
         },
@@ -102,5 +125,13 @@ export default {
     display: inline-block;
     font-size: 16px;
     margin-left: 20px;
+}
+.section-row{
+    display: inline-block;
+    margin-left: 10px;
+}
+.tab {
+  display: inline-block;
+  cursor: pointer;
 }
 </style>

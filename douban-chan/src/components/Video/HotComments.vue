@@ -30,10 +30,6 @@ export default {
 </script>
 
 <style scoped>
-.button-for-more {
-    margin-top: 5px;
-    float: right;
-}
 
 .film-module-block2 {
     width: 100%;
