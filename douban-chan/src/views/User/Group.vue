@@ -6,8 +6,6 @@
       <div class="group-list-for-switch">
         <GroupCard v-for="group in groupList" :key="group.groupId" :group="group">
         </GroupCard>
-        <GroupCard v-for="group in groupList" :key="group.groupId" :group="group">
-        </GroupCard>
       </div>
 
     </div>
@@ -16,6 +14,8 @@
 
 <script>
 import GroupCard from '@/components/group/GroupCard.vue'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default {
   components: {
     GroupCard,
@@ -27,96 +27,28 @@ export default {
   },
   methods: {
     getGroupListOnline() {
-      return [
-        {
-          groupId: 'g001',
-          groupHeadBgUrl: require('../../assets/user-image-7.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-1.jpg'),
-          groupName: "集美小组集美小组集美小组",
-          groupIntro: "家人们谁懂啊，咱就是说一整个无语住了，一把子大动作给到了，今天又是在逃公主的一天，九敏九敏真的太好哭了吧，下头男",
-          tagList: ['生活', '文化'],
-          groupPostNumber: 321,
-          groupFollowNumber: 594,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-        {
-          groupId: 'g002',
-          groupHeadBgUrl: require('../../assets/user-bg-4.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-2.jpg'),
-          groupName: "coding小组",
-          groupIntro: "编程爱好者聚集地",
-          tagList: ['生活', '游戏', '文化'],
-          groupPostNumber: 597,
-          groupFollowNumber: 792,
-          memberList: [
-            {
-              userId: '001',
-              userName: "羽毛笔",
-              userImageUrl: require('../../assets/user-image-1.jpg'),
-              isAdmin: false,
-            },
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '004',
-              userName: "bochi",
-              userImageUrl: require('../../assets/user-image-7.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-        {
-          groupId: 'g003',
-          groupHeadBgUrl: require('../../assets/group-img-8.jpg'),
-          groupAvatarImgUrl: require('../../assets/group-avatar-3.jpg'),
-          groupName: "蔚蓝档案小组",
-          groupIntro: "联邦理事会宣布对此事件负责",
-          tagList: ['游戏'],
-          groupPostNumber: 1367,
-          groupFollowNumber: 59521,
-          memberList: [
-            {
-              userId: '002',
-              userName: "Chino",
-              userImageUrl: require('../../assets/user-image-8.jpg'),
-              isAdmin: true,
-            },
-            {
-              userId: '003',
-              userName: "_Karasu_",
-              userImageUrl: require('../../assets/user-image-6.jpg'),
-              isAdmin: false,
-            },
-          ],
-        },
-      ]
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          u_id: this.userId,
+        }),
+        url: "/user/register/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          console.log(res.data)
+          //给groupList赋值
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ");
+        });
     },
   },
+  computed: {
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+  },
   mounted() {
-    this.groupList = this.getGroupListOnline();
+    // this.groupList = this.getGroupListOnline();
   },
 }
 </script>

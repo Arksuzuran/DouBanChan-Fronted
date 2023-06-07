@@ -26,44 +26,18 @@
 import ScrollingScreenCard from '../components/ScrollingScreenCard.vue';
 import CollectionCard from '../components/CollectionCard.vue';
 import RefreshButton from './RefreshButton.vue';
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
+    components: {
+        ScrollingScreenCard,
+        CollectionCard,
+        RefreshButton,
+    },
     data() {
         return {
             index_card: 0,
+            scrollCards: [
+            ],
             collectionCards: [
-                {
-                    id: 1,
-                    image: require(`../assets/conroy_img/doupo.png`),
-                    rate: '95%',
-                    name: '斗破苍穹',
-                    star: '萧炎 萧薰儿 美杜莎',
-                    text: '三十年河东三十年河西，莫欺少年穷！',
-                },
-                {
-                    id: 2,
-                    image: require(`../assets/conroy_img/login-back.jpg`),
-                    rate: '90%',
-                    name: '芭比娃娃',
-                    text: '我，迷人吗？',
-                    star: '粉色女郎',
-                },
-                {
-                    id: 3,
-                    image: require(`../assets/conroy_img/shadowdie.jpg`),
-                    rate: '97%',
-                    name: '只狼 影逝二度',
-                    star: '弦一郎',
-                    text: '不死斩，斩灭不死！',
-                },
-                {
-                    id: 4,
-                    image: require(`../assets/conroy_img/image.jpg`),
-                    rate: '98%',
-                    name: '偶像梦想祭',
-                    text: '浓度很高，but this is for u！',
-                    star: '朔间零',
-                },
             ],
         };
     },
@@ -86,14 +60,42 @@ export default {
             const endIndex = this.currentPage * this.pageSize;
             this.displayedMovieList = this.movieList.slice(startIndex, endIndex);
         },
+        //请求主页轮播图数据
+        requestScrollCards() {
+            this.$axios({
+                method: "post",
+                url: "/base/base_movie_series_list/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.scrollCards = res.data.list;
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        //请求主页书香之选数据
+        requestCollectionCards() {
+            this.$axios({
+                method: "post",
+                url: "/base/base_book_list/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.collectionCards = res.data.list;
+                })
+                .catch((err) => {
+                    this.error();
+                    this.$message.error("网络出错QAQ");
+                });
+        },
     },
-    components: {
-        ScrollingScreenCard,
-        CollectionCard,
-        RefreshButton,
-    },
-    computed: {
-        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId', 'scrollCards']),
+    mounted() {
+        this.requestScrollCards();
+        this.requestCollectionCards();
     }
 }
 </script>

@@ -1,3 +1,6 @@
+// 在页面加载时从本地存储中读取状态
+const savedState = localStorage.getItem('state');
+const initialState = savedState ? JSON.parse(savedState) : {};
 //用户信息管理
 export default {
 	namespaced: true,
@@ -5,6 +8,11 @@ export default {
 
 	},
 	mutations: {
+		// 更新状态，并保存到本地存储
+		updateState(state, newState) {
+			Object.assign(state, newState);
+			localStorage.setItem('state', JSON.stringify(state));
+		},
 		//转换为已登录
 		LOGIN(state, value) {
 			console.log('user mutations中的LOGIN被调用了')
@@ -18,11 +26,14 @@ export default {
 			state.userSex = value.u_gender;
 			state.userSignature = value.u_signature;
 			state.userImgUrl = value.u_profile_photo;
+			localStorage.setItem('state', JSON.stringify(state));
 		},
 		//转换为登出
 		LOGOUT(state, value) {
 			console.log('user mutations中的LOGOUT被调用了')
 			state.isLogin = false;
+			localStorage.removeItem('isLogin');
+			localStorage.removeItem('userId');
 		},
 		//清除新回复数量
 		ClearUserReplyNum(state) {
@@ -49,13 +60,9 @@ export default {
 		ModifyUserImgUrl(state, img) {
 			state.userImgUrl = img;
 		},
-
-		//请求主页轮播图数据
-		requestScrollCards(state, scroll) {
-			state.scrollCards = scroll.data.list;
-		}
 	},
 	state: {
+		...initialState,
 		//当前是否登录
 		isLogin: false,
 		//头像路径
@@ -71,7 +78,7 @@ export default {
 		//用户生日
 		userBirthday: '2002-01-13',
 		//用户id
-		userId: "20375337",
+		userId: "1",
 		//用户个性签名
 		userSignature: "爱没有技巧,真诚才是必杀技",
 		//用户简介
@@ -206,52 +213,6 @@ export default {
 				title: 'ADK太吊了,北航不允许这么牛逼的人存在',
 				text: '家人们,GodA你听过吗?不得了啊,不得了啊,他一个小时写完挑战性任务,软工前后端全栈,国奖什么的都是小意思,paper遍地走,nature得管他叫爹,院士得喊他哥,女人们都想做他的学术妲己,男人们都想做他的GGBoy!',
 				handled: 2,
-			},
-		],
-
-		//主页轮播图所需要的数组
-		scrollCards: [
-			{
-				id: 1,
-				cardImage: require(`../assets/conroy_img/snake.jpg`),
-				miniImage: require(`../assets/conroy_img/doupo.png`),
-				name: '斗破苍穹',
-				text: '三十年河东三十年河西，莫欺少年穷！',
-			},
-			{
-				id: 2,
-				cardImage: require(`../assets/conroy_img/login-back.jpg`),
-				miniImage: require(`../assets/conroy_img/xw.jpg`),
-				name: '芭比娃娃',
-				text: '我，迷人吗？',
-			},
-			{
-				id: 3,
-				cardImage: require(`../assets/conroy_img/shadowdie2.jpg`),
-				miniImage: require(`../assets/conroy_img/shadowdie.jpg`),
-				name: '只狼 影逝二度',
-				text: '不死斩，斩灭不死！',
-			},
-			{
-				id: 4,
-				cardImage: require(`../assets/conroy_img/OM.jpg`),
-				miniImage: require(`../assets/conroy_img/image.jpg`),
-				name: '偶像梦想祭',
-				text: '浓度很高，but this is for u！',
-			},
-			{
-				id: 5,
-				cardImage: require(`../assets/conroy_img/snake.jpg`),
-				miniImage: require(`../assets/conroy_img/doupo.png`),
-				name: '斗破苍穹',
-				text: '三十年河东三十年河西，莫欺少年穷！',
-			},
-			{
-				id: 6,
-				cardImage: require(`../assets/conroy_img/snake.jpg`),
-				miniImage: require(`../assets/conroy_img/doupo.png`),
-				name: '斗破苍穹',
-				text: '三十年河东三十年河西，莫欺少年穷！',
 			},
 		],
 	},
