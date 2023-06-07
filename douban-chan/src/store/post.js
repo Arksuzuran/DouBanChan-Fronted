@@ -27,11 +27,7 @@ export default {
             //             reject(err);
             //         });
             // });
-            if (info.input) {
-                console.log("依据指定tag获取帖子列表，指定搜索内容：", info.input);
-            } else {
-                console.log("随机获取帖子列表");
-            }
+            console.log("全站搜索帖子", info.input);
             context.commit("SET_POSTLIST", context.state.postList);
         },
 
@@ -45,12 +41,12 @@ export default {
                         u_id: info.userId,
                         c_tag: info.tag,
                     }),
-                    url: "/group/query_posts_by_tag/",
+                    url: "/post/query_posts_by_tag/",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        console.log('根据tag获得帖子列表成功',res);
-                        context.commit("SET_POSTLIST", res.data);
+                        console.log("根据tag获得帖子列表成功", res);
+                        context.commit("SET_POSTLIST", res.data.postList);
                         resolve(res);
                     })
                     .catch((err) => {
@@ -72,11 +68,11 @@ export default {
                     data: qs.stringify({
                         u_id: info.userId,
                     }),
-                    url: '666',
+                    url: "666",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        console.log('获得我的小组所属的帖子列表',res);
+                        console.log("获得我的小组所属的帖子列表", res);
                         let postList = res.data;
                         context.commit("SET_POSTLIST", postList);
                         resolve(res);
@@ -128,11 +124,11 @@ export default {
                         u_id: info.userId,
                         g_id: info.groupId,
                     }),
-                    url: 'post/query_group_posts/',
+                    url: "post/query_group_posts/",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        console.log('获取小组内的帖子列表成功', res);
+                        console.log("获取小组内的帖子列表成功", res);
                         context.commit("SET_POSTLIST", res.data.postList);
                         resolve(res);
                     })
@@ -145,52 +141,50 @@ export default {
         },
         //根据话题id获取帖子列表
         getPostListByTopicIdOnline(context, info) {
-            return new Promise((resolve, reject) => {
-                axios({
-                    method: "post",
-                    data: qs.stringify({
-                        u_id: info.userId,
-                        c_id: info.topicId,
-                    }),
-                    url: 'post/query_topic_posts/',
-                    headers: { "content-type": "application/x-www-form-urlencoded" },
-                })
-                    .then((res) => {
-                        console.log('获取话题内的帖子列表成功', res);
-                        context.commit("SET_POSTLIST", res.data.postList);
-                        resolve(res);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            });
-            console.log("依据话题id获取帖子列表，话题id：", info.c_id);
-            context.commit("SET_POSTLIST", context.state.postList);
-        },
-
-        //根据帖子id获取帖子的全部信息（含楼层列表）
-        getPostOnline(context, info) {
             // return new Promise((resolve, reject) => {
             //     axios({
             //         method: "post",
             //         data: qs.stringify({
-            //             // u_id: 1,
             //             u_id: info.userId,
-            //             p_id: info.postId,
+            //             c_id: info.topicId,
             //         }),
-            //         url: '111',
+            //         url: "post/query_topic_posts/",
             //         headers: { "content-type": "application/x-www-form-urlencoded" },
             //     })
             //         .then((res) => {
-            //             console.log(res);
-            //             let post = res.data;
-            //             context.commit("SET_POSTINFO", postInfo);
+            //             console.log("获取话题内的帖子列表成功", res);
+            //             context.commit("SET_POSTLIST", res.data.postList);
             //             resolve(res);
             //         })
             //         .catch((err) => {
             //             reject(err);
             //         });
             // });
+            console.log("依据话题id获取帖子列表，话题id：", info.c_id);
+            context.commit("SET_POSTLIST", context.state.postList);
+        },
+
+        //根据帖子id获取帖子的全部信息（含楼层列表）
+        getPostOnline(context, info) {
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        p_id: info.postId,
+                    }),
+                    url: "post/query_single_post/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log("帖子楼层信息获取成功", res);
+                        context.commit("SET_POSTINFO", res.data.post);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("依据帖子id获取帖子，id：", info.p_id);
             context.commit("SET_POSTINFO", context.state.postInfo);
         },
@@ -213,7 +207,7 @@ export default {
                             text: newPost.text,
                             picture_list: newPost.postImageUrlList,
                         },
-                        { arrayFormat: 'comma' }
+                        { arrayFormat: "comma" }
                         // { arrayFormat: "repeat" }
                     ),
                     url: "post/add_post/",
@@ -229,28 +223,31 @@ export default {
             });
             console.log("小组创建帖子", newPost);
         },
-        //回复帖子1
+        //回复帖子12
         replyPostOnline(context, newReply) {
-            console.log("回复帖子", newReply);
-            // let url = "/text/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             t_description,
-            //             t_father_text_id,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify(
+                        {
+                            u_id: newReply.userId,
+                            p_id: newReply.postId,
+                            text: newReply.text,
+                            picture_list: newReply.imageUrlList,
+                        },
+                        { arrayFormat: "comma" }
+                    ),
+                    url: "post/reply_post/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log("回帖成功", res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
         //点赞帖子1
         likePostOnline(context, info) {
@@ -385,26 +382,25 @@ export default {
 
         //回复文本1
         replyTextOnline(context, info) {
-            // let url = info.good ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        t_description: info.text,
+                        t_father_text_id: info.textId, 
+                    }),
+                    url: '/text/reply_text/',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('楼层回复成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("回复text", info.textId, info.newReply);
         },
         //点赞文本 is:为真则点赞 为假则取消点赞
@@ -455,7 +451,7 @@ export default {
         // 假数据
         postList: [
             {
-                postId: "p001",
+                postId: 6,
                 lzId: "004", //发帖人id
                 lzName: "bochi", //发帖人昵称
                 lzImageUrl: require("../assets/user-image-7.jpg"), //发帖人头像路径
@@ -483,10 +479,10 @@ export default {
                 userFav: false,
                 //如果该小组不来自于一个小组 那么下面的字段均填 ''
                 groupName: "Game", //来自的小组的名称
-                groupId: "g001", //来自的小组的id
+                groupId: 1, //来自的小组的id
             },
             {
-                postId: "p002",
+                postId: 2,
                 lzId: "001",
                 lzName: "羽毛笔",
                 lzImageUrl: require("../assets/user-image-1.jpg"),
@@ -513,10 +509,10 @@ export default {
                 userFav: false,
                 //如果该小组不来自于一个小组 那么下面的字段均填 ''
                 groupName: "BUAA", //来自的小组的名称
-                groupId: "g002", //来自的小组的id
+                groupId: 2, //来自的小组的id
             },
             {
-                postId: "p003",
+                postId: 3,
                 lzId: "002",
                 lzName: "Chino",
                 lzImageUrl: require("../assets/user-image-8.jpg"),
@@ -543,10 +539,10 @@ export default {
                 userFav: false,
                 //如果该小组不来自于一个小组 那么下面的字段均填 ''
                 groupName: "黑坤巴", //来自的小组的名称
-                groupId: "g003", //来自的小组的id
+                groupId: 3, //来自的小组的id
             },
             {
-                postId: "p004",
+                postId: 4,
                 lzId: "002",
                 lzName: "Chino",
                 lzImageUrl: require("../assets/user-image-8.jpg"),
@@ -573,11 +569,11 @@ export default {
                 userFav: false,
                 //如果该小组不来自于一个小组 那么下面的字段均填 ''
                 groupName: "", //来自的小组的名称
-                groupId: "", //来自的小组的id
+                groupId: 4, //来自的小组的id
             },
         ],
         postInfo: {
-            postId: "p001",
+            postId: 1,
             lzId: "004", //发帖人id
             lzName: "bochi", //发帖人昵称
             lzImageUrl: require("../assets/user-image-7.jpg"), //发帖人头像路径
@@ -605,7 +601,7 @@ export default {
             userFav: false,
             //如果该小组不来自于一个小组 那么下面的字段均填 ''
             groupName: "Game", //来自的小组的名称
-            groupId: "g001", //来自的小组的id
+            groupId: 4, //来自的小组的id
             // 楼层列表
             floorList: [
                 {

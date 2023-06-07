@@ -116,17 +116,13 @@ export default {
         async createPost() {
             //构造对象
             let newReply = {
-                floor: this.postInfo.comments,
                 userId: this.userId,
-                userName: this.userName,
-                userImageUrl: this.userImgUrl,
+                postId: this.postInfo.postId,
                 text: this.form.text,
                 imageUrlList: this.form.imgIdList,
             };
             try {
-                await this.replyPostOnline({
-                    newReply,
-                })
+                await this.replyPostOnline(newReply)
             } catch (err) {
                 this.$message.error('网络错误, 发帖失败')
             }

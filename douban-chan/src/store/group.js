@@ -27,11 +27,7 @@ export default {
             //             reject(err);
             //         });
             // });
-            if (info.input) {
-                console.log("依据指定tag获取小组列表，指定搜索内容：", info.input);
-            } else {
-                console.log("随机获取小组列表");
-            }
+            console.log("全站搜索小组", info.input);
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
         //根据info.tag 获取小组列表12
@@ -48,9 +44,8 @@ export default {
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        console.log(res);
-                        let groupList = res.data.groupList;
-                        context.commit("SET_GROUPLIST", groupList);
+                        console.log('根据tag获取小组列表成功',res);
+                        context.commit("SET_GROUPLIST", res.data.groupList);
                         resolve(res);
                     })
                     .catch((err) => {
@@ -122,17 +117,14 @@ export default {
                     data: qs.stringify({
                         u_id: info.userId,
                         g_id: info.groupId,
-                        // u_id: 1,
-                        // g_id: 3,
                     }),
                     url: "/group/group_brief/",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
-                        let groupInfo = res.data;
-                        context.commit("SET_GROUPINFO", groupInfo);
+                        console.log('成功获取小组详细信息',res);
+                        context.commit("SET_GROUPINFO", res.data);
                         resolve(res);
-                        console.log(res);
                     })
                     .catch((err) => {
                         reject(err);

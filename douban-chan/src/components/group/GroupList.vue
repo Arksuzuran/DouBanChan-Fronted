@@ -48,7 +48,6 @@ export default {
   methods: {
     // 选择需要调用的组件
     getComponentType() {
-      console.log(this.DIYCardComponentName)
       if (this.DIYCardComponentName) {
         return this.DIYCardComponentName
       }

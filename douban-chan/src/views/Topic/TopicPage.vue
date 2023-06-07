@@ -125,6 +125,11 @@ export default {
                 await this.getTopicListByHotOnline({
                     userId:  this.userId,
                 });
+                await this.getTopicInfoOnline({
+                    userId:  this.userId,
+                    topicId: id,
+
+                });
             } catch (err) {
                 this.$message.error('网络错误')
             }
@@ -135,7 +140,7 @@ export default {
         ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
         //获取小组列表    
         ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
-        ...mapActions('topicAbout', ['createTopicOnline', 'joinTopicOnline']),
+        ...mapActions('topicAbout', ['createTopicOnline', 'joinTopicOnline', 'getTopicInfoOnline']),
     },
     computed: {
         //头像路径与用户名
@@ -280,7 +285,7 @@ export default {
 .topic-header-follown {
     /* 位置 */
     position: absolute;
-    right: 40px;
+    right: 30px;
     bottom: 20px;
     border-radius: 5px;
     /* 高度 */
@@ -299,7 +304,7 @@ export default {
 /* 话题帖子数 */
 .topic-header-postn {
     position: absolute;
-    right: 150px;
+    right: 160px;
     bottom: 20px;
     border-radius: 5px;
     height: 42px;

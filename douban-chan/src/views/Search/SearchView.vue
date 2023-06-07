@@ -51,7 +51,7 @@ export default {
   methods: {
     handleJump() {
       console.log(this.activeIndex)
-      console.log(this.allResult[this.activeIndex])
+      console.log('即将跳转到结果页面',this.allResult[this.activeIndex])
       this.$router.push({
         name: this.activeIndex,
         params: {
@@ -68,21 +68,20 @@ export default {
       // 在此请求数据
       try {
         await this.getPostListSearchOnline({
-          input,
+          input: this.input,
           userId: this.userId,
         })
         await this.getGroupListSearchOnline({
-          input,
+          input: this.input,
           userId: this.userId,
         })
         await this.getTopicListSearchOnline({
-          input,
+          input: this.input,
           userId: this.userId,
         })
       } catch (err) {
         this.$message.error('网络错误')
       }
-
 
       this.allResult.searchTopic = this.topicList.slice()
       this.allResult.searchGroup = this.groupList.slice()
@@ -107,6 +106,15 @@ export default {
     ...mapGetters('postAbout', ['postList']),
     ...mapGetters('topicAbout', ['topicList']),
     ...mapGetters('groupAbout', ['groupList']),
+  },
+  // 从其他页面的搜索框跳转而来，那么进入搜索页面以给定的参数直接搜索
+  mounted(){
+    let preParams = this.$route.params
+    if(preParams.input){
+      this.input = preParams.input
+      this.activeIndex = preParams.index
+      this.handleSearch()
+    }
   },
 }
 </script>

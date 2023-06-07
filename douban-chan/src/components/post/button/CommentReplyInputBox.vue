@@ -47,7 +47,7 @@ export default {
                 return;
             }
             let newReply = {
-                textId,
+                textId: this.textId,
                 userId: this.userId,
                 text: this.text,
             }
@@ -55,11 +55,9 @@ export default {
             if (this.floor2) {
                 newReply.text = this.replyHeaderStr + newReply.text
             }
+            console.log(newReply)
             try {
-                this.replyTextOnline({
-                    textId: this.textId,
-                    newReply,
-                })
+                this.replyTextOnline(newReply)
             } catch (err) {
                 this.$message.error('网络错误')
             }
