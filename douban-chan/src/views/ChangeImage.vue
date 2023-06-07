@@ -1,12 +1,12 @@
 <template>
     <button>
-        <i class="fa-solid fa-image"></i> 修改头像
+        <i class="fa-solid fa-image" style="color:#ff742e"></i> 修改头像
     </button>
 </template>
 
 <style scoped>
 button {
-    color: rgb(0, 0, 0);
+    color: #ff742e;
     text-decoration: none;
     font-size: 25px;
     border: none;

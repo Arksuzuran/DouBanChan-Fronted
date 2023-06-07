@@ -10,12 +10,13 @@
           <!-- 头像与签名 -->
           <div class="header-user-info">
             <img :src="userImgUrl" class="header-user-avatar" />
-            <div class="header-user-details">
-              <div class="header-user-nickname-wrapper">
-                <p class="header-user-nickname">{{ userName }}</p>
-              </div>
-              <p class="header-user-signature">{{ userSignature }}</p>
+            <div class="header-user-nickname-wrapper">
+              <span class="header-user-nickname">{{ userNick }}</span>
             </div>
+            <div class="header-user-signature-wrapper">
+              <span class="header-user-signature">{{ userSignature }}</span>
+            </div>
+
           </div>
         </div>
 
@@ -55,8 +56,6 @@ export default {
       //Header
       //头图设置
       userHeadUrl: require("../assets/conroy_img/OM.jpg"),
-      //用户签名
-      userSignature: "你好，我是羽毛笔。",
     };
   },
   methods: {
@@ -69,7 +68,7 @@ export default {
   },
   computed: {
     //头像路径与用户名
-    ...mapState('userAbout', ['userName', 'userImgUrl']),
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'userSignature', 'userNick']),
     activeIndex() {
       const currentRoute = this.$route.path;
       if (currentRoute === '/userHome/home') {
@@ -132,7 +131,6 @@ export default {
   width: 100%;
   height: 100px;
   display: flex;
-  align-items: center;
   justify-content: left;
   padding: 5px;
   box-sizing: border-box;
@@ -147,16 +145,12 @@ export default {
   margin-right: 20px;
 }
 
-.header-user-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 50px;
-}
 
 .header-user-nickname-wrapper {
+  position: absolute;
+  margin-left: 100px;
+  margin-top: 10px;
   display: flex;
-  margin-right: 80px;
   background-color: rgba(255, 255, 255, 0.3);
   /* 调整昵称背景色透明度 */
   border-radius: 5px;
@@ -166,13 +160,17 @@ export default {
 }
 
 .header-user-nickname {
-  margin: 0;
   font-size: 20px;
   font-weight: bold;
   color: #000000;
 }
 
 .header-user-signature {
+  position: absolute;
+  margin-top: 50px;
+}
+
+.header-user-signature-wrapper {
   font-size: 16px;
   color: #170f0f;
 }

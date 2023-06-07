@@ -63,6 +63,18 @@ export default ({
             }
             else return '#ff0000';
         },
+    },
+    mounted() {
+        if (this.manage.handled == 0) {
+            this.isHandle = false;
+        } else if (this.manage.handled == 1) {
+            this.isHandle = true;
+            this.success = true;
+        }
+        else if (this.manage.handled == 2) {
+            this.isHandle = true;
+            this.fail = true;
+        }
     }
 })
 </script>

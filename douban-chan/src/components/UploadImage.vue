@@ -7,7 +7,7 @@
                     <img :src="avatar" alt="">
                 </div>
                 <div v-if="avatar == ''" class="image-now">
-                    <img :src="require('../assets/conroy_img/qq.jpg')" alt="">
+                    <img :src="userImgUrl" alt="">
                 </div>
             </div>
             <div class="right">
@@ -26,9 +26,9 @@
                     <input id="upload" type="file" @change="selectImg">
                     <label for="upload" class="icon-btn add-btn">
                         <div class="add-icon"></div>
-                        <div class="btn-txt">上传图片</div>
+                        <div class="btn-txt">{{ buttonName }}</div>
                     </label>
-                    <div class="save">
+                    <div class="save" @click="saveUserImg">
                         <button>
                             确认更换
                         </button>
@@ -42,7 +42,8 @@
 </template>
 
 <script>
-import { VueCropper } from 'vue-cropper'
+import { VueCropper } from 'vue-cropper';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
     name: "CropperImage",
     components: {
@@ -78,6 +79,35 @@ export default {
         };
     },
     methods: {
+        ...mapMutations('userAbout', ['ModifyUserImgUrl']),
+        saveUserImg() {
+            if (this.option.img == '') {
+                this.modifyError();
+                return;
+            }
+            this.uploadImg();
+        },
+        modifySuccess() {
+            this.$Notify.success({
+                title: 'Success!',
+                message: '头像更新成功！',
+                showClose: false,
+            })
+        },
+        modifyError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '请选择图片上传！',
+                showClose: false,
+            })
+        },
+        uploadError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '图片上传失败，请重新上传',
+                showClose: false,
+            })
+        },
         //初始化函数
         imgLoad(msg) {
             console.log('载入成功...')
@@ -97,7 +127,7 @@ export default {
                 return false
             }
             if (!/\.(jpg|jpeg|png|JPG|PNG)$/.test(e.target.value)) {
-                alert("图片类型要求：jpeg、jpg、png")
+                alert("图片类型要求:jpeg、jpg、png")
                 return false
             }
             //转化为blob
@@ -115,15 +145,37 @@ export default {
             reader.readAsDataURL(file)
         },
         //上传图片
-        uploadImg(type) {
-            let _this = this;
+        uploadImg() {
             //获取截图的blob数据
             this.$refs.cropper.getCropBlob(async (data) => {
                 let formData = new FormData();
-                formData.append('file', data, "DX.jpg")
-                console.log('data：', data)
+                formData.append('p_content', data, "userImage.jpg")
+                formData.append("u_id", this.userId)
+                console.log('data:', data);
                 // 上传到服务端
-                // doSomething
+                this.$axios({
+                    method: "post",
+                    data: formData,
+                    url: "/user/update_profile/",
+                    headers: { "content-type": " multipart/form-data" },
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        const uploadSuccess = res.data.msg;
+                        if (uploadSuccess != 0) {
+                            this.uploadError();
+                            return;
+                        }
+                        this.ModifyUserImgUrl(this.option.img);
+                        this.modifySuccess();
+                        this.avatar = '';
+                    })
+                    .catch((err) => {
+                        this.$message({
+                            type: "error",
+                            message: "网络出错QAQ",
+                        });
+                    });
             })
         },
     },
@@ -132,7 +184,14 @@ export default {
             if (this.avatar == '') {
                 return '当前头像'
             } else return '预览头像'
-        }
+        },
+        ...mapState('userAbout', ['userImgUrl']),
+        buttonName() {
+            if (this.option.img == '') {
+                return '上传图片'
+            } else return '重新选择'
+        },
+        ...mapState('userAbout', ['isLogin', 'userId']),
     }
 }
 </script>

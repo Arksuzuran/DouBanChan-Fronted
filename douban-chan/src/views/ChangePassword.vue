@@ -1,12 +1,12 @@
 <template>
     <button>
-        <i class="fa-solid fa-lock"></i> 修改密码
+        <i class="fa-solid fa-lock" style="color:#ff742e"></i> 修改密码
     </button>
 </template>
 
 <style scoped>
 button {
-    color: rgb(0, 0, 0);
+    color: #ff742e;
     text-decoration: none;
     font-size: 25px;
     border: none;
