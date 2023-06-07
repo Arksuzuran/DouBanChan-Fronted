@@ -33,9 +33,9 @@
             <div class="user-home-info" @click="skipSetting">
                 <div class="card" style="--rating:90">
                     <div class="icon"><i class="fa-solid fa-user" style="color: #ff7e29;"></i></div>
-                    <div class="title">Did <span style="color: #4f7eff;">{{ Did }}</span></div>
-                    <p class="sex">性别 <span style="color: #4f7eff;">{{ sex }}</span> &nbsp&nbsp&nbsp&nbsp 生日 <span
-                            style="color: #4f7eff;">{{ birthday }}</span></p>
+                    <div class="title">Did <span style="color: #4f7eff;">{{ userId }}</span></div>
+                    <p class="sex">性别 <span style="color: #4f7eff;">{{ userSex }}</span> &nbsp&nbsp&nbsp&nbsp 生日 <span
+                            style="color: #4f7eff;">{{ userBirthday }}</span></p>
                     <a class="link">修改资料</a>
                 </div>
             </div>
@@ -48,6 +48,7 @@ import CollectionCard from '../../components/CollectionCard.vue';
 import PostCard from '../../components/post/PostCard.vue';
 import GroupCard from '@/components/group/GroupCard.vue';
 import SubscribeCard from '../../components/SubscribeCard.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
     components: {
         CollectionCard,
@@ -59,9 +60,6 @@ export default {
         return {
             postList: [],
             groupList: [],
-            Did: 12306777,
-            sex: '男',
-            birthday: '01-13',
             subscribes: [
                 {
                     id: 1,
@@ -266,6 +264,9 @@ export default {
     mounted() {
         this.postList = this.getPostListOnline();
         this.groupList = this.getGroupListOnline();
+    },
+    computed: {
+        ...mapState('userAbout', ['userId', 'userBirthday', 'userSex']),
     },
 };
 </script>

@@ -26,54 +26,11 @@
 import ScrollingScreenCard from '../components/ScrollingScreenCard.vue';
 import CollectionCard from '../components/CollectionCard.vue';
 import RefreshButton from './RefreshButton.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
     data() {
         return {
             index_card: 0,
-            scrollCards: [
-                {
-                    id: 1,
-                    cardImage: require(`../assets/conroy_img/snake.jpg`),
-                    miniImage: require(`../assets/conroy_img/doupo.png`),
-                    name: '斗破苍穹',
-                    text: '三十年河东三十年河西，莫欺少年穷！',
-                },
-                {
-                    id: 2,
-                    cardImage: require(`../assets/conroy_img/login-back.jpg`),
-                    miniImage: require(`../assets/conroy_img/xw.jpg`),
-                    name: '芭比娃娃',
-                    text: '我，迷人吗？',
-                },
-                {
-                    id: 3,
-                    cardImage: require(`../assets/conroy_img/shadowdie2.jpg`),
-                    miniImage: require(`../assets/conroy_img/shadowdie.jpg`),
-                    name: '只狼 影逝二度',
-                    text: '不死斩，斩灭不死！',
-                },
-                {
-                    id: 4,
-                    cardImage: require(`../assets/conroy_img/OM.jpg`),
-                    miniImage: require(`../assets/conroy_img/image.jpg`),
-                    name: '偶像梦想祭',
-                    text: '浓度很高，but this is for u！',
-                },
-                {
-                    id: 5,
-                    cardImage: require(`../assets/conroy_img/snake.jpg`),
-                    miniImage: require(`../assets/conroy_img/doupo.png`),
-                    name: '斗破苍穹',
-                    text: '三十年河东三十年河西，莫欺少年穷！',
-                },
-                {
-                    id: 6,
-                    cardImage: require(`../assets/conroy_img/snake.jpg`),
-                    miniImage: require(`../assets/conroy_img/doupo.png`),
-                    name: '斗破苍穹',
-                    text: '三十年河东三十年河西，莫欺少年穷！',
-                },
-            ],
             collectionCards: [
                 {
                     id: 1,
@@ -135,6 +92,9 @@ export default {
         CollectionCard,
         RefreshButton,
     },
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId', 'scrollCards']),
+    }
 }
 </script>
 
