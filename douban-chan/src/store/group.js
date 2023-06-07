@@ -7,26 +7,27 @@ export default {
         //
         //请求数据
         //
-        //搜索框接口 根据指定输入内容返回小组列表
+        //搜索框接口 根据指定输入内容返回小组列表12
         getGroupListSearchOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        qstr: info.input,
+                    }),
+                    url: "/base/query_group/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取搜索结果', res);
+                        context.commit("SET_GROUPLIST", res.data);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("全站搜索小组", info.input);
             context.commit("SET_GROUPLIST", context.state.groupList);
         },
@@ -163,7 +164,7 @@ export default {
                     });
             });
         },
-        //加入小组1
+        //加入小组12
         joinGroupOnline(context, info) {
             let url = info.is ? "group/join_group/" : "/group/quit_group/";
             console.log("加入小组", info.groupId, info.userId, info.is);
@@ -186,7 +187,7 @@ export default {
                     });
             });
         },
-        //申请管理员1
+        //申请管理员12
         applyAdminOnline(context, info) {
             let url = info.is ? "/group/apply_admin/" : "group/cancel_admin/";
             console.log("开始处理申请或卸任管理员", info.groupId, info.userId, info.is);

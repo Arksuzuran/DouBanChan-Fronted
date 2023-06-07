@@ -136,6 +136,7 @@ export default {
 <style scoped>
 .postlist-main-container{
     max-width: 850px;
+    margin: 0 auto;
 }
 .postlist-title {
     display: flex;

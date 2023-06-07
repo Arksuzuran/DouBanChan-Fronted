@@ -141,7 +141,7 @@ export default {
       console.log('顶部index',index)
       try {
         // 选择浏览发现 则随机推荐
-        if (index == 0) {
+        if (index == 0 || index == 2) {
           console.log(this.tag)
           await this.getTopicListOnline({
             tag: this.tag,
@@ -166,19 +166,6 @@ export default {
             userId: this.userId,
           })
           await this.getPostListByHotOnline({
-            tag: this.tag,
-            userId: this.userId,
-          })
-        }
-        else {
-          this.getGroupListOnline({
-            tag: this.tag,
-            userId: this.userId,
-          })
-          this.getTopicListOnline({
-            tag: this.tag,
-          })
-          this.getPostListOnline({
             tag: this.tag,
             userId: this.userId,
           })

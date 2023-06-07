@@ -7,31 +7,32 @@ export default {
         //
         //请求数据
         //
-        //搜索框接口 根据指定输入内容返回帖子列表
+        //搜索框接口 根据指定输入内容返回帖子列表12
         getPostListSearchOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             input: info.input,
-            //         }),
-            //         url: "/group/create/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        qstr: info.input,
+                    }),
+                    url: "/base/query_post/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取搜索结果',res);
+                        context.commit("SET_POSTLIST", res.data);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("全站搜索帖子", info.input);
             context.commit("SET_POSTLIST", context.state.postList);
         },
 
-        //获得帖子列表 如果传入tag则以tag为标准筛选
+        //获得帖子列表 如果传入tag则以tag为标准筛选12
         getPostListOnline(context, info) {
             return new Promise((resolve, reject) => {
                 axios({
@@ -164,7 +165,7 @@ export default {
             context.commit("SET_POSTLIST", context.state.postList);
         },
 
-        //根据帖子id获取帖子的全部信息（含楼层列表）
+        //根据帖子id获取帖子的全部信息（含楼层列表）12
         getPostOnline(context, info) {
             return new Promise((resolve, reject) => {
                 axios({
@@ -380,7 +381,7 @@ export default {
             }
         },
 
-        //回复文本1
+        //回复文本12
         replyTextOnline(context, info) {
             return new Promise((resolve, reject) => {
                 axios({
@@ -477,7 +478,7 @@ export default {
                 userLike: false,
                 userDislike: false,
                 userFav: false,
-                //如果该小组不来自于一个小组 那么下面的字段均填 ''
+                //如果该帖子不来自于一个小组 那么下面的字段均填 ''
                 groupName: "Game", //来自的小组的名称
                 groupId: 1, //来自的小组的id
             },

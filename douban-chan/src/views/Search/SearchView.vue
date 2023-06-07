@@ -106,6 +106,7 @@ export default {
     ...mapGetters('postAbout', ['postList']),
     ...mapGetters('topicAbout', ['topicList']),
     ...mapGetters('groupAbout', ['groupList']),
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
   },
   // 从其他页面的搜索框跳转而来，那么进入搜索页面以给定的参数直接搜索
   mounted(){

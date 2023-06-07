@@ -7,26 +7,27 @@ export default {
         //
         //请求数据
         //
-        //搜索框接口 根据指定输入内容返回话题列表
+        //搜索框接口 根据指定输入内容返回话题列表12
         getTopicListSearchOnline(context, info){
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             c_tag: info.tag
-            //         }),
-            //         url: "/chat/query_chat_by_heat/",
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log('成功获取热榜话题',res);
-            //             resolve(res);
-            //             context.commit('SET_TOPICLIST', res)
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        qstr: info.input,
+                    }),
+                    url: "/base/query_chat/",
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('成功获取搜索结果',res);
+                        context.commit('SET_TOPICLIST', res.data)
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("全站搜索话题", info.input);
             context.commit('SET_TOPICLIST', context.state.topicList)
         },
