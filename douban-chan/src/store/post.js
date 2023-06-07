@@ -253,99 +253,94 @@ export default {
         //点赞帖子1
         likePostOnline(context, info) {
             console.log("点赞帖子", info.postId, info.userId, info.is);
-            // let url = info.is ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            let url = info.is ? "/post/reply/" : "/post/reply/";
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        p_id: info.postId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('点赞成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
         //点踩帖子1
         dislikePostOnline(context, info) {
             console.log("点踩帖子", info.postId, info.userId, info.is);
-            // let url = info.is ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            let url = info.is ? "/post/reply/" : "/post/reply/";
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        p_id: info.postId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('点踩成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
         //收藏帖子1
         favPostOnline(context, info) {
             console.log("收藏帖子", info.postId, info.userId, info.is);
-            // let url = info.is ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            let url = info.is ? "/post/reply/" : "/post/reply/";
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        p_id: info.postId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('收藏成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("收藏帖子", info.postId, info.userId, info.is);
         },
         //置顶帖子1
         topPostOnline(context, info) {
             console.log("点赞帖子", info.postId, info.userId, info.is);
-            // let url = info.is ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            let url = info.is ? "/post/set_top/" : "/post/set_top/";
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        p_id: info.postId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('帖子置顶成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             if (info.top) {
                 console.log("置顶帖子", info.postId);
             } else {
@@ -354,26 +349,24 @@ export default {
         },
         //设置为精华1
         goodPostOnline(context, info) {
-            // let url = info.good ? "/post/reply/" : "/post/reply/";
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url,
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            let url = info.good ? "/post/set_essence/" : "/post/set_essence/";
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        p_id: info.postId,
+                    }),
+                    url,
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('帖子精华设置成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             if (info.good) {
                 console.log("精华帖子", info.postId);
             } else {
@@ -414,30 +407,50 @@ export default {
         },
         //举报文本1
         reportTextOnline(context, info) {
-            // return new Promise((resolve, reject) => {
-            //     axios({
-            //         method: "post",
-            //         data: qs.stringify({
-            //             u_id: info.userId,
-            //             p_id: info.postId,
-            //         }),
-            //         url: '1111',
-            //         headers: { "content-type": "application/x-www-form-urlencoded" },
-            //     })
-            //         .then((res) => {
-            //             console.log(res);
-            //             resolve(res);
-            //             console.log(res);
-            //         })
-            //         .catch((err) => {
-            //             reject(err);
-            //         });
-            // });
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        u_id: info.userId,
+                        t_id: info.textId,
+                        textId: this.textId,
+                        userId: this.userId,
+                        title: this.form.title,
+                        text: this.form.text,
+                    }),
+                    url: '1111',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('举报成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
             console.log("举报text", info.textId, info.report, info.userId);
         },
-        //删除文本1
-        deleteTextOnline(context, textId) {
-            console.log("删除text", textId);
+        //删除文本12
+        deleteTextOnline(context, postId) {
+            console.log("删除text", postId);
+            return new Promise((resolve, reject) => {
+                axios({
+                    method: "post",
+                    data: qs.stringify({
+                        p_id: postId,
+                    }),
+                    url: '/post/delete_post/',
+                    headers: { "content-type": "application/x-www-form-urlencoded" },
+                })
+                    .then((res) => {
+                        console.log('删除成功',res);
+                        resolve(res);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
         },
     },
     mutations: {

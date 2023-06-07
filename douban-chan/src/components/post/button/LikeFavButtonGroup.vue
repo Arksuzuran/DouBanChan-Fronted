@@ -112,34 +112,46 @@ export default {
             // this.updateFavClass()
         },
         // 改变点赞数
-        uploadLike(num) {
+        async uploadLike(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：点赞数',num)
-            this.likePostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
+            try {
+                await this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: num > 0,
+                })
+            } catch (err) {
+                this.$message.error('网络错误，点赞失败')
+            }
         },
         //改变点踩数
-        uploadDislike(num) {
+        async uploadDislike(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：点踩数',num)
-            this.dislikePostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
+            try {
+                this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: num > 0,
+                })
+            } catch (err) {
+                this.$message.error('网络错误，点踩失败')
+            }
         },
         //改变收藏数
-        uploadFav(num) {
+        async uploadFav(num) {
             //在此向后端发送请求
             // console.log('向后端发送请求：收藏数',num)
-            this.favPostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
+            try {
+                this.favPostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is: num > 0,
+                })
+            } catch (err) {
+                this.$message.error('网络错误，收藏失败')
+            }
         },
         // 准备向后端发送点赞信息
         prepareUploadLike() {

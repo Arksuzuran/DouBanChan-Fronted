@@ -64,7 +64,6 @@ export default {
                 // type: 'warning',
             }).then(() => {
                 this.deleteTextOnline(this.info.postId)
-
                 this.$message.success('删除请求已提交!');
             }).catch(() => {
                 this.$message.error('已取消操作');

@@ -134,11 +134,11 @@ export default {
             }
             this.$confirm('确定要进行举报吗？')
                 .then(_ => {
-                    if(!this.form.title){
+                    if (!this.form.title) {
                         this.$message.error("举报标题不能为空。")
                         return;
                     }
-                    if(!this.form.text || this.form.text.length < 15){
+                    if (!this.form.text || this.form.text.length < 15) {
                         this.$message.error("举报内容不能少于15个字。")
                         return;
                     }
@@ -169,15 +169,13 @@ export default {
         async createReport() {
             // 在此发送请求
             let report = {
+                textId: this.textId,
+                userId: this.userId,
                 title: this.form.title,
                 text: this.form.text,
             }
             try {
-                await this.reportTextOnline({
-                textId: this.textId, 
-                userId: this.userId,
-                report,
-            })
+                await this.reportTextOnline(report)
             } catch (err) {
                 this.$message.error('网络错误，举报提交失败。')
             }
