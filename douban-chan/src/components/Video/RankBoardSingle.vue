@@ -15,7 +15,7 @@
         <div class="title">
             {{ title }}
         </div>
-        <div class="rank-one-wrapper">
+        <div class="rank-one-wrapper" @click="toVideoDetail(items[0].m_id)">
             <div class="videocard-heng">
                 <div class="image">
                     <img :src="items[0].m_profile_photo" style="height: 100%;border-radius: 10px;">
@@ -42,13 +42,13 @@
             </div>
             <div class="comment clearfix">
                 <div class="yinhao"><i class="fa-solid fa-quote-left"></i>酱友点评</div>
-                <div class="comment-content">
+                <div class="comment-content" @click="toReviewPage(videoFirstReviewId)">
                     {{ videoFirstReviewTitle }}
                 </div>
             </div>
         </div>
         <div class="nineWrapper">
-            <div class="videocard-heng2" v-for="(item, index) in filteredItems" :key="index">
+            <div class="videocard-heng2" v-for="(item, index) in filteredItems" :key="index" @click="toVideoDetail(item.m_id)">
                 <div class="image">
                     <img :src="item.m_profile_photo" style="height: 100%; border-radius: 10px;">
                 </div>
@@ -76,10 +76,10 @@ export default {
     components:{VideoHengCard},
     data(){
         return {
-            value: null,
+            value: 0,
             backgroundImage: '',
             videoFirstReviewTitle: '',
-            videoReviewId: '',
+            videoFirstReviewId: '',
             items: [],
             selected: {
                 '影or视': '电影',
@@ -137,6 +137,7 @@ export default {
             })
             .then((res) => {
                 this.videoFirstReviewTitle = res.data.text_by_like[0].text.t_topic
+                this.videoFirstReviewId = res.data.text_by_like[0].text.textId
             })
             .catch((err) => {
                 this.$message.error("网络出错了QAQ")
@@ -147,7 +148,19 @@ export default {
             {
                 this.selected = this.selected
             }
-        }
+        },
+        toVideoDetail(videoId) {
+            this.$router.push({ name: 'videoDetail', params: { id: videoId } })
+        },
+        toReviewPage(id){
+            this.$router.push({
+                name: 'review',
+                params: {
+                    m_id: this.items[0].m_id,
+                    t_id: id
+                }
+            })
+        },
     },
     mounted(){
         this.getSelected()
@@ -175,6 +188,7 @@ export default {
 }
 .rank-one-wrapper{
     display: flex;
+    cursor: pointer;
 }
 
 .videocard-heng{
@@ -253,6 +267,7 @@ export default {
     height: 100px;
     display: flex;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 .content2{
     flex: 2;

@@ -1,11 +1,12 @@
 <template>
-    <div class="menu-wrapper navbar-scroll">
+    <div :class="{ 'menu-wrapper': true, 'navbar-scroll': true, 'scrolled': navbarClass, 'reset': !navbarClass }">
         <div class="logo-wrapper">
             <img height="40px" src="https://cdn.worldvectorlogo.com/logos/barbie-brand-1.svg" alt="logo" />
         </div>
         <div class="menu-items">
-            <div v-for="item in menuItems" :key="item.value" class="menu-item" :class="{ active: item.value === menuValue }"
-                @click="handleMenuClick(item.value)">
+            <div v-for="item in menuItems" :key="item.value" class="menu-item"
+                :class="{ active: item.value === menuValue, 'menu-item-hovered': item === hoveredItem }"
+                @click="handleMenuClick(item.value)" @mouseover="handleMenuItemHover(item)">
                 {{ item.label }}
             </div>
         </div>
@@ -13,12 +14,20 @@
         <div class="menu-search">
             <Search></Search>
         </div>
-        <!-- 头像 -->
-        <div class="NavBar-block" @mouseover="showIndividualBlock" @click="gotoUserHome" v-if="isLogin">
-            <el-avatar :size="60" :src="circleUrl"></el-avatar>
-        </div>
-        <div class="NavBar-block" @click="showLogin" v-if="!isLogin">
-            <el-avatar :size="60" :src="circleUrl"></el-avatar>
+        <div class="Navbar-image-block-position" @mouseleave="hideIndividualBlock">
+            <!-- 头像 -->
+            <div class="NavBar-block cartoon-big" @mouseover="showIndividualBlock" @click="gotoUserHome" v-if="isLogin"
+                :style="animationStyle">
+                <el-avatar :size="60" :src="userImgUrl"></el-avatar>
+            </div>
+            <div class="NavBar-block" @click="showLogin" v-if="!isLogin">
+                <el-avatar :size="60" :src="image"></el-avatar>
+            </div>
+            <!-- 个人简介弹窗 -->
+            <div v-if="isLogin && showIndividual" class="NavBar-individual-block"
+                :style="{ opacity: individualBlockOpacity, transition: 'opacity 0.5s' }">
+                <IndividualMiniCard></IndividualMiniCard>
+            </div>
         </div>
         <!-- 登录弹窗 -->
         <div v-if="clickLogin" class="NavBar-login-block">
@@ -27,11 +36,6 @@
         </div>
         <div class="cartoon">
             <NavBarCartoon></NavBarCartoon>
-        </div>
-        <!-- 个人简介弹窗 -->
-        <div v-if="showIndividual" class="NavBar-individual-block" :style="{ opacity: individualBlockOpacity }"
-            @mouseleave="hideIndividualBlock">
-            <IndividualMiniCard></IndividualMiniCard>
         </div>
     </div>
 </template>
@@ -54,39 +58,34 @@ export default {
     },
     data() {
         return {
+            hoveredItem: null, // 当前被悬浮的菜单项
             showIndividual: false,
             individualBlockOpacity: 0, // 初始透明度为 0
             clickLogin: false,
-            image: "qq.jpg",
+            image: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
             menuItems: [
                 { label: '主页', value: 'item1', index: "" },
                 { label: '电影', value: 'item2', index: "video" },
-                { label: '图书', value: 'item3', index: "bookHome" },
+                { label: '图书', value: 'item3', index: "book" },
                 { label: '小组', value: 'item4', index: "groupHome" },
                 { label: '话题', value: 'item5', index: "topicHome" },
             ],
             restaurants: [],
             state: '',
-            isLogin: false,
-            circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
             homePath: ['/'],
-            videoPath: ['videoHome', 'videoDetail', 'review'],
+            videoPath: ['videoHome', 'videoDefault', 'rankBoard', 'videoCategory', 'videoDetail', 'writeReview', 'review'],
             bookPath: ['bookHome'],
-            groupPath: ['groupHome', 'group', 'group/post'],
-            topicPath: ['topicHome',],
+            groupPath: ['groupHome', 'group', 'groupPost', 'groupTopicList'],
+            topicPath: ['topicHome', 'topicSquare', 'todaysHot', 'topicPost'],
+            scrollDistance: 0,
         };
     },
     methods: {
         handleScroll() {
-            const navbarWrapper = document.querySelector('.navbar-scroll');
-            if (window.pageYOffset > 180) {
-                navbarWrapper.classList.add('scrolled');
-                navbarWrapper.classList.remove('reset');
-
-            } else if (window.pageYOffset < 100) {
-                navbarWrapper.classList.remove('scrolled');
-                navbarWrapper.classList.add('reset');
-            }
+            this.scrollDistance = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        },
+        handleMenuItemHover(item) {
+            this.hoveredItem = item;
         },
         showIndividualBlock() {
             this.showIndividual = true;
@@ -94,14 +93,11 @@ export default {
         },
         hideIndividualBlock() {
             this.individualBlockOpacity = 0; // 鼠标离开时将透明度恢复为 0
-            setTimeout(() => {
-                this.showIndividual = false;
-            }, 500);
+            this.showIndividual = false;
+
         },
         showLogin() {
             this.clickLogin = true; // 显示弹窗
-            this.isLogin = true;
-            this.circleUrl = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg';
             document.body.style.overflow = 'hidden'; // 隐藏滚动条
             document.addEventListener('scroll', this.disableScroll, { passive: false }); // 禁用滚动事件
         },
@@ -190,6 +186,10 @@ export default {
         },
     },
     computed: {
+        navbarClass() {
+            if (this.scrollDistance > 0) return true;
+            else if (this.scrollDistance == 0) return false;
+        },
         menuValue() {
             const currentRoute = this.$route.name;
             if (this.$route.path === "/") {
@@ -205,23 +205,40 @@ export default {
             } else {
                 return '';
             }
-        }
-        //头像路径与用户名
-        //引入vuex的userAbout模块里的 state变量
-        //像一般的计算属性一样使用即可 例如：console.log(this.userName)
-        // ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        },
+        animationStyle() {
+            if (this.showIndividual) {
+                return 'transition: transform 0.5s;transform: scale(1.3) translateY(10px);';
+            } else {
+                return 'transition: transform 0.5s; transform: scale(1) translateY(0);';
+            }
+        },
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
     },
     mounted() {
         this.restaurants = this.loadAll();
-        window.addEventListener('scroll', this.handleScroll)
+    },
+    watch: {
+        isLogin(newValue) {
+            if (newValue) {
+                this.closeLogin();
+            }
+        }
+    },
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
     },
     beforeDestroy() {
         window.removeEventListener('scroll', this.handleScroll);
-    }
+    },
 };
 </script>
 
 <style scoped>
+.menu-item-hovered {
+    animation: jumpAnimation 0.5s;
+}
+
 @keyframes navbarAnimation {
     from {
         height: 100px;
@@ -257,6 +274,21 @@ export default {
     }
 }
 
+@keyframes jumpAnimation {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
 .navbar-scroll.reset {
     animation: navbarResetAnimation 0.5s forwards;
 }
@@ -282,8 +314,8 @@ export default {
     background-color: transparent;
     border-radius: 10px;
     position: absolute;
-    top: 55px;
-    left: 1185px;
+    margin-top: -10px;
+    margin-left: -78px;
     clip-path: polygon(30px 0%, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0% 30px);
     border-top-right-radius: 20px;
     border-bottom-left-radius: 20px;
@@ -294,6 +326,13 @@ export default {
 }
 
 .NavBar-block {
+    cursor: pointer;
+    position: relative;
+    margin-left: 16.5%;
+    z-index: 50;
+}
+
+.Navbar-image-block-position {
     position: relative;
     margin-left: 16.5%;
     z-index: 50;
@@ -335,6 +374,10 @@ export default {
 .menu-item.active {
     background-color: #734623;
     color: #fff;
+}
+
+.menu-item:hover {
+    color: #ff6200;
 }
 
 .my-autocomplete {

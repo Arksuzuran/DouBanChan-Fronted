@@ -4,7 +4,7 @@
             <img :src="miniCard.miniImage" class="mini-card-image">
         </div>
         <div class="mini-card-info">
-            <span class="mini-card-name">{{ miniCard.name }}<i class="fa-regular fa-circle-play"></i></span>
+            <span class="mini-card-name">{{ miniCard.name }} <i class="fa-regular fa-circle-play"></i></span>
             <span class="mini-card-word">{{ miniCard.text }}</span>
         </div>
     </div>

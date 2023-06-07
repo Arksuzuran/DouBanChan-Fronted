@@ -203,7 +203,6 @@ export default {
                 const book = this.bookList[i % bookListLength];
                 tempBookList.push(book);
             }
-
             this.tempBookList = tempBookList;
         }
     },

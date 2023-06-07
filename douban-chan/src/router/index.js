@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import BookHomeView from '../views/BookHomeView.vue'
+import BookHomeView from '../views/Book/BookHomeView.vue'
 import TopicHomeView from '../views/Topic/TopicHomeView.vue'
 import GroupHomeView from '../views/Group/GroupHomeView.vue'
 import UserHomeView from '../views/UserHomeView.vue'
@@ -15,12 +15,17 @@ import UserHomeHome from "../views/User/Home.vue";
 import UserHomeMessage from "../views/User/Message.vue";
 import UserHomePost from "../views/User/Post.vue";
 import UserHomeSubscribe from "../views/User/Subscribe.vue";
+import UserHomeSetting from "../views/User/Setting.vue";
 
 //影视
 import VideoDetail from "../views/Video/VideoDetail.vue"
 import VideoRankBoard from "../views/Video/VideoRankBoard.vue"
 import VideoCategory from "../views/Video/VideoCategory.vue"
 import VideoDefault from "../views/Video/VideoDefault.vue"
+//图书
+import BookRankBoard from "../views/Book/BookRankBoard.vue"
+import BookCategory from "../views/Book/BookCategory.vue"
+import BookDefault from "../views/Book/BookDefault.vue"
 //小组
 import GroupPage from "../views/Group/GroupPage.vue";
 import GroupPostList from "../views/Group/GroupPostList.vue";
@@ -45,7 +50,7 @@ import SearchGroup from '../views/Search/SearchGroup.vue';
 import SearchTopic from '../views/Search/SearchTopic.vue';
 
 //写影评
-import WriteReview from "../views/Review/WriteReview.vue"
+import WriteReview from "../views/Review/WriteReview.vue";
 
 Vue.use(VueRouter);
 
@@ -58,9 +63,30 @@ const routes = [
   },
   //图书版块主页
   {
-    path: "/bookHome",
+    path: "/book",
     name: "bookHome",
     component: BookHomeView,
+    children: [
+      {
+        path: 'home',
+        name: 'bookDefault',
+        component: BookDefault
+      },
+      {
+        path: "rankboard",
+        name: "bookRankBoard",
+        component: BookRankBoard
+      },
+      {
+        path: "category",
+        name: "bookCategory",
+        component: BookCategory
+      },
+      {
+        path: '',
+        redirect: 'home' // 设置空路由路径的重定向到默认子路由
+      }
+    ]
   },
   //全站搜索页面
   {
@@ -108,14 +134,14 @@ const routes = [
       },
       //话题广场
       {
-        path:'/topicHome/topicSquare',
-        name:'topicSquare',
+        path: '/topicHome/topicSquare',
+        name: 'topicSquare',
         component: TopicHomeTopicSquare
       },
       //热榜
       {
-        path:'/topicHome/todaysHot',
-        name:'todaysHot',
+        path: '/topicHome/todaysHot',
+        name: 'todaysHot',
         component: TopicHomeTodaysHot
       },
     ]
@@ -132,8 +158,8 @@ const routes = [
       },
       // 帖子的页面
       {
-        path:'/topic/post',
-        name:'topicPost',
+        path: '/topic/post',
+        name: 'topicPost',
         component: Post
       },
       //
@@ -158,7 +184,7 @@ const routes = [
       },
       {
         path: "rankboard",
-        name: "rankBoard",
+        name: "videoRankBoard",
         component: VideoRankBoard
       },
       {
@@ -185,14 +211,14 @@ const routes = [
       },
       // 帖子的页面
       {
-        path:'/group/post',
-        name:'groupPost',
+        path: '/group/post',
+        name: 'groupPost',
         component: Post
       },
       //groupTopicList
       {
-        path:'/group/postList',
-        name:'groupTopicList',
+        path: '/group/postList',
+        name: 'groupTopicList',
         component: TopicHomeTopicSquare
       },
       //管理员事务界面
@@ -209,21 +235,21 @@ const routes = [
       // },
     ]
   },
-  //影视详情页面
+  //影视/图书详情页面
   {
-    path: "/video/detail/:id",
+    path: "/subject/:id",
     name: "videoDetail",
     component: VideoDetail,
   },
-  //写影评页面
+  //写评论页面
   {
-    path: "/video/detail/:id/write_review",
+    path: "/subject/:id/write_review",
     name: "writeReview",
     component: WriteReview,
   },
   //评论详情页面
   {
-    path: "/video/review/:id",
+    path: "/subject/:m_id/review/:t_id",
     name: "review",
     component: reviewView,
   },
@@ -268,6 +294,12 @@ const routes = [
         path: "message",
         name: "userpageMessage",
         component: UserHomeMessage,
+      },
+      //修改资料
+      {
+        path: "setting",
+        name: "userpageSetting",
+        component: UserHomeSetting,
       },
     ],
   },

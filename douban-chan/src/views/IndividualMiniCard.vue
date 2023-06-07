@@ -1,64 +1,119 @@
 <template>
     <div class="card">
-        <span>秋子夜</span>
-        <p class="info">爱没有技巧，真诚才是必杀技</p>
-        <button class="reply"> 消息 <i class="replyNum"> &nbsp 99+</i></button>
+        <span>{{ userNick }}</span>
+        <p class="info">{{ userSignature }}</p>
+        <div class="mini-message">
+            <el-badge :value="userReplyNum" :max="9" class="left-content message-hover">
+                <i class="fa-solid fa-comment fa-2xl" style="color: #34a1d8;" @click="gotoReply"></i>
+            </el-badge>
+            <el-badge :value="userMessageNum" :max="9" class="center-content message-hover">
+                <i class="fa-solid fa-envelope reply fa-2xl" style="color: #080808;" @click="gotoMessage"></i>
+            </el-badge>
+            <el-badge :value="userGoodNum" :max="9" class="right-content message-hover">
+                <i class="fa-solid fa-thumbs-up fa-2xl" style="color: #ff0000;" @click="gotoGood"></i>
+            </el-badge>
+        </div>
         <br>
         <button class="learn-more">
             <span class="circle" aria-hidden="true">
                 <span class="icon arrow"></span>
             </span>
-            <span class="button-text">个人中心</span>
+            <span class="button-text" @click="gotoMyHome">个人中心</span>
         </button>
         <button class="learn-more">
             <span class="circle" aria-hidden="true">
                 <span class="icon arrow"></span>
             </span>
-            <span class="button-text">我的收藏</span>
+            <span class="button-text" @click="gotoMyFav">我的收藏</span>
         </button>
-        <button class="quit">退出登录</button>
+        <button class="quit" @click="quit">退出登录</button>
     </div>
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default ({
     data() {
         return {
 
         }
-    }
+    },
+    methods: {
+        ...mapMutations('userAbout', ['LOGIN', 'LOGOUT']),
+        quit() {
+            this.LOGOUT();
+            window.location.reload();
+            this.$router.push('/');//退出登录回到主页
+        },
+        gotoMyHome() {
+            this.$router.push('/userHome/home');//去到个人主页
+        },
+        gotoMyFav() {
+            this.$router.push('/userHome/favlist');//去到我的收藏
+        },
+        gotoReply() {
+            this.$router.push('/userHome/message');//去到回复
+        },
+        gotoMessage() {
+            this.$router.push('/userHome/message');//去到系统信息
+        },
+        gotoGood() {
+            this.$router.push('/userHome/message');//去到收到的赞
+        }
+    },
+    computed: {
+        ...mapState('userAbout', ['userNick', 'isLogin', 'userId', 'userSignature', 'userReplyNum', 'userMessageNum', 'userGoodNum']),
+    },
 
 })
 </script>
 <style scoped>
-.reply {
-    font-family: PlusJakartaSans, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Cantarell, Helvetica Neue, Ubuntu, sans-serif;
-    font-size: 1rem;
+.mini-message {
+    width: 70%;
+    max-height: 30px;
+    display: flex;
     align-items: center;
-    width: 150px;
-    height: 45px;
-    border-radius: 0.4rem;
-    font-weight: 600;
-    padding: 0 1.2rem;
-    color: #ffffff;
-    border: none;
-    box-shadow: 0 .5rem 1rem rgba(143, 142, 142, 0.15) !important;
-    background: #000000;
+    justify-content: space-between;
+    /* background-color: black; */
 }
 
-.replyNum {
-    font-size: 0.8rem;
-    color: #f7750cc6;
+.center-content {
+    display: flex;
+    width: 30px;
+    align-items: center;
+    height: 21px;
+    margin-top: 10px;
 }
 
-.reply:hover {
-    background: #2b2a2a;
+.left-content {
+    display: flex;
+    width: 30px;
+    align-items: center;
+    height: 21px;
+    margin-top: 12px;
+}
+
+.right-content {
+    display: flex;
+    height: 21px;
+    width: 30px;
+    align-items: center;
+    margin-top: 7px;
+}
+
+.message-hover {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.message-hover:hover {
+    transform: scale(1.1);
 }
 
 .card {
     width: 17em;
     height: 22.5em;
-    background: #ccb8a0;
+    background: #f2feff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     transition: 1s ease-in-out;
     clip-path: polygon(30px 0%, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0% 30px);
@@ -143,7 +198,7 @@ button {
 button.learn-more {
     width: 12rem;
     height: auto;
-    padding-top: 5px;
+    padding-top: 4px;
 }
 
 button.learn-more .circle {

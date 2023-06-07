@@ -8,7 +8,7 @@
       <self-information></self-information>
     </div>
     <div class="test2">
-      <subscribe-card></subscribe-card>
+      <upload-image></upload-image>
     </div>
     <br>
     <br>
@@ -23,7 +23,7 @@ import FilmModule from './FilmModule.vue';
 import BookModule from './BookModule.vue';
 import TopicGroupModule from './TopicGroupModule.vue';
 import SelfInformation from './SelfInformation.vue';
-import SubscribeCard from '../components/SubscribeCard.vue';
+import UploadImage from '../components/UploadImage.vue'
 export default {
   name: 'HomeView',
   components: {
@@ -32,7 +32,7 @@ export default {
     BookModule,
     TopicGroupModule,
     SelfInformation,
-    SubscribeCard,
+    UploadImage
   },
   data() {
     return {

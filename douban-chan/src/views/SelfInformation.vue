@@ -25,29 +25,29 @@
                     <div class="sex">
                         <label>性别</label>
                         <div class="radio-input">
-                            <input type="radio" id="man" name="value-radio" value="man" v-model="form.sex">
+                            <input type="radio" id="man" name="value-radio" value="男" v-model="form.sex">
                             <label for="man">男</label>
-                            <input type="radio" id="woman" name="value-radio" value="woman" v-model="form.sex">
+                            <input type="radio" id="woman" name="value-radio" value="女" v-model="form.sex">
                             <label for="woman">女</label>
-                            <input type="radio" id="secret" name="value-radio" value="secret" v-model="form.sex">
+                            <input type="radio" id="secret" name="value-radio" value="保密" v-model="form.sex">
                             <label for="secret">保密</label>
                         </div>
                     </div>
                     <div style="height: 25px;"></div>
                     <el-form-item label="出生日期">
                         <el-col :span="15">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
+                            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="form.date"
                                 style="width: 100%;"></el-date-picker>
                         </el-col>
                     </el-form-item>
                     <div style="height: 7px;"></div>
                     <el-form-item label="个人简介" prop="desc">
-                        <el-input type="textarea" placeholder="填写个人简介更有利于交友哟qwq" v-model="form.desc"></el-input>
+                        <el-input type="textarea" placeholder="填写个人简介更有利于交友哟" v-model="form.desc"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
             <el-divider></el-divider>
-            <div class="save">
+            <div class="save" @click="saveInfo">
                 <button>
                     保存
                 </button>
@@ -59,20 +59,9 @@
             </div>
             <el-divider></el-divider>
             <div class="self-info-menu-right-true-2">
-
-                <div class="nowImage">
-                    <img :src="imagePath" class="coverImage">
-                    <span>当前头像</span>
-                </div>
                 <div class="changeImage">
                     <UploadImage></UploadImage>
                 </div>
-            </div>
-            <el-divider></el-divider>
-            <div class="save">
-                <button>
-                    确认更换
-                </button>
             </div>
         </div>
         <div v-if="choice == 3" class="self-info-menu-right-3">
@@ -82,34 +71,26 @@
             <el-divider></el-divider>
             <div class="self-info-menu-right-true-3">
                 <el-form ref="form" :model="form" label-width="80px">
+                    <div style="height: 20px;"></div>
                     <div class="inputGroup">
                         <input type="text" required="" autocomplete="off" v-model="changePassword.email">
                         <label for="name">邮箱</label>
                     </div>
                     <div style="height: 5px;"></div>
-                    <div class="inputGroup">
-                        <input type="text" required="" autocomplete="off" v-model="changePassword.key">
-                        <label for="name">验证码</label>
-                    </div>
-                    <button class="forKey">获取验证码
-                        <div class="arrow-wrapper">
-                            <div class="arrow"></div>
-                        </div>
-                    </button>
                     <div style="height: 5px;"></div>
                     <div class="inputGroup">
-                        <input type="text" required="" autocomplete="off" v-model="changePassword.newPassword1">
+                        <input type="password" required="" autocomplete="off" v-model="changePassword.newPassword1">
                         <label for="name">新密码</label>
                     </div>
                     <div style="height: 5px;"></div>
                     <div class="inputGroup">
-                        <input type="text" required="" autocomplete="off" v-model="changePassword.newPassword2">
+                        <input type="password" required="" autocomplete="off" v-model="changePassword.newPassword2">
                         <label for="name">确认密码</label>
                     </div>
                 </el-form>
             </div>
             <el-divider></el-divider>
-            <div class="save">
+            <div :class="{ 'save': true, 'disabled': isButtonDisabled }" @click="submitChange">
                 <button>
                     确认更改
                 </button>
@@ -125,6 +106,8 @@ import SelfInfoChoice from './SelfInfoChoice.vue';
 import UploadImage from '../components/UploadImage.vue'
 import changePassword from './ChangePassword.vue';
 import changeImage from './ChangeImage.vue';
+import qs from 'qs';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default ({
     components: {
         ChoiceMenu,
@@ -141,18 +124,100 @@ export default ({
                 name: '秋子夜',
                 saying: 'letting go',
                 date: '2002-01-13',
-                sex: 'secret',
+                sex: '保密',
                 desc: '',
             },
             changePassword: {
                 email: '',
-                key: '',
                 newPassword1: '',
                 newPassword2: '',
             },
         }
     },
     methods: {
+        //提交给后端信息表单
+        submitInfo() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    u_nickname: this.form.name,
+                    u_gender: this.form.sex,
+                    u_birthday: this.form.date,
+                    u_signature: this.form.saying,
+                    u_desc: this.form.desc,
+                }),
+                url: "/user/change_profile/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data.user);
+                    const submitSuccess = res.data.msg;
+                    if (submitSuccess != 0) {
+                        this.saveError();
+                        return;
+                    }
+                    this.ModifyInfo(this.form);
+                    this.saveSuccess();
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ")
+                });
+        },
+        ...mapMutations('userAbout', ['ModifyInfo', 'LOGOUT']),
+        //提交修改密码
+        submitChange() {
+            // 非下划线的单词字符 + 2个以上单词字符 + @ + 2位以上单词字符域名 + .2位以上小写字母做域名后缀 + (.2位以上二重域名后缀)?
+            // var reg = /^(用户名)@(组织名)\.(一级域名后缀)(二级域名后缀)?$/
+            const emailPattern = /^([a-zA-Z\d][\w-]{2,})@(\w{2,})\.([a-z]{2,})(\.[a-z]{2,})?$/;
+            if (!emailPattern.test(this.changePassword.email)) {
+                // 邮箱地址不合法，执行相应的逻辑
+                this.invalidEmailWarning();
+                return;
+            }
+            if (this.changePassword.email != this.userEmail) {
+                this.emailError();
+                return;
+            }
+
+            if (this.changePassword.newPassword1 != this.changePassword.newPassword2) {
+                this.errorPassword();
+                return;
+            }
+            this.emailSuccess();
+            //这里需要调用后端的部分
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.submitPassword();
+                }, 1000);
+            });
+        },
+        //提交给后端信息表单
+        submitPassword() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    new_password: this.changePassword.newPassword1,
+                }),
+                url: "/user/change_password/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    const submitSuccess = res.data.msg;
+                    if (submitSuccess != 0) {
+                        this.passwordError();
+                        return;
+                    }
+                    this.passwordSuccess();
+                    this.LOGOUT();
+                    this.$router.push('/');//退出登录回到主页
+                    localStorage.removeItem('inputPassword');
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ")
+                });
+        },
         handleOptionSelected(option) {
             if (option == '个人信息') {
                 this.choice = 1;
@@ -163,32 +228,120 @@ export default ({
             }
             // 在这里处理选中的选项
         },
+        saveInfo() {
+            if (this.form.name == '') {
+                this.nameError();
+                return;
+            }
+            this.submitInfo();
+        },
+        saveSuccess() {
+            this.$Notify.success({
+                title: 'Success!',
+                message: '您的信息修改成功',
+                showClose: false,
+            })
+        },
+        saveError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '修改失败，请尝试重新修改！',
+                showClose: false,
+            })
+        },
+        nameError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '昵称不能为空',
+                showClose: false,
+            })
+        },
+        emailWarning() {
+            this.$Notify.warning({
+                title: 'Warning!',
+                message: '请输入邮箱地址',
+                showClose: false,
+            })
+        },
+        emailError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '邮箱地址错误！',
+                showClose: false,
+            })
+        },
+        invalidEmailWarning() {
+            this.$Notify.warning({
+                title: 'Warning!',
+                message: '邮箱格式不合法',
+                showClose: false,
+            })
+        },
+        emailSuccess() {
+            this.$Notify.success({
+                title: 'Success!',
+                message: '验证码发送成功,请查看邮箱！',
+                showClose: false,
+            })
+        },
+        emailErrorSb() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '是不是有病？发完验证码还改邮箱？',
+                showClose: false,
+            })
+        },
+        errorPassword() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '密码不一致',
+                showClose: false,
+            })
+        },
+        passwordSuccess() {
+            this.$Notify.success({
+                title: 'Success!',
+                message: '密码修改成功!请重新登录',
+                showClose: false,
+            })
+        },
+        passwordError() {
+            this.$Notify.error({
+                title: 'Error!',
+                message: '密码修改失败!请重新尝试',
+                showClose: false,
+            })
+        },
     },
     computed: {
         updatedImagePath() {
             return this.imagePath;
-        }
+        },
+        isButtonDisabled() {
+            if (this.changePassword.email == '' || this.changePassword.newPassword1 == '' || this.changePassword.newPassword2 == '') {
+                return true;
+            }
+            else return false;
+        },
+        ...mapState('userAbout', ['userId', 'userNick', 'userSignature', 'userSex', 'userBirthday', 'userDesc', 'userEmail']),
+    },
+    mounted() {
+        this.form.name = this.userNick;
+        this.form.saying = this.userSignature;
+        if (this.userBirthday == '保密') this.form.date = null;
+        else this.form.date = this.userBirthday;
+        this.form.sex = this.userSex;
+        this.form.desc = this.userDesc;
     }
 })
 </script>
 
 <style scoped>
-.nowImage {
-    width: 10em;
-    height: 10em;
-    background: white;
-    border-radius: 30px;
-    position: absolute;
-    margin-left: 120px;
-    margin-top: 20px;
-}
-
-.coverImage {
-    position: relative;
-    border-radius: 30px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.disabled {
+    pointer-events: none;
+    /* 禁用按钮作用在 .save 元素上 */
+    opacity: 0.5;
+    /* 设置透明度为 0.5 */
 }
 
 .save button {
@@ -227,9 +380,9 @@ export default ({
 .self-info-block {
     display: flex;
     flex-direction: row;
-    width: 70%;
+    width: 80%;
     margin-left: 15%;
-    height: 700px;
+    height: 600px;
     background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     background-color: #f9f9f9;
@@ -237,12 +390,12 @@ export default ({
 
 .self-info-menu-left {
     width: 20%;
-    height: 700px;
+    height: 600px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 }
 
 .self-info-menu-left-select {
-    width: 50%;
+    width: 60%;
     height: 300px;
     /* background-color: black; */
     display: flex;
@@ -334,7 +487,8 @@ export default ({
     display: flex;
     align-items: center;
     padding: 5px 10px;
-    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     background-color: #ffffff;
     border-radius: 5px;
     margin-right: 12px;
@@ -343,29 +497,12 @@ export default ({
     transition: all 0.3s ease-in-out;
 }
 
-.radio-input label:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    transition: all 0.3s ease-in-out;
-}
 
-.radio-input input[type="radio"]:checked+label:before {
-    background-color: rgb(255, 106, 0);
-    top: 0;
-}
+
 
 .radio-input input[type="radio"]:checked+label {
-    background-color: rgb(203, 180, 255);
-    color: #685151;
+    background-color: #393939;
+    color: #ffffff;
     border-color: rgb(1, 1, 1);
     animation: radio-translate 0.5s ease-in-out;
 }
@@ -408,7 +545,7 @@ export default ({
 
 .changeImage {
     margin-top: 120px;
-    margin-left: 200px;
+    margin-left: 50px;
 }
 
 .self-info-menu-right-3 {
@@ -430,7 +567,7 @@ export default ({
 .self-info-menu-right-true-3 {
     width: 50%;
     margin-left: 5%;
-    height: 360px;
+    height: 300px;
 }
 
 .forKey {
@@ -452,7 +589,7 @@ export default ({
     font-weight: bold;
     position: absolute;
     margin-left: 270px;
-    margin-top: -65px;
+    margin-top: -222px;
 }
 
 .forKey .arrow-wrapper {

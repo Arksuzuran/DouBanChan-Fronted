@@ -5,6 +5,9 @@ import store from './store'
 import axios from 'axios'
 import qs from "qs"
 
+import VueCropper from 'vue-cropper';
+Vue.use(VueCropper)
+
 //引入ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -44,6 +47,7 @@ Vue.config.productionTip = false
 Vue.prototype.$qs = qs
 axios.defaults.baseURL = 'http://10.193.202.49:8000'
 // axios.defaults.baseURL = 'http://127.0.0.1:8000'
+axios.defaults.baseURL = 'http://10.193.206.15:8000'
 // 把axios挂到Vue实例对象上
 Vue.prototype.$axios = axios
 Vue.use(ElementUI);

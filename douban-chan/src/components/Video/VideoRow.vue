@@ -7,16 +7,16 @@
                     <div style="float: left; display: inline-block;">
                         <span
                             style="float: left;margin-top: 20px;margin-left: 5px;font-size: 30px; font-weight: bold;color: #000000;">{{ title }}</span>
-                        <div class="button-for-more">
-                            <ButtonForMore></ButtonForMore>
-                        </div>
                     </div>
                 </div>
             </el-header> 
             <el-main>
-                <div class="card-container">
+                <div class="card-container" v-if="title !== '热门图书'">
                     <UniversalCard v-for="movie in items" :key="movie.id" :movie="movie">
                     </UniversalCard>
+                </div>
+                <div class="card-container" v-else>
+                    <BookCard v-for="book in items" :key="book.id" :book="book"></BookCard>
                 </div>
             </el-main>
         </el-container>
@@ -27,9 +27,10 @@
 <script>
 import VideoBookItem from '@/components/Video/VideoBookItem.vue'
 import UniversalCard from '../UniversalCard.vue';
+import BookCard from '../BookCard.vue';
 export default {
   name: 'ShowARow',
-  components: { VideoBookItem, UniversalCard},
+  components: { VideoBookItem, UniversalCard, BookCard},
   props:['items', 'title'],
   data() {
     return {
@@ -38,24 +39,6 @@ export default {
       paginationFactor: 170,
     }
   },
-  computed: {
-    atEndOfList() {
-      return this.currentOffset <= (this.paginationFactor * -1) * (this.items.length - this.windowSize);
-    },
-    atHeadOfList() {
-      return this.currentOffset === 0;
-    },
-  },
-  methods: {
-    moveCarousel(direction) {
-      // Find a more elegant way to express the :style. consider using props to make it truly generic
-      if (direction === 1 && !this.atEndOfList) {
-        this.currentOffset -= this.paginationFactor * 7;
-      } else if (direction === -1 && !this.atHeadOfList) {
-        this.currentOffset += this.paginationFactor * 7;
-      }
-    },
-  }
 }
 </script>
 

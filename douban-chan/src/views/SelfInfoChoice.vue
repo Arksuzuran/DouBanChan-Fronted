@@ -1,12 +1,12 @@
 <template>
     <button>
-        <i class="fa-solid fa-user"></i>个人信息
+        <i class="fa-solid fa-user" style="color:#ff742e"></i>个人信息
     </button>
 </template>
 
 <style scoped>
 button {
-    color: rgb(0, 0, 0);
+    color: #ff742e;
     text-decoration: none;
     font-size: 25px;
     border: none;

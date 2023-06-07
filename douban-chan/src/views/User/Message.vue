@@ -22,6 +22,10 @@
                             <input type="radio" name="radio" @change="toShow = 3">
                             <span>系统通知</span>
                         </label>
+                        <label>
+                            <input type="radio" name="radio" @change="toShow = 4">
+                            <span>管理信息</span>
+                        </label>
                     </form>
                 </div>
             </div>
@@ -47,6 +51,13 @@
                     <div class="message-no-reply-img"></div>
                 </div>
             </div>
+            <div v-if="toShow == 4" class="message-reply-block">
+                <ManageInfo v-for="manage in manages" :key="manage.id" :manage="manage" @delete="deleteManage(manage.id)">
+                </ManageInfo>
+                <div class="message-no-reply" v-if="isManageEmpty">
+                    <div class="message-no-reply-img"></div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -55,114 +66,47 @@
 import MessageCardReply from '../MessageCardReply.vue';
 import MessageGood from '../MessageGood.vue';
 import SystemInfoVue from '../SystemInfo.vue';
+import ManageInfo from '../../components/ManageInfo.vue';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     components: {
         MessageCardReply,
         MessageGood,
         SystemInfoVue,
+        ManageInfo,
     },
     data() {
         return {
             toShow: 1,
             messages: [
-                {
-                    id: 1,
-                    imagePath: require('../../assets/conroy_img/qq.jpg'),
-                    name: '秋子夜',
-                    reply: '家人们无语啦无语啦,它居然是个男人,家人们,大无语事件呀,啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                    time: '2023年6月4日 17:51',
-                    comment: '江南第一深情吴一凡邀请你共进晚餐,希望你不要不识抬举.',
-                },
-                {
-                    id: 4,
-                    imagePath: require('../../assets/conroy_img/xw.jpg'),
-                    name: '溪午',
-                    reply: '支持支持',
-                    time: '2023年6月5日 14:51',
-                    comment: '朔间零太帅啦.',
-                },
-                {
-                    id: 3,
-                    imagePath: require('../../assets/conroy_img/czx.jpg'),
-                    name: 'Arksuzuran',
-                    reply: '不是,不知道你在装什么捏',
-                    time: '2023年6月3日 11:21',
-                    comment: '我是最吊的,不服来干',
-                },
-                {
-                    id: 2,
-                    imagePath: require('../../assets/conroy_img/adk.jpg'),
-                    name: 'ADK',
-                    reply: '不想学os啦,不想搓软工啦!!!!!!!!',
-                    time: '2023年6月4日 17:51',
-                    comment: '大方承认吧,北航,您最爱的大专.',
-                },
             ],
             goods: [
-                {
-                    id: 1,
-                    imagePath: require('../../assets/conroy_img/qq.jpg'),
-                    name: '秋子夜',
-                    time: '2023年6月4日 17:51',
-                    comment: '江南第一深情吴一凡邀请你共进晚餐,希望你不要不识抬举.',
-                },
-                {
-                    id: 4,
-                    imagePath: require('../../assets/conroy_img/xw.jpg'),
-                    name: '溪午',
-                    time: '2023年6月5日 14:51',
-                    comment: '朔间零太帅啦.',
-                },
-                {
-                    id: 3,
-                    imagePath: require('../../assets/conroy_img/czx.jpg'),
-                    name: 'Arksuzuran',
-                    time: '2023年6月3日 11:21',
-                    comment: '我是最吊的,不服来干',
-                },
-                {
-                    id: 2,
-                    imagePath: require('../../assets/conroy_img/adk.jpg'),
-                    name: 'ADK',
-                    time: '2023年6月4日 17:51',
-                    comment: '大方承认吧,北航,您最爱的大专.',
-                },
+
             ],
             infos: [
-                {
-                    id: 1,
-                    name: '豆瓣酱隐私政策的修订通知',
-                    time: '2023年6月4日 17:51',
-                    text: '亲爱的用户，根据业务开展的实际情况，哔哩哔哩近期更新了《哔哩哔哩隐私政策》中的相关内容。你可以前往哔哩哔哩客户端【我的-设置-隐私政策-哔哩哔哩隐私政策全文】查看更新后的主要提示以及全部内容。',
-                },
-                {
-                    id: 4,
-                    name: '正在直播MSI总决赛：BLG vs JDG',
-                    time: '2023年6月5日 14:51',
-                    text: 'LPL队伍历史首次在国际赛事会师决赛，谁将为赛区捧起第五座MSI冠军奖杯？看直播参与天选抽奖，华为P50 Pocket、Matebook13、大会员权益等你来拿！上B站看MSI，让我们共同见证冠军诞生！',
-                },
-                {
-                    id: 3,
-                    name: '终于！你的B站专属年度报告来了！',
-                    time: '2023年6月3日 11:21',
-                    text: '2022你最关注的TA是？哪些视频让你N刷不断？又是什么被你刻入了DNA？戳链接，回顾你和B站的2022>>',
-                },
-                {
-                    id: 2,
-                    name: '您的评论违规，已被管理员删除',
-                    time: '2023年6月4日 17:51',
-                    text: '您的评论‘曹尼玛的北航真傻逼’涉嫌违规，已经被管理员删除，希望您理性评论！',
-                },
             ],
+            manages: [
+            ],
+            isManageEmpty: true,
             isMessageEmpty: true,
             isGoodEmpty: true,
             isInfoEmpty: true,
         }
     },
+    mounted() {
+        this.messages = this.userMessages;
+        this.goods = this.userGoods;
+        this.infos = this.userInfos;
+        this.manages = this.userManages;
+    },
     created() {
+        this.ClearUserReplyNum();
+        this.ClearUserMessageNum();
+        this.ClearUserGoodNum();
         this.checkMessageEmpty();
         this.checkGoodEmpty();
         this.checkInfoEmpty();
+        this.checkManageEmpty();
     },
     computed: {
         messageHeaderText() {
@@ -172,20 +116,27 @@ export default {
                 return '收到的赞';
             } else if (this.toShow === 3) {
                 return '系统通知';
+            } else if (this.toShow === 3) {
+                return '管理信息';
             }
             // 默认情况
             return '回复我的';
-        }
+        },
+        ...mapState('userAbout', ['userMessages', 'userGoods', 'userInfos', 'userManages']),
     },
     methods: {
+        ...mapMutations('userAbout', ['ClearUserReplyNum', 'ClearUserMessageNum', 'ClearUserGoodNum']),
         checkMessageEmpty() {
-            this.isMessageEmpty = this.messages.length === 0;
+            this.isMessageEmpty = this.userMessages.length === 0;
+        },
+        checkManageEmpty() {
+            this.isManageEmpty = this.userManages.length === 0;
         },
         checkGoodEmpty() {
-            this.isGoodEmpty = this.goods.length === 0;
+            this.isGoodEmpty = this.userGoods.length === 0;
         },
         checkInfoEmpty() {
-            this.isInfoEmpty = this.infos.length === 0;
+            this.isInfoEmpty = this.userInfos.length === 0;
         },
         deleteMessage(id) {
             const index = this.messages.findIndex(message => message.id === id);
@@ -208,8 +159,14 @@ export default {
             }
             this.checkInfoEmpty(); // 在删除消息后再次检查数组是否为空
         },
+        deleteManage(id) {
+            const index = this.manages.findIndex(manage => manage.id === id);
+            if (index !== -1) {
+                this.manages.splice(index, 1);
+            }
+            this.checkManageEmpty(); // 在删除消息后再次检查数组是否为空
+        },
     },
-
 
 }
 </script>
@@ -324,7 +281,7 @@ export default {
 .message-left-switch {
     width: 10%;
     background-color: transparent;
-    margin-top: 45px;
+    margin-top: 15px;
     /* 居中对齐 */
 }
 
