@@ -43,7 +43,7 @@ export default {
             data: qs.stringify({
                 t_description: this.text,
                 t_father_text_id: this.textId,
-                u_id: 2
+                u_id: this.userId
             }),
             url: "/text/reply_text/",
             headers: { "content-type": "application/x-www-form-urlencoded" },

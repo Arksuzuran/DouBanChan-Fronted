@@ -1,6 +1,6 @@
 <template>
     <div>
-      <VideoList :items="list" title="搜索结果" :top="205" col=""></VideoList>
+      <VideoList :items="list" title="搜索结果" :top="205" col="3"></VideoList>
     </div>
   </template>
   
@@ -8,17 +8,18 @@
   import VideoList from '@/views/Video/VideoList.vue'
   export default {
     name: 'SearchTopic',
+    props:['list'],
     components: {
       VideoList
     },
     data() {
       return {
-        list: [],
+        // list: [],
       }
     },
-    mounted() {
-      this.list = this.$route.params.list ? this.$route.params.list : []
-    },
+    // mounted() {
+    //   this.list = this.$route.params.list ? this.$route.params.list : []
+    // },
   }
   </script>
   

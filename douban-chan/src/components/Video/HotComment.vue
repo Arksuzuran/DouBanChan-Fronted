@@ -69,12 +69,16 @@
 <script>
 import RateWithNumber from '../Video/RateWithNumber.vue'
 import qs from "qs"
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'ReviewSmall',
     components: {
         RateWithNumber,
     },
     props: ['item'],
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     data() {
         return {
             userLike: false,
@@ -96,15 +100,26 @@ export default {
             rate: this.item.t_rate,
             reviewId: this.item.textId,
             commentNum: this.item.comments,
-            favNum: this.item.t_favorite,    
+            favNum: this.item.t_favorite,
+            type: '',
         }
     },
     methods: {
-        toReviewPage(id){
+        toBookReviewPage(id){
             this.$router.push({
-                name: 'review',
+                name: 'bookReview',
                 params: {
-                    id: id
+                    t_id: this.item.textId,
+                    m_id: id
+                }
+            })
+        },
+        toVideoReviewPage(id){
+            this.$router.push({
+                name: 'videoReview',
+                params: {
+                    t_id: this.item.textId,
+                    m_id: id
                 }
             })
         },
@@ -112,49 +127,49 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/like/",
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
         },
         clickCancelLike(){
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/cancel_like/",
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
         },
         clickDislike(){
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/dislike/",
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
         },
         clickCancelDislike(){
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/cancel_dislike/",
@@ -168,7 +183,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/text_set_favorite/",
@@ -182,7 +197,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/text_cancel_favorite/",
@@ -194,12 +209,23 @@ export default {
         },
 
         toReviewPage(id){
-            this.$router.push({
-                name: 'review',
-                params: {
-                    id: id
-                }
-            })
+            if (this.type === '1')
+                this.$router.push({
+                    name: 'videoReview',
+                    params: {
+                        m_id: id,
+                        t_id: this.item.textId
+                    }
+                })
+            else{
+                this.$router.push({
+                    name: 'bookReview',
+                    params: {
+                        m_id: id,
+                        t_id: this.item.textId
+                    }
+                })
+            }
         },
         handleFav() {
             this.userFav = !this.userFav
@@ -281,7 +307,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 m_id: id
             }),
             url: "/media/query_single/",
@@ -290,17 +316,18 @@ export default {
             .then((res) => {
                 this.videoName = res.data.media.m_name
                 this.videoImageUrl = res.data.media.m_profile_photo
+                this.type = res.data.media.m_type
             })
-            .catch((err) => {
-                this.$message.error("网络出错QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
         },
         
         getStatus(){
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId
             }),
             url: "/media/get_status/",
@@ -319,7 +346,10 @@ export default {
             // });
         },
         handleComment(){
-            this.toReviewPage(this.videoId)
+            if (this.type !== '1')
+                this.toReviewPage(this.videoId)
+            else
+                this.toReviewPage(this.videoId)
         },
         //跳转到影视详情
         toVideoDetail(videoId) {

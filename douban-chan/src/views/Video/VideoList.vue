@@ -28,6 +28,20 @@ export default {
     props: ['items', 'title', 'DIYCardComponentName', 'col', 'top'],
     mounted(){
         console.log(this.items)
+    },
+    computed: {
+        colClass() {
+        return this.col ? 'col-' + this.col : ''
+        },
+        // 动态设置到顶部的距离
+        distanceToTop() {
+        if (this.top) {
+            return {
+            top: this.top + 'px',
+            }
+        }
+        return {}
+        }
     }
 }
 </script>
@@ -41,7 +55,7 @@ export default {
 }
 
 .grouplist-container {
-  margin: 0 20px;
+  margin: 0 auto;
 }
 
 .col-2 {

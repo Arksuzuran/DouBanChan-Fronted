@@ -46,9 +46,30 @@
                         <el-button plain><i class="fa-regular fa-share-from-square" style="color: #0fa8f5;font-size: 10px;"></i>转发</el-button>
                     </div>
                     <div class="buttons-under-review">
-                        <el-button plain><i class="fa-solid fa-triangle-exclamation" style="color: #ebee11; font-size: 10px"></i>举报</el-button>
+                        <el-button plain><i class="fa-solid fa-triangle-exclamation" style="color: #ebee11; font-size: 10px" @click="report"></i>举报</el-button>
                     </div>
                 </div>
+                    <el-dialog
+                    title="举报"
+                    :visible.sync="centerDialogVisible"
+                    width="30%"
+                    center>
+                    <div>
+                        <el-input
+                        type="textarea"
+                        :rows="2"
+                        placeholder="请输入举报内容（不少于15字）"
+                        v-model="reportDetail">
+                        </el-input>
+                    </div>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="centerDialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+                    </span>
+                    </el-dialog>
+
+
+
                 <el-divider></el-divider>
 
                 <!-- 二级评论 -->
@@ -117,11 +138,15 @@ import qs from "qs"
 import commentFirstLevel from '@/components/review/commentFirstLevel.vue'
 import CommentReply from '@/components/review/commentReply.vue'
 import RateWithNumber_M from '@/components/Video/RateWithNumber_M.vue'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     components: {
         Rate, CommentSection,commentFirstLevel,CommentReply, RateWithNumber_M
     },
     name: 'ReviewView',
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     data () {
         return {
             userLike: false,
@@ -217,11 +242,11 @@ export default {
                 this.activeTab = tab;
                 if (tab === 'latest') {
                 console.log('最新');
-                this.reviewItems = this.reviewsOrderedByTime
+                this.commentItems = this.commentItemsOrderedByTime
                 }
                 else if (tab === 'hottest') {
                 console.log('最热');
-                this.reviewItems = this.reviewsOrderedByLike
+                this.commentItems = this.commentItemsOrderedByLike
                 }
             }
         },

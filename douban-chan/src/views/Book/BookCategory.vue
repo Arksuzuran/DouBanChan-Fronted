@@ -89,9 +89,9 @@ export default {
                 this.items = res.data.media
                 console.log(this.items)
             })
-            .catch((err) => {
-                this.$message.error("网络出错了QAQ")
-            });
+            // .catch((err) => {
+            //     this.$message.error("网络出错了QAQ")
+            // });
             },
         selectCategory(categoryName, detail){
             if (this.selected[categoryName] !== detail) //如果点击的和现在的不一样才更改

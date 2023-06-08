@@ -136,11 +136,15 @@ import ReviewSmall from '@/components/Video/ReviewSmall.vue'
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 // optional style for arrows & dots
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
   components: {
     ReviewSection, ItemInfo, Rate, GroupCard, TopicCard, VideoEditor, VueSlickCarousel, ReviewSmall
   },
   name: 'VideoDetail',
+  computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
   data() {
     return {
       settings: {
@@ -216,9 +220,9 @@ export default {
           this.reviewsOrderedByTime = res.data.text_by_time
           this.reviewItems = this.reviewsOrderedByLike
         })
-        .catch((err) => {
-          this.$message.error("网络出错QAQ")
-        });
+        // .catch((err) => {
+        //   this.$message.error("网络出错QAQ")
+        // });
     },
     //得到相关话题
     getTopics() {
@@ -290,7 +294,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id,
           op: op
         }),
@@ -301,9 +305,9 @@ export default {
           console.log(res.data.msg)
           this.isActive = !this.isActive
         })
-        .catch((err) => {
-          this.$message.error("网络出错QAQ")
-        });
+        // .catch((err) => {
+        //   this.$message.error("网络出错QAQ")
+        // });
     },
     //一开始调用这个函数，判断是否已经收藏和已经评分, 改变isActive
     getMediaStatus()
@@ -311,7 +315,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id
         }),
         url: "/media/get_media_status/",
@@ -329,9 +333,9 @@ export default {
             this.isActive = true
           }
         })
-        .catch((err) => {
-          this.$message.error("网络出错QAQ")
-        });
+        // .catch((err) => {
+        //   this.$message.error("网络出错QAQ")
+        // });
     }
   },
   mounted() {

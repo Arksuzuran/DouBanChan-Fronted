@@ -72,8 +72,12 @@ import Vue from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { createEditor } from '@wangeditor/editor';
 import qs from "qs"
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default Vue.extend({
     components: { Editor, Toolbar },
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     data() {
         return {
             title: '',  //输入的标题
@@ -148,7 +152,7 @@ export default Vue.extend({
                 this.$axios({
                     method: "post",
                     data: qs.stringify({
-                        u_id: 2,
+                        u_id: this.userId,
                         m_id: this.$route.params.id,
                         t_rate: this.rate,
                         t_description: this.editor.getHtml(),
@@ -179,7 +183,7 @@ export default Vue.extend({
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 m_id: this.$route.params.id
             }),
             url: "/media/query_single/",

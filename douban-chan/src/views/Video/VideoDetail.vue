@@ -363,7 +363,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id,
           op: op
         }),
@@ -383,7 +383,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id
         }),
         url: "/media/get_media_status/",
