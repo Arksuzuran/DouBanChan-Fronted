@@ -57,14 +57,15 @@ export default {
             }
             console.log(newReply)
             try {
-                this.replyTextOnline(newReply)
+                await this.replyTextOnline(newReply)
                 this.$message.success("成功发表回复")
             } catch (err) {
                 this.$message.error('网络错误')
             }
+            // this.$bus.$emit('update')
+
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
             this.$bus.$emit('commentReplyCreated', this.textId);
-
             console.log('用户回复楼层', newReply);
             this.text = ''
         },

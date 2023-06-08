@@ -35,7 +35,7 @@ export default {
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             })
                 .then((res) => {
-                    console.log(res.data)
+                    console.log('成功获取我的帖子',res.data)
                     //给postList赋值
                     this.postList = res.data.posts
                 })

@@ -147,7 +147,7 @@ export default {
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
 
     inList(){
-      return this.allResult[this.activeIndex]
+      return this.allResult[this.activeIndex].slice()
     },
   },
   // 从其他页面的搜索框跳转而来，那么进入搜索页面以给定的参数直接搜索
