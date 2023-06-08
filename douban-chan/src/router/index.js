@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue, { computed } from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BookHomeView from '../views/Book/BookHomeView.vue'
@@ -51,6 +51,8 @@ import SearchTopic from '../views/Search/SearchTopic.vue';
 
 //写影评
 import WriteReview from "../views/Review/WriteReview.vue";
+
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 Vue.use(VueRouter);
 
@@ -223,8 +225,8 @@ const routes = [
       },
       //管理员事务界面
       {
-        path:'/group/admin',
-        name:'groupAdminMatterList',
+        path: '/group/admin',
+        name: 'groupAdminMatterList',
         component: GroupAdminMatterList,
       },
       // 成员列表页面
@@ -235,22 +237,46 @@ const routes = [
       // },
     ]
   },
-  //影视/图书详情页面
+  //影视详情页面
   {
     path: "/subject/:id",
     name: "videoDetail",
     component: VideoDetail,
   },
-  //写评论页面
+  //图书详情页面
+  {
+    path: "/subject/:id",
+    name: "bookDetail",
+    component: VideoDetail,
+  },
+  //写影评页面
   {
     path: "/subject/:id/write_review",
-    name: "writeReview",
+    name: "writeVideoReview",
     component: WriteReview,
+    meta: {
+      requiresAuth: true
+    },
   },
-  //评论详情页面
+  //写书评页面
+  {
+    path: "/subject/:id/write_review",
+    name: "writeBookReview",
+    component: WriteReview,
+    meta: {
+      requiresAuth: true
+    },
+  },
+  //影视评论详情页面
   {
     path: "/subject/:m_id/review/:t_id",
-    name: "review",
+    name: "videoReview",
+    component: reviewView,
+  },
+  //图书评论详情页面
+  {
+    path: "/subject/:m_id/review/:t_id",
+    name: "bookReview",
     component: reviewView,
   },
   //用户个人账户主页
@@ -258,6 +284,9 @@ const routes = [
     path: "/userHome",
     name: "userHome",
     component: UserHomeView,
+    meta: {
+      requiresAuth: true
+    },
     children: [
       //主页
       {
@@ -326,6 +355,17 @@ const router = new VueRouter({
   scrollBehavior: () => ({ y: 0 }), //自动滚动到顶端
   routes,
 });
+
+// 全局前置守卫
+// router.beforeEach((to, from, next) => {
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+//   if (requiresAuth && !isLogin) {
+//     next('/');
+//   } else {
+//     next();
+//   }
+// });
+
 
 let originPush = VueRouter.prototype.push;
 let originReplace = VueRouter.prototype.replace;

@@ -95,15 +95,13 @@ export default {
         }
     },
     mounted() {
+        this.requestManage();
+        this.requestInfo();
+        this.requestMessage();
         this.messages = this.userMessages;
         this.goods = this.userGoods;
         this.infos = this.userInfos;
-        this.manages = this.requestManage();
-    },
-    created() {
-        // this.ClearUserReplyNum();
-        // this.ClearUserMessageNum();
-        // this.ClearUserGoodNum();
+        this.manages = this.userManages;
         this.checkMessageEmpty();
         this.checkGoodEmpty();
         this.checkInfoEmpty();
@@ -126,18 +124,18 @@ export default {
         ...mapState('userAbout', ['userMessages', 'userGoods', 'userInfos', 'userManages', 'userId']),
     },
     methods: {
-        ...mapMutations('userAbout', ['ClearUserReplyNum', 'ClearUserMessageNum', 'ClearUserGoodNum']),
+        ...mapMutations('userAbout', ['ClearUserReplyNum', 'ClearUserMessageNum', 'ClearUserGoodNum', 'requestManageInfo', 'requestSystemInfo', 'requestUserMessage']),
         checkMessageEmpty() {
-            this.isMessageEmpty = this.userMessages.length === 0;
+            this.isMessageEmpty = this.messages.length === 0;
         },
         checkManageEmpty() {
-            this.isManageEmpty = this.userManages.length === 0;
+            this.isManageEmpty = this.manages.length === 0;
         },
         checkGoodEmpty() {
-            this.isGoodEmpty = this.userGoods.length === 0;
+            this.isGoodEmpty = this.goods.length === 0;
         },
         checkInfoEmpty() {
-            this.isInfoEmpty = this.userInfos.length === 0;
+            this.isInfoEmpty = this.infos.length === 0;
         },
         deleteMessage(id) {
             const index = this.messages.findIndex(message => message.id === id);
@@ -179,6 +177,43 @@ export default {
                 .then((res) => {
                     console.log(res.data);
                     this.manages = res.data.report_list;
+                    this.requestManageInfo(this.manages);
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        requestInfo() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_system_message/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.infos = res.data.system_message_list;
+                    this.requestSystemInfo(this.infos);
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        requestMessage() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_comment_message/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.messages = res.data.comment_message_list;
+                    this.requestUserMessage(this.messages);
                 })
                 .catch((err) => {
                     this.$message.error("网络出错QAQ");

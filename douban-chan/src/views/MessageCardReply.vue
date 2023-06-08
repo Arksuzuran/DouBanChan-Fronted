@@ -1,10 +1,10 @@
 <template>
     <div class="message-card-reply-block" style="cursor: pointer;">
         <div class="message-image">
-            <img :src="message.imagePath" class="coverImage">
+            <img :src="message.u_profile" class="coverImage">
         </div>
         <div class="message-top">
-            <div class="message-name">{{ message.name }}</div>
+            <div class="message-name">{{ message.u_name }}</div>
             <div class="message-reply">回复了我的评论</div>
         </div>
         <div class="message-reply-text">
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="message-my-comment-block">
-            <span class="message-my-comment">{{ message.comment }}</span>
+            <span class="message-my-comment">{{ message.text }}</span>
         </div>
     </div>
 </template>

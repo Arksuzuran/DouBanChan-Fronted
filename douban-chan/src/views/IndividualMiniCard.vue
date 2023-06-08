@@ -31,19 +31,28 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default ({
     data() {
         return {
+            messages: [
+            ],
+            goods: [
 
+            ],
+            infos: [
+            ],
+            manages: [
+            ],
         }
     },
     methods: {
-        ...mapMutations('userAbout', ['LOGIN', 'LOGOUT']),
+        ...mapMutations('userAbout', ['LOGIN', 'LOGOUT', 'ClearUserReplyNum', 'ClearUserMessageNum', 'ClearUserGoodNum', 'requestManageInfo', 'requestSystemInfo', 'requestUserMessage']),
         quit() {
             this.LOGOUT();
-            window.location.reload();
             this.$router.push('/');//退出登录回到主页
+            window.location.reload();
         },
         gotoMyHome() {
             this.$router.push('/userHome/home');//去到个人主页
@@ -59,11 +68,73 @@ export default ({
         },
         gotoGood() {
             this.$router.push('/userHome/message');//去到收到的赞
-        }
+        },
+        requestManage() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_report/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.manages = res.data.report_list;
+                    this.requestManageInfo(this.manages);
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        requestInfo() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_system_message/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.infos = res.data.system_message_list;
+                    this.requestSystemInfo(this.infos);
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
+        requestMessage() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/report/query_comment_message/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    this.messages = res.data.comment_message_list;
+                    this.requestUserMessage(this.messages);
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
     },
     computed: {
         ...mapState('userAbout', ['userNick', 'isLogin', 'userId', 'userSignature', 'userReplyNum', 'userMessageNum', 'userGoodNum']),
     },
+    mounted() {
+        // this.requestManage();
+        // this.requestInfo();
+        // this.requestMessage();
+        this.ClearUserReplyNum();
+        this.ClearUserMessageNum();
+        this.ClearUserGoodNum();
+    }
 
 })
 </script>

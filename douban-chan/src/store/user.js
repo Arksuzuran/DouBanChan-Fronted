@@ -29,15 +29,21 @@ export default {
 		},
 		//清除新回复数量
 		ClearUserReplyNum(state) {
-			state.userReplyNum = '';
+			const num = state.userMessages.length;
+			if (num == 0) state.userReplyNum = '';
+			else state.userReplyNum = num;
 		},
 		//清除新系统消息数量+管理员消息数量
 		ClearUserMessageNum(state) {
-			state.userMessageNum = '';
+			const num = state.userInfos.length + state.userManages.length;
+			if (num == 0) state.userMessageNum = '';
+			else state.userMessageNum = num;
 		},
 		//清除新点赞数量
 		ClearUserGoodNum(state) {
-			state.userGoodNum = '';
+			const num = state.userGoods.length;
+			if (num == 0) state.userGoodNum = '';
+			else state.userGoodNum = num;
 		},
 		//修改用户信息
 		ModifyInfo(state, form) {
@@ -55,7 +61,15 @@ export default {
 		//更新用户收到的管理信息
 		requestManageInfo(state, value) {
 			state.userManages = value;
-		}
+		},
+		//更新用户收到的系统信息
+		requestSystemInfo(state, value) {
+			state.userInfos = value;
+		},
+		//更新用户收到的回复信息
+		requestUserMessage(state, value) {
+			state.userMessages = value;
+		},
 	},
 	state: {
 		//当前是否登录
@@ -79,11 +93,11 @@ export default {
 		//用户简介
 		userDesc: '',
 		//用户收到的新回复数量
-		userReplyNum: 5,
+		userReplyNum: '',
 		//用户收到的新系统消息数量+管理员消息数量
-		userMessageNum: 12,
+		userMessageNum: '',
 		//用户收到的新点赞数量
-		userGoodNum: 24,
+		userGoodNum: '',
 		//用户消息中心的回复邮件数组
 		userMessages: [
 			{

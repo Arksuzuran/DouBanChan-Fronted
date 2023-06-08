@@ -29,6 +29,7 @@
     position: relative;
     height: 2.8em;
     padding-right: 3em;
+    cursor: pointer;
 }
 
 .iconButton {

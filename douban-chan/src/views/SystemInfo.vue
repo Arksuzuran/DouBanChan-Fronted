@@ -1,7 +1,7 @@
 <template>
     <div class="system-info-block">
         <div class="system-info-top">
-            <div class="system-info-name">{{ info.name }}</div>
+            <div class="system-info-name">{{ info.title }}</div>
             <div class="system-info-time">{{ info.time }}</div>
             <div class="system-info-delete" style="cursor: pointer;" @click="deleteInfo()"><i
                     class="fa-regular fa-trash-can delete-icon" style="color: #929292;"></i>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import qs from 'qs';
 export default ({
     props: ['info'],
     methods: {

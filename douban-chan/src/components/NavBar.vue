@@ -12,7 +12,7 @@
         </div>
         <!-- 搜索 -->
         <div class="menu-search">
-            <Search></Search>
+            <SearchBar index="searchPost"></SearchBar>
         </div>
         <div class="Navbar-image-block-position" @mouseleave="hideIndividualBlock">
             <!-- 头像 -->
@@ -49,12 +49,14 @@ import LoginModule from '../views/LoginModule.vue';
 import IndividualMiniCard from '../views/IndividualMiniCard.vue';
 import Search from '../views/Search.vue'
 import NavBarCartoon from '../components/NavBarCartoon.vue';
+import SearchBar from '../views/Search/SearchBar.vue'
 export default {
     components: {
         LoginModule,
         IndividualMiniCard,
         Search,
         NavBarCartoon,
+        SearchBar,
     },
     data() {
         return {
@@ -73,8 +75,8 @@ export default {
             restaurants: [],
             state: '',
             homePath: ['/'],
-            videoPath: ['videoHome', 'videoDefault', 'rankBoard', 'videoCategory', 'videoDetail', 'writeReview', 'review'],
-            bookPath: ['bookHome'],
+            videoPath: ['videoHome', 'videoDefault', 'rankBoard', 'videoCategory', 'videoDetail', 'writeReview', 'videoReview'],
+            bookPath: ['bookHome', 'bookDefault', 'bookRankBoard', 'bookCategory', 'bookDetail', 'writeBookReview', 'bookReview'],
             groupPath: ['groupHome', 'group', 'groupPost', 'groupTopicList'],
             topicPath: ['topicHome', 'topicSquare', 'todaysHot', 'topicPost'],
             scrollDistance: 0,

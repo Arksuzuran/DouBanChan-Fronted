@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" @click="toTopicDetail">
 
         <div class="textBox">
             <div class="textContent">
@@ -22,6 +22,15 @@
 <script>
 export default ({
     props: ['topic'],
+    methods:{
+        toTopicDetail() {
+            console.log(this.topic.topicId)
+            this.$router.push({ name: 'topic', query: { topicId: this.topic.topicId} })
+        }
+    },
+    mounted(){
+        console.log(this.topic)
+    }
 })
 </script>
 

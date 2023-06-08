@@ -1,5 +1,5 @@
 <template>
-    <div class="collection-card-big-block">
+    <div class="collection-card-big-block" @click="toBookDetail(collectionCard.id)">
         <div class="collection-card-block">
             <div class="collection-card-image-container">
                 <img :src="collectionCard.image" class="collection-card-image">
@@ -23,6 +23,14 @@ export default {
         return {
             image: 'doupo.png'
         }
+    },
+    methods: {
+        toBookDetail(bookId) {
+            this.$router.push({ name: 'bookDetail', params: { id: bookId } })
+        }
+    },
+    mounted(){
+        console.log(this.collectionCard)
     }
 }
 </script>

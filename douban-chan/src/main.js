@@ -48,6 +48,7 @@ Vue.prototype.$qs = qs
 axios.defaults.baseURL = 'http://10.193.202.49:8000'
 // axios.defaults.baseURL = 'http://127.0.0.1:8000'
 // axios.defaults.baseURL = 'http://10.193.18.167:8000'
+// axios.defaults.baseURL = 'http://10.193.206.15:8000'
 // axios.defaults.baseURL = 'http://127.0.0.1:8000'
 // axios.defaults.baseURL = 'http://10.193.206.15:8000'
 // 把axios挂到Vue实例对象上

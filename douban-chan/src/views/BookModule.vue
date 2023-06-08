@@ -19,7 +19,7 @@
                             </svg>
                             换一批
                         </div>
-                        <div class="button-for-more">
+                        <div class="button-for-more" @click="toBookHome">
                             <ButtonForMore></ButtonForMore>
                         </div>
                     </div>
@@ -67,6 +67,9 @@ export default {
         ...mapState('userAbout', ['userId']),
     },
     methods: {
+        toBookHome(){
+            this.$router.push({ name: 'bookDefault'})
+        },
         //请求图书栏目数据
         requestBookList() {
             this.$axios({

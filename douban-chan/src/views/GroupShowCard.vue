@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" @click="toGroupDetail">
         <div class="align">
             <span class="red"></span>
             <span class="yellow"></span>
@@ -19,6 +19,11 @@
 <script>
 export default ({
     props: ['group'],
+    methods:{
+        toGroupDetail(){
+            this.$router.push({ name: 'group', query: { groupId: this.group.groupId } })
+        }
+    }
 })
 </script>
 <style scoped>
@@ -36,6 +41,7 @@ export default ({
     transition: .4s;
     overflow: hidden;
     color: white;
+    cursor: pointer;
 }
 
 .card:hover {

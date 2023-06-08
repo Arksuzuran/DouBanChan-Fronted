@@ -328,7 +328,7 @@ export default {
     // 跳转到写影评页面
     toWriteReviewPage() {
       this.$router.push({
-        name: 'writeReview',
+        name: 'writeVideoReview',
         params: {
           id: this.$route.params.id
         }
