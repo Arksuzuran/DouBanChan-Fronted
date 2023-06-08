@@ -8,16 +8,17 @@
 import TopicHomeTopicSquare from '../Topic/TopicHomeTopicSquare.vue';
 export default {
     name: 'SearchTopic',
+    props:['list'],
     components: {
         TopicHomeTopicSquare,
     },
     data() {
         return {
-            list: [],
+            // list: [],
         }
     },
     mounted() {
-        this.list = this.$route.params.list ? this.$route.params.list : []
+        // this.list = this.$route.params.list ? this.$route.params.list : []
     },
 }
 </script>

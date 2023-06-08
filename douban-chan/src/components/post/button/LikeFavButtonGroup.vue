@@ -33,18 +33,13 @@
 </template>
 
 <script>
+import qs from 'qs'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'LikeFavButtonGroup',
     props: ['info'],
     data() {
         return {
-            userFav: false,
-            userLike: false,
-            userDislike: false,
-            basicFavNumber: this.info.fav,
-            basicLikeNumber: this.info.like,
-            basicDislikeNumber: this.info.dislike,
             enterLike: false,
             enterDislike: false,
             enterFav: false,
@@ -52,106 +47,186 @@ export default {
     },
     computed: {
         ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+        ...mapGetters('postAbout',['postList', 'postInfo']),
         // 点赞数 点踩数 收藏数
         getLikeNumber() {
-            return this.enterLike ? (this.userLike ? '取消点赞' : '点赞') : (this.userLike ? this.basicLikeNumber + 1 : this.basicLikeNumber);
+            return this.enterLike ? (this.postInfo.userLike ? '取消点赞' : '点赞') : (this.postInfo.like);
         },
         getDislikeNumber() {
-            return this.enterDislike ? (this.userDislike ? '取消点踩' : '点踩') : (this.userDislike ? this.basicDislikeNumber + 1 : this.basicDislikeNumber);
+            return this.enterDislike ? (this.postInfo.userDislike ? '取消点踩' : '点踩') : (this.postInfo.dislike);
         },
         getFavNumber() {
-            return this.enterFav ? (this.userFav ? '取消收藏' : '收藏') : (this.userFav ? this.basicFavNumber + 1 : this.basicFavNumber);
+            return this.enterFav ? (this.postInfo.userFav ? '取消收藏' : '收藏') : (this.postInfo.fav);
         },
         // 根据当前点赞 点踩 收藏情况改变按钮颜色
         getLikeButtonClass() {
-            return this.userLike ? "likefav-button-like" : '';
+            return this.postInfo.userLike ? "likefav-button-like" : '';
         },
         getDislikeButtonClass() {
-            return this.userDislike ? "likefav-button-dislike" : '';
+            return this.postInfo.userDislike ? "likefav-button-dislike" : '';
         },
         getFavButtonClass() {
-            return this.userFav ? "likefav-button-fav" : '';
+            return this.postInfo.userFav ? "likefav-button-fav" : '';
         },
     },
     methods: {
         //帖子 文本相关
+        //获取话题列表
+        ...mapActions('topicAbout', ['getTopicListSearchOnline', 'getTopicListOnline', 'getTopicListByHotOnline', 'getTopicListMineOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline', 'getTopicListSearchOnline']),
+        //获取帖子列表 或者一个完整的帖子
+        ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostListMineOnline', 'getPostOnline', 'getPostListSearchOnline']),
         ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        //获取小组列表    
+        ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
+        // getNum() {
+        //     this.$axios({
+        //         method: "post",
+        //         data: qs.stringify({
+        //             p_id: this.info.postId,
+        //             u_id: this.userId,
+        //         }),
+        //         url: "/post/get_post_status1/",
+        //         headers: { "content-type": "application/x-www-form-urlencoded" },
+        //     }).then((res) => {
+        //         this.userLike = res.data.post_is_like
+        //         this.userDislike = res.data.post_is_dislike
+        //         this.userFav = res.data.post_is_favorite
+        //         this.favNumber = res.data.post_favorite_num
+        //         this.likeNumber = res.data.post_like_num
+        //         this.dislikeNumber = res.data.post_dislike_num
+        //     })
+        //         .catch((err) => {
+        //             this.$message.error("网络出错QAQ")
+        //         });
+        // },
+        async getData(id) {
+            console.log('尝试向后端发送数据', id)
+            // 从后端获取数据
+            try {
+                await this.getPostOnline({
+                    userId: this.userId,
+                    postId: id,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 无法加载帖子信息')
+            }
+        },
+        async update() {
+            try {
+                await this.getPostOnline({
+                    userId: this.userId,
+                    postId: this.info.postId,
+                })
+            } catch (err) {
+                this.$message.error('网络错误, 无法加载帖子信息')
+            }
+        },
         // 处理点赞
         handleLike() {
-            // 更新点赞
-            this.userLike = !this.userLike
-            this.prepareUploadLike()
             // 点赞与点踩只能有一个
-            if (this.userLike && this.userDislike) {
-                this.userDislike = false
-                this.prepareUploadDislike()
+            if (!this.postInfo.userLike && this.postInfo.userDislike) {
+                this.postInfo.userDislike = false
+                this.uploadDislike(false)
             }
+            // 更新点赞
+            this.postInfo.userLike = !this.postInfo.userLike
+            this.uploadLike(this.postInfo.userLike)
+            console.log(this.postInfo)
+            // this.update()
             // 更新css类
             // this.updateDislikeClass()
             // this.updateLikeClass()
         },
         // 处理点踩
         handleDislike() {
-            // 更新点踩
-            this.userDislike = !this.userDislike
-            this.prepareUploadDislike()
             // 点赞与点踩只能有一个
-            if (this.userLike && this.userDislike) {
-                this.userLike = false
-                this.prepareUploadLike()
+            if (this.postInfo.userLike && !this.postInfo.userDislike) {
+                this.postInfo.userLike = false
+                this.uploadLike(false)
             }
-            // 更新css类
-            // this.updateDislikeClass()
-            // this.updateLikeClass()
+            // 更新点踩
+            this.postInfo.userDislike = !this.postInfo.userDislike
+            this.uploadDislike(this.postInfo.userDislike)
+            console.log('点踩')
+            console.log(this.postInfo)
+            // this.update()
         },
         // 处理收藏
         handleFav() {
             // 更新收藏
-            this.userFav = !this.userFav
-            this.prepareUploadFav()
+            this.postInfo.userFav = !this.postInfo.userFav
+            this.uploadFav(this.postInfo.userFav)
+            console.log('收藏',this.postInfo.userFav)
             // this.updateFavClass()
+            // this.update()
         },
         // 改变点赞数
-        uploadLike(num) {
+        async uploadLike(is) {
+            if (is) {
+                this.postInfo.like++;
+            }
+            else {
+                this.postInfo.like--;
+            }
             //在此向后端发送请求
             // console.log('向后端发送请求：点赞数',num)
-            this.likePostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
+            try {
+                await this.likePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+                await this.update()
+            } catch (err) {
+                this.$message.error('网络错误，点赞失败')
+            }
+            console.log('点赞动作结束', this.postInfo)
         },
         //改变点踩数
-        uploadDislike(num) {
+        async uploadDislike(is) {
+            if (is) {
+                this.postInfo.dislike++;
+            }
+            else {
+                this.postInfo.dislike--;
+            }
             //在此向后端发送请求
             // console.log('向后端发送请求：点踩数',num)
-            this.dislikePostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
+            try {
+                await this.dislikePostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+                await this.update()
+            } catch (err) {
+                this.$message.error('网络错误，点踩失败')
+            }
+
+            console.log('点踩动作结束', this.postInfo)
         },
         //改变收藏数
-        uploadFav(num) {
+        async uploadFav(is) {
+            if (is) {
+                this.postInfo.fav++;
+            }
+            else {
+                this.postInfo.fav--;
+            }
             //在此向后端发送请求
             // console.log('向后端发送请求：收藏数',num)
-            this.favPostOnline({
-                postId: this.info.postId,
-                userId: this.userId,
-                is: num > 0,
-            })
-        },
-        // 准备向后端发送点赞信息
-        prepareUploadLike() {
-            this.userLike ? this.uploadLike(1) : this.uploadLike(-1)
-        },
-        // 准备向后端发送点踩信息
-        prepareUploadDislike() {
-            this.userDislike ? this.uploadDislike(1) : this.uploadDislike(-1)
-        },
-        //准备向后端发送收藏信息
-        prepareUploadFav() {
-            this.userFav ? this.uploadFav(1) : this.uploadFav(-1)
+            try {
+                await this.favPostOnline({
+                    postId: this.info.postId,
+                    userId: this.userId,
+                    is,
+                })
+                await this.update()
+            } catch (err) {
+                this.$message.error('网络错误，收藏失败')
+            }
+            
+            console.log('收藏动作结束', this.postInfo)
         },
         // // 根据点赞来修改css类
         // updateLikeClass() {
@@ -203,7 +278,10 @@ export default {
         },
     },
     mounted() {
-
+        this.update()
+        console.log('点赞模块初始化',this.postInfo)
+        // console.log('初始布尔值', this.userFav, this.userLike, this.userDislike)
+        // console.log('初始收藏赞踩', this.favNumber, this.likeNumber, this.dislikeNumber)
     },
 }
 </script>

@@ -14,9 +14,8 @@
     </div>
     <!-- 根据传入参数来确定使用何种组件 -->
     <div :class="colClass">
-      <component v-for="group in groupList" :key="group.groupId" :group="group" :is="getComponentType()"></component>
+      <component v-for="group in inGroupList" :key="group.groupId" :group="group" :is="getComponentType()"></component>
     </div>
-
   </div>
 </template>
 
@@ -43,6 +42,18 @@ export default {
         }
       }
       return {}
+    },
+    inGroupList(){
+      if(!this.DIYCardComponentName){
+        return this.groupList
+      }
+      let list = []
+      for(let group of this.groupList){
+        if(group.aboutTopic){
+          list.push(group)
+        }
+      }
+      return list
     }
   },
   methods: {

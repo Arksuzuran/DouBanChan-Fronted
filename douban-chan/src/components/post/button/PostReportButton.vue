@@ -5,7 +5,7 @@
             @click="report">
             <span ref="reportButtonText">举报</span>
         </button>
-        <ReportInputBox :signal="inputBoxOpenSignal" :textId="info.postId"></ReportInputBox>
+        <ReportInputBox :signal="inputBoxOpenSignal" :textId="info.postId" :fromPost="fromPost"></ReportInputBox>
     </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
     name: 'PostReportButton',
     // 举报信息
     // info:{ textId, userId, userName, userImageUrl, title, text, }
-    props:['info'],
+    props:['info', 'fromPost'],
     data(){
         return{
             inputBoxOpenSignal: false,  //当该值变化时即打开弹窗 由弹窗自己进行关闭

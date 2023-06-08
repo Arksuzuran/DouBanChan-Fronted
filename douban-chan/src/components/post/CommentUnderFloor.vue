@@ -24,7 +24,7 @@
                 <div class="postfloor-reply-button" @click="changeReplying">
                     回复
                 </div>
-                <FloorReportButton :info="info"></FloorReportButton>
+                <FloorReportButton :textId="floorTextId"></FloorReportButton>
             </div>
             <div class="postfloor-comment-container">
                 <!-- 撰写评论的区域 -->

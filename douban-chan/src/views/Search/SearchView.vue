@@ -25,7 +25,7 @@
       </el-menu>
     </div>
     <div class="search-result-container" v-if="this.searched">
-      <router-view></router-view>
+      <router-view :list="inList"></router-view>
     </div>
   </div>
 </template>
@@ -55,9 +55,9 @@ export default {
       console.log('即将跳转到结果页面',this.allResult[this.activeIndex])
       this.$router.push({
         name: this.activeIndex,
-        params: {
-          list: this.allResult[this.activeIndex],
-        }
+        // params: {
+        //   list: this.allResult[this.activeIndex],
+        // }
       })
     },
     getBookListSearchOnline(){
@@ -145,6 +145,10 @@ export default {
     ...mapGetters('topicAbout', ['topicList']),
     ...mapGetters('groupAbout', ['groupList']),
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+
+    inList(){
+      return this.allResult[this.activeIndex]
+    },
   },
   // 从其他页面的搜索框跳转而来，那么进入搜索页面以给定的参数直接搜索
   mounted(){

@@ -20,7 +20,7 @@
             <div class="postcard-buttongroup">
                 <PostTopicButton :info="info"></PostTopicButton>
                 <PostOperateButton :info="info" v-if="info.userIsAdmin || info.userIsLz"></PostOperateButton>
-                <PostReportButton :info="info"></PostReportButton>
+                <PostReportButton :info="info" :fromPost="true"></PostReportButton>
             </div>
 
             <!-- 点赞数 与 帖子正文 -->
@@ -81,10 +81,9 @@ export default {
                 date: this.info.date,
                 imageUrl: this.info.lzImageUrl,
             },
-            userLike: false,
-            userDislike: false,
-            userFav: false,
-            userComment: false,
+            userLike: this.info.userLike,
+            userDislike: this.info.userDislike,
+            userFav: this.info.userFav,
             favNumber: this.info.fav,
             commentNumber: this.info.comments,
             likeNumber: this.info.like,

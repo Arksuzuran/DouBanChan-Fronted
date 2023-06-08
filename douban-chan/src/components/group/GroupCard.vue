@@ -94,6 +94,9 @@ export default {
                 query:{
                     groupId: this.group.groupId
                 },
+                params:{
+                    join: true
+                },
             })
         },
         

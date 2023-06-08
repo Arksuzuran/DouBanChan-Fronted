@@ -152,11 +152,11 @@ export default {
                         this.$message.error("请选择小组所属的标签。如果您不想让小组参与标签分类，请选择“无”。")
                         return;
                     }
-                    if(!this.form.headimgIdList[0]){
+                    if(!this.form.avatarImgIdList[0]){
                         this.$message.error("请上传小组的封面头像。")
                         return;
                     }
-                    if(!this.form.avatarUrlList[0]){
+                    if(!this.form.headImgIdList[0]){
                         this.$message.error("请上传小组的主页头图。")
                         return;
                     }
@@ -188,8 +188,8 @@ export default {
                 groupName: this.form.name,
                 groupIntro: this.form.intro,
                 tag: this.form.tag,
-                avatar: this.form.headImgIdList[0],
-                head: this.form.avatarImgIdList[0],
+                avatar: this.form.avatarImgIdList[0],
+                head: this.form.headImgIdList[0],
             };
             try {
                 await this.createGroupOnline(newGroup)

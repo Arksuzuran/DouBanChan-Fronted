@@ -1,13 +1,25 @@
 <template>
     <div>
-        我是小组搜索结果
+      <VideoList :items="list" title="搜索结果" :top="205" col=""></VideoList>
     </div>
-</template>
+  </template>
   
-<script>
-export default {
-
-}
-</script>
+  <script>
+  import VideoList from '@/views/Video/VideoList.vue'
+  export default {
+    name: 'SearchTopic',
+    components: {
+      VideoList
+    },
+    data() {
+      return {
+        list: [],
+      }
+    },
+    mounted() {
+      this.list = this.$route.params.list ? this.$route.params.list : []
+    },
+  }
+  </script>
   
-<style scoped></style>
+  <style scoped></style>

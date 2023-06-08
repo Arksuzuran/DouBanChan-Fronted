@@ -16,7 +16,7 @@
                     <PostTopicButton :info="postInfo"></PostTopicButton>
                     <PostOperateButton :info="postInfo" v-if="postInfo.userIsAdmin || postInfo.userIsLz">
                     </PostOperateButton>
-                    <PostReportButton :info="postInfo"></PostReportButton>
+                    <PostReportButton :info="postInfo" fromPost="true"></PostReportButton>
                 </div>
             </div>
             <!-- 标题部分 -->
@@ -86,7 +86,6 @@ export default {
             this.floorList.push(newReply)
         },
         async getData(id) {
-            console.log('尝试向后端发送数据',id)
             // 从后端获取数据
             try {
                 await this.getPostOnline({
@@ -140,10 +139,11 @@ export default {
             activeLabel: 1,
         }
     },
-    mounted() {
+    created() {
         let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
         this.getData(id)
+        console.log('获取了帖子的全部信息',this.postInfo)
 
         //监听“只看楼主”改变的事件
         this.$bus.$on('setOnlyLz', (onlyLz) => {

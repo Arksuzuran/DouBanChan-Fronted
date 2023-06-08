@@ -51,7 +51,7 @@ export default {
       //热度排序 浏览数大的在前面。
       if (this.activeLabel === 1) {
         list.sort((a, b) => {
-          return b.visit - a.visit
+          return b.post - a.post
         })
       }
       //时间排序 时间小的在前面。特别地，置顶帖子优先

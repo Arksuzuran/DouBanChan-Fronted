@@ -58,11 +58,10 @@ export default {
             console.log(newReply)
             try {
                 this.replyTextOnline(newReply)
+                this.$message.success("成功发表回复")
             } catch (err) {
                 this.$message.error('网络错误')
             }
-            this.$message.success("成功发表回复")
-
             // 通过事件总线触发自定义事件，并传递被回复的帖子id 以及 新楼中楼作为参数
             this.$bus.$emit('commentReplyCreated', this.textId);
 
