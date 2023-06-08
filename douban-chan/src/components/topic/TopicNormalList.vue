@@ -1,7 +1,7 @@
 <!-- 普通话题 -->
 <template>
     <div class="topiclist-container">
-        <TopicCard v-for="topic in topicList" :key="topic.key" :topic="topic"></TopicCard>
+        <TopicCard v-for="topic in topicList" :key="topic.topicId" :topic="topic"></TopicCard>
     </div>
 </template>
   

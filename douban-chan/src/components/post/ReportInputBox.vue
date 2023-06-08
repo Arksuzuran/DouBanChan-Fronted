@@ -79,7 +79,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import { nanoid } from 'nanoid'
 export default {
     name: 'ReportInputBox',
-    props: ['signal', 'textId'],
+    props: ['signal', 'textId', 'fromPost'],
     components: {
         PictureChooser,
     },
@@ -126,7 +126,7 @@ export default {
     },
     methods: {
         //帖子 文本相关
-        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'deleteTextOnline']),
+        ...mapActions('postAbout', ['createPostOnline', 'createPostOnline', 'replyPostOnline', 'likePostOnline', 'dislikePostOnline', 'favPostOnline', 'topPostOnline', 'goodPostOnline', 'replyTextOnline', 'likeTextOnline', 'dislikeTextOnline', 'reportTextOnline', 'reportPostOnline', 'deleteTextOnline']),
         // 关闭上拉栏
         handleClose(done) {
             if (this.loading) {
@@ -175,11 +175,16 @@ export default {
                 text: this.form.text,
             }
             try {
-                await this.reportTextOnline(report)
+                if(this.fromPost){
+                    await this.reportPostOnline(report)
+                }
+                else{
+                    await this.reportTextOnline(report)
+                }
             } catch (err) {
                 this.$message.error('网络错误，举报提交失败。')
             }
-            this.$message.success("举报提交成功，您的管理员将会收到举报信息。")
+            // this.$message.success("举报提交成功，您的管理员将会收到举报信息。")
             // console.log('用户发送举报请求', report)
 
             // 清空内容

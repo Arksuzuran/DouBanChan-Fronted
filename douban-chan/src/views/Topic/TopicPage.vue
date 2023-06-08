@@ -89,7 +89,7 @@ export default {
                         userId: this.userId,
                         is: true,
                     })
-
+                    this.getData(this.topicId)
                     this.$message.success('您已成功加入话题!');
                     this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
@@ -107,7 +107,7 @@ export default {
                         userId: this.userId,
                         is: false,
                     })
-
+                    this.getData(this.topicId)
                     this.$message.success('您已退出话题');
                     this.topicInfo.userInTopic = !this.topicInfo.userInTopic
                 }).catch(() => {
@@ -124,11 +124,11 @@ export default {
                 });
                 await this.getTopicListByHotOnline({
                     userId:  this.userId,
+                    tag: '',
                 });
                 await this.getTopicInfoOnline({
                     userId:  this.userId,
                     topicId: id,
-
                 });
             } catch (err) {
                 this.$message.error('网络错误')
@@ -166,10 +166,10 @@ export default {
             console.log('用户发帖成功：', newPost)
         });
 
-        let topicId = this.$route.query.topicId ? this.$route.query.topicId : this.$route.params.topicId
+        this.topicId = this.$route.query.topicId ? this.$route.query.topicId : this.$route.params.topicId
 
-        console.log('已收到路由传递的话题id', topicId)
-        this.getData(topicId)
+        console.log('已收到路由传递的话题id', this.topicId)
+        this.getData(this.topicId)
     },
 }
 </script>

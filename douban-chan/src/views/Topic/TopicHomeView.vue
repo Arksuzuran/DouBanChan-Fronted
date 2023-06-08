@@ -138,22 +138,39 @@ export default {
     // 根据当前导航栏选择状态来更新数据
     async updateData() {
       let index = this.activeTopLabel
-      console.log('顶部index',index)
+      console.log('顶部index', index)
       try {
+        console.log('当前选择的左侧', this.tag)
         // 选择浏览发现 则随机推荐
         if (index == 0 || index == 2) {
-          console.log(this.tag)
-          await this.getTopicListOnline({
-            tag: this.tag,
-          })
-          await this.getGroupListOnline({
-            tag: this.tag,
-            userId: this.userId,
-          })
-          await this.getPostListOnline({
-            tag: this.tag,
-            userId: this.userId,
-          })
+          if (this.tag == '我的话题') {
+
+            await this.getTopicListMineOnline({
+              userId: this.userId,
+            })
+            await this.getGroupListOnline({
+              userId: this.userId,
+              tag: '',
+            })
+            await this.getPostListOnline({
+              tag: '',
+              userId: this.userId,
+            })
+          }
+          else {
+            console.log('非我的话题', this.tag)
+            await this.getTopicListOnline({
+              tag: this.tag,
+            })
+            await this.getGroupListOnline({
+              tag: this.tag,
+              userId: this.userId,
+            })
+            await this.getPostListOnline({
+              tag: this.tag,
+              userId: this.userId,
+            })
+          }
         }
         // 选择今日热榜 则推荐热榜相关
         else if (index == 1) {
@@ -161,11 +178,11 @@ export default {
           await this.getTopicListByHotOnline({
             tag: this.tag,
           })
-          await this.getGroupListByHotOnline({
+          await this.getGroupListOnline({
             tag: this.tag,
             userId: this.userId,
           })
-          await this.getPostListByHotOnline({
+          await this.getPostListOnline({
             tag: this.tag,
             userId: this.userId,
           })
@@ -185,11 +202,11 @@ export default {
     },
 
     //获取话题列表    
-    ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListByHotOnline']),
+    ...mapActions('topicAbout', ['getTopicListOnline', 'getTopicListMineOnline', 'getTopicListByHotOnline']),
     //获取帖子列表
-    ...mapActions('postAbout', ['getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
+    ...mapActions('postAbout', ['getPostListOnline', 'getPostListMineOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline']),
     //获取小组列表    
-    ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListByHotOnline']),
+    ...mapActions('groupAbout', ['getGroupListOnline', 'getGroupListMineOnline', 'getGroupListByHotOnline']),
   },
 
   computed: {
@@ -220,7 +237,7 @@ export default {
     this.$bus.$on('leftNavChanged', (index) => {
       this.handleSelect2(index)
     });
-    
+
   },
 
 }

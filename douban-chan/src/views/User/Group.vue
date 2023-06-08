@@ -26,18 +26,25 @@ export default {
     }
   },
   methods: {
+    //获取话题列表
+    ...mapActions('topicAbout', ['getTopicListSearchOnline', 'getTopicListOnline', 'getTopicListByHotOnline', 'getTopicListMineOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline', 'getTopicListSearchOnline']),
+    //获取帖子列表 或者一个完整的帖子
+    ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostListMineOnline', 'getPostOnline', 'getPostListSearchOnline']),
+    //获取小组列表    
+    ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
     getGroupListOnline() {
       this.$axios({
         method: "post",
         data: qs.stringify({
           u_id: this.userId,
         }),
-        url: "/user/register/",
+        url: "/user/get_self_group/",
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
         .then((res) => {
-          console.log(res.data)
+          console.log('成功获取我的小组', res.data)
           //给groupList赋值
+          this.groupList = res.data.groups
         })
         .catch((err) => {
           this.$message.error("网络出错QAQ");
@@ -48,7 +55,7 @@ export default {
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
   },
   mounted() {
-    // this.groupList = this.getGroupListOnline();
+    this.getGroupListOnline()
   },
 }
 </script>

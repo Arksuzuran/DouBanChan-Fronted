@@ -84,6 +84,7 @@ export default {
         return {
             activeIndex: 'groupPostList',
             msgList: [],
+            id: '',
         }
     },
     methods: {
@@ -100,7 +101,7 @@ export default {
                         userId: this.userId,
                         is: true,
                     })
-
+                    this.getData(this.id)
                     this.$message.success('您已成功加入小组!');
                     this.groupInfo.userInGroup = !this.groupInfo.userInGroup
                 }).catch(() => {
@@ -118,7 +119,7 @@ export default {
                         userId: this.userId,
                         is: false,
                     })
-
+                    this.getData(this.id)
                     this.$message.success('您已退出小组');
                     this.groupInfo.userInGroup = !this.groupInfo.userInGroup
                 }).catch(() => {
@@ -251,7 +252,6 @@ export default {
                 });
                 // 小组参与的话题列表
                 await this.getTopicListByGroupIdOnline({
-                    userId: this.userId,
                     groupId: id,
                 });
                 // 加载当前小组的管理员事务
@@ -290,7 +290,6 @@ export default {
         ...mapGetters('topicAbout', ['topicList']),
         ...mapGetters('groupAbout', ['groupInfo']),
         showPostCreateBar() {
-            // console.log(this.$route)
             return this.$route.name == 'group' || this.$route.name == 'groupTopicList'
         },
         joinButtonClass() {
@@ -322,12 +321,16 @@ export default {
             this.postList.push(newPost);
             console.log('用户发帖成功：', newPost)
         });
-        let id = this.$route.query.groupId ? this.$route.query.groupId : this.$route.params.groupId
+        this.id = this.$route.query.groupId ? this.$route.query.groupId : this.$route.params.groupId
 
-        this.getData(id)
-        console.log('已收到路由传递的小组id', id)
+        this.getData(this.id)
+        console.log('已收到路由传递的小组id', this.id)
 
         this.updateLabelByRoute()
+
+        if(this.$route.params.join){
+            this.joinGroup()
+        }
     },
 }
 </script>

@@ -155,6 +155,14 @@ export default {
                         this.$message.error("请选择话题所属的标签。如果您不想让话题参与标签分类，请选择“无”。")
                         return;
                     }
+                    if(!this.form.avatarImgIdList[0]){
+                        this.$message.error("请上传话题的封面头像。")
+                        return;
+                    }
+                    if(!this.form.headImgIdList[0]){
+                        this.$message.error("请上传话题的主页头图。")
+                        return;
+                    }
 
                     this.createTopic();
                     this.loading = true;
@@ -186,12 +194,13 @@ export default {
                 intro: this.form.intro,
                 tag: this.form.tag,
             };
+            console.log(newTopic)
             // 创建话题
             try {
                 await this.createTopicOnline(newTopic)
                 this.$message.success("成功创建话题:" + this.form.name)
             } catch (err) {
-                this.$message.error('网络错误, 发帖失败')
+                this.$message.error('网络错误, 话题创建失败')
             }
 
             // 清空内容

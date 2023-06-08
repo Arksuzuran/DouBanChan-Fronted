@@ -18,11 +18,11 @@
                 <i class="fa-sharp fa-solid fa-thumbtack" style="font-size: 16px; margin-right:8px"></i>
                 取消置顶
             </div>
-            <div @click="handleGood" class="drop-item" v-if="info.userIsAdmin && !info.isGood">
+            <div @click="handleGood" class="drop-item" v-if="info.userIsAdmin && !info.isGoodPost">
                 <i class="el-icon-medal" style="font-size: 16px; margin-right:20px;"></i>
                 加精
             </div>
-            <div @click="handleNotGood" class="drop-item" v-if="info.userIsAdmin && info.isGood">
+            <div @click="handleNotGood" class="drop-item" v-if="info.userIsAdmin && info.isGoodPost">
                 <i class="el-icon-medal" style="font-size: 16px; margin-right:2px;"></i>
                 取消加精
             </div>
@@ -78,7 +78,7 @@ export default {
             }).then(() => {
                 this.topPostOnline({
                     postId: this.info.postId,
-                    top: true
+                    top: true,
                 })
 
                 this.$message.success('置顶请求已提交!');
