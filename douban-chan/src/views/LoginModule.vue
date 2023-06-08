@@ -26,7 +26,7 @@
                 </div>
                 <div v-if="notHideButtons" class="login-module-radio">
                     <el-checkbox v-model="remember" class="login-module-radio-remember" size="mini">记住密码</el-checkbox>
-                    <span class="login-module-radio-forget">忘记密码?</span>
+                    <span class="login-module-radio-forget" @click="forgetPassword">忘记密码?</span>
                 </div>
                 <div v-if="notHideButtons" class="login-module-text">
                     <span>这一枪，叫温柔</span>
@@ -160,6 +160,34 @@ export default ({
     },
     methods: {
         ...mapMutations('userAbout', ['LOGIN', 'LOGOUT']),
+        forgetPassword() {
+            if (this.inputAccount === '') {
+                this.$Notify.error({
+                    title: '请输入用户名',
+                    showClose: false,
+                })
+                return;
+            }
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_name: this.inputAccount,
+                }),
+                url: "/sender/find/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data)
+                    this.$Notify.success({
+                        title: 'Success!',
+                        message: '请查看邮箱',
+                        showClose: false,
+                    })
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
         handleButtonClick() {
             this.start();//开始捏
             this.moveLeft = !this.moveLeft;
@@ -531,6 +559,11 @@ export default ({
     margin-right: 8px;
     float: right;
     font-size: 14px;
+    cursor: pointer;
+}
+
+.login-module-radio-forget :hover {
+    color: #0015ff;
 }
 
 .login-module--right-enroll-fbd {

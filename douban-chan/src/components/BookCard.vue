@@ -83,8 +83,7 @@
                 </div>
                 <el-button type="info" plain
                     style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;">
-                    <i class="fa-solid fa-plus" style="color: #003899;"></i>
-                    &nbsp 我的订阅
+                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> &nbsp 查看详情
                 </el-button>
                 <el-button type="info" plain
                     style="border: none;margin-top: 70%;float: right;color:#003899; width: 120px;font-weight: bold;">
@@ -114,8 +113,8 @@
                         <el-rate class="book-rate-ten-star" style="margin-top: 3%;" v-model="value" :colors="colors"
                             :max="10">
                         </el-rate>
-                        <button :class="['book-rate-button', { 'disabled': value === 0 }]"
-                            :disabled="value === 0">打分</button>
+                        <button :class="['book-rate-button', { 'disabled': value === 0 }]" :disabled="value === 0"
+                            @click="rate()">打分</button>
                     </div>
                 </div>
             </div>
@@ -148,11 +147,41 @@ export default {
             document.body.style.overflow = 'auto'; // 恢复滚动条
             document.removeEventListener('scroll', this.disableScroll); // 移除禁用滚动事件
         },
+        rate() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    m_id: this.book.m_id,
+                    rate: this.value,
+                }),
+                url: "/media/rate_media/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log(res.data.msg)
+                    if (res.data.msg === 0) {
+                        this.closeRate()
+                        this.$Notify.success({
+                            title: 'Success',
+                            message: '评分成功！',
+                            showClose: false,
+                        })
+                    }
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ")
+                });
+        },
         disableScroll(event) {
             event.preventDefault();
             event.stopPropagation();
         },
         showRate() {
+            if (!this.isLogin) {
+                this.favError();
+                return;
+            }
             this.isRateVisible = true;
             if (!this.isModalVisible)
                 document.body.style.overflow = 'hidden'; // 隐藏滚动条
@@ -171,7 +200,7 @@ export default {
         //当前用户想要收藏或者取消收藏
         wantFavBook() {
             //提醒用户先登录
-            if (this.userId == 1) {
+            if (!this.isLogin) {
                 this.favError();
                 return;
             }
@@ -256,6 +285,15 @@ export default {
 
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
+
+.modal-introduction-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+}
 
 .book-card {
     width: 200px;
@@ -728,6 +766,7 @@ export default {
 
 .modal-people-d {
     position: absolute;
+    margin-top: 10px;
     top: 65%;
     left: 2%;
     width: 90%;

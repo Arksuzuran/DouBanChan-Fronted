@@ -53,12 +53,9 @@ export default ({
             })
                 .then((res) => {
                     console.log(res.data);
-                    this.isHandle = true;
-                    this.success = true;
                 })
-                .catch((err) => {
-                    this.$message.error("网络出错QAQ");
-                });
+            this.isHandle = true;
+            this.success = true;
         },
         showFail() {
             this.$axios({
@@ -71,14 +68,8 @@ export default ({
                 url: "/report/handle_report_post/",
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-                .then((res) => {
-                    console.log(res.data);
-                    this.isHandle = true;
-                    this.fail = true;
-                })
-                .catch((err) => {
-                    this.$message.error("网络出错QAQ");
-                });
+            this.isHandle = true;
+            this.fail = true;
         },
         deleteManage() {
             this.$emit('delete', this.manage.id);
