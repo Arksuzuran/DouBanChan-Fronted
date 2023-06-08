@@ -20,7 +20,7 @@
     <CommentReplyInputBox v-if="isReplying" :textId="textId" :targetUserName="reviewerName">
     </CommentReplyInputBox>
 
-    <commentFirstLevel v-for="(commentInfo,index) in commentInfos" :key=index :item="commentInfo"></commentFirstLevel>
+    <commentFirstLevel v-for="(commentInfo,index) in reviewItems" :key=index :item="commentInfo"></commentFirstLevel>
 </div>
 </template>
 
@@ -38,36 +38,7 @@ export default {
         return {
             textId: this.$route.params.id,
             isReplying: false,
-            commentNum: 1000,
-            commentInfos: [
-                {
-                    id: 1,
-                    imageUrl: require('../../assets/user-image-1.jpg'),
-                    name: '阿迪斯发斯蒂芬',
-                    date: '2020-12-31 12:00:00',
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 10,
-                    dislike: 100,
-                },
-                {
-                    id: 2,
-                    imageUrl: require('../../assets/user-image-2.jpg'),
-                    name: 'www',
-                    date: '2020-12-31 12:00:00',
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 10,
-                    dislike: 100,
-                },
-                {
-                    id: 3,
-                    imageUrl: require('../../assets/user-image-3.jpg'),
-                    name: 'www',
-                    date: '2020-12-31 12:00:00',
-                    content: "楼主本人的影评写的不错，不过后面附的观影团其他人的影评，这部分我个人阅后认为有的人的影评过于高高在上了。通俗来说就是可能成长顺遂没有吃过苦，对影片中的一些言不由衷的苦难，难以启齿的经历，没法好好共情，导致写出的影评有一股上帝视角的审视，及道德制高点的各种上帝全知全能预设式的批判，我表示达咩。",
-                    like: 10,
-                    dislike: 100,
-                },
-            ]
+            reviewItems: [],
         }
     },
     methods:{
@@ -76,7 +47,9 @@ export default {
                 this.activeTab = tab;
                 if (tab === 'latest') {
                 console.log('最新');
+                console.log(this.reviewItems)
                 this.reviewItems = this.reviewsOrderedByTime
+                console.log(this.reviewItems)
                 }
                 else if (tab === 'hottest') {
                 console.log('最热');

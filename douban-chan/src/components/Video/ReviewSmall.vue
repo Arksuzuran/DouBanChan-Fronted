@@ -53,12 +53,16 @@
 <script>
 import RateWithNumber_M from '../Video/RateWithNumber_M.vue'
 import qs from "qs"
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'ReviewSmall',
     components: {
         RateWithNumber_M,
     },
     props: ['item'],
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     data() {
         return {
             userLike: false,
@@ -73,7 +77,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/like/",
@@ -87,7 +91,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/cancel_like/",
@@ -101,7 +105,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/dislike/",
@@ -115,7 +119,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/cancel_dislike/",
@@ -129,7 +133,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/text_set_favorite/",
@@ -143,7 +147,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId,
             }),
             url: "/text/text_cancel_favorite/",
@@ -156,7 +160,7 @@ export default {
 
         toReviewPage(id){
             this.$router.push({
-                name: 'review',
+                name: 'videoReview',
                 params: {
                     m_id: this.$route.params.id,
                     t_id: id
@@ -246,7 +250,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.item.textId
             }),
             url: "/media/get_status/",

@@ -7,6 +7,7 @@
         :class="getActiveButtonClass(button.id)" @click="handleSelect(button.id)">
         {{ button.label }}
       </div>
+      <SearchBar index="searchBook"></SearchBar>
     </div>
 
     <div class="container">
@@ -20,10 +21,11 @@
 import Lunbo from '@/components/Video/Lunbo.vue';
 import HotVideo from '@/components/Video/HotVideo.vue';
 import VideoRow from '@/components/Video/VideoRow.vue';
+import SearchBar from '../Search/SearchBar.vue';
 export default {
   components: {
     Lunbo,
-    HotVideo, VideoRow
+    HotVideo, VideoRow, SearchBar
   },
   data() {
     return {

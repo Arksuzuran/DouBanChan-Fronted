@@ -33,9 +33,9 @@ export default {
       .then((res) => {
           this.hotComments = res.data.heat_comment
       })
-      .catch((err) => {
-          this.$message.error("网络出错QAQ")
-      });
+      // .catch((err) => {
+      //     this.$message.error("网络出错QAQ")
+      // });
     },
     getHotBook(){
         this.$axios({

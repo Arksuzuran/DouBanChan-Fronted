@@ -20,7 +20,7 @@
           <el-col :span="18">
             <div style="height:300px;">
               <el-col :span="16">
-                <div style="width: 240px">
+                <div style="width: 400px">
                   <div v-if="!Skeleton" class="skeleton"></div>
                   <ItemInfo v-if="Skeleton" :item="item"></ItemInfo>
                 </div>
@@ -29,7 +29,7 @@
               <el-col :span="8">
                 <div class="rate-board">
                   <div class="little-button">豆瓣酱评分</div>
-                  <Rate :score="item.m_rate"></Rate>
+                  <Rate :item="item"></Rate>
 
                   <!-- 图表 -->
                   <!-- <div>
@@ -38,11 +38,6 @@
 
                   <div class="little-button">我的评分</div>
                   <!-- 收藏按钮 -->
-                  <!-- <div>
-                    <button v-bind:class="{ active: isActive }" v-on:click="handleCollect">
-                      {{buttonText}}
-                    </button>
-                  </div> -->
 
                   <div style="display: flex">
                     <button class="Btn" @click="showRate">打分
@@ -57,9 +52,7 @@
                                 background-color: rgba(234, 109, 25, 0.5); width: 40px; color: white; border-radius: 10px;">
                       {{ value }}
                     </div>
-                    <el-button v-bind:class="{ active: isActive }" v-on:click="handleCollect" type="warning"
-                      icon="el-icon-star-off" circle
-                      style="position: absolute; margin-top: 22px; margin-left: 170px;"></el-button>
+
                   </div>
 
 
@@ -327,6 +320,15 @@ export default {
     },
     // 跳转到写影评页面
     toWriteReviewPage() {
+      if (this.userId == 1)
+        {
+          this.$Notify.error({
+                title: 'Error',
+                message: '请您先登录',
+                showClose: false,
+            })
+          return
+        }
       this.$router.push({
         name: 'writeVideoReview',
         params: {
@@ -363,7 +365,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id,
           op: op
         }),
@@ -383,7 +385,7 @@ export default {
       this.$axios({
         method: "post",
         data: qs.stringify({
-          u_id: 2,
+          u_id: this.userId,
           m_id: this.$route.params.id
         }),
         url: "/media/get_media_status/",
@@ -405,6 +407,7 @@ export default {
           this.$message.error("网络出错QAQ")
         });
     },
+
     rate() {
       this.$axios({
         method: "post",

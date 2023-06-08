@@ -38,17 +38,6 @@
 
 
                 <br>
-                <div class="buttons-holder">
-                    <div class="buttons-under-review">
-                        <el-button plain><i class="el-icon-star-off" style="font-size: 10px"></i>收 藏</el-button>
-                    </div>
-                    <div class="buttons-under-review">
-                        <el-button plain><i class="fa-regular fa-share-from-square" style="color: #0fa8f5;font-size: 10px;"></i>转发</el-button>
-                    </div>
-                    <div class="buttons-under-review">
-                        <el-button plain><i class="fa-solid fa-triangle-exclamation" style="color: #ebee11; font-size: 10px"></i>举报</el-button>
-                    </div>
-                </div>
                 <el-divider></el-divider>
 
                 <!-- 二级评论 -->
@@ -87,7 +76,7 @@
                         :src="movieItem.m_profile_photo">
                     </el-image>
                     
-                    <div v-if="movieItem.m_type !== 3">
+                    <div v-if="movieItem.m_type !== 3" style="width: 200px">
                         <ul>
                             <li><span>导演：</span>{{ movieItem.m_director }}</li>
                             <li><span>编剧：</span>{{ movieItem.m_writer }}</li>
@@ -117,11 +106,15 @@ import qs from "qs"
 import commentFirstLevel from '@/components/review/commentFirstLevel.vue'
 import CommentReply from '@/components/review/commentReply.vue'
 import RateWithNumber_M from '@/components/Video/RateWithNumber_M.vue'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     components: {
         Rate, CommentSection,commentFirstLevel,CommentReply, RateWithNumber_M
     },
     name: 'ReviewView',
+    computed: {
+        ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+    },
     data () {
         return {
             userLike: false,
@@ -131,7 +124,7 @@ export default {
             
             reviewItem: {},
             reviewerItem: {},
-            movieItem: {},
+            movieItem : {},
             commentItems: [],
             commentItemsOrderedByTime:[],
             commentItemsOrderedByLike:[],
@@ -155,7 +148,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId
             }),
             url: "/text/query_single/",
@@ -189,6 +182,7 @@ export default {
             })
             .then((res) => {
                 this.reviewerItem = res.data.user
+                console.log(this.reviewerItem)
             })
             .catch((err) => {
                 this.$message.error("网络出错QAQ")
@@ -199,7 +193,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 m_id: id
             }),
             url: "/media/query_single/",
@@ -217,11 +211,11 @@ export default {
                 this.activeTab = tab;
                 if (tab === 'latest') {
                 console.log('最新');
-                this.reviewItems = this.reviewsOrderedByTime
+                this.commentItems = this.commentItemsOrderedByTime
                 }
                 else if (tab === 'hottest') {
                 console.log('最热');
-                this.reviewItems = this.reviewsOrderedByLike
+                this.commentItems = this.commentItemsOrderedByLike
                 }
             }
         },
@@ -232,7 +226,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId,
             }),
             url: "/text/like/",
@@ -246,7 +240,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId,
             }),
             url: "/text/cancel_like/",
@@ -260,7 +254,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId,
             }),
             url: "/text/dislike/",
@@ -274,7 +268,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId,
             }),
             url: "/text/cancel_dislike/",
@@ -323,7 +317,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.textId
             }),
             url: "/media/get_status/",
@@ -333,9 +327,6 @@ export default {
                 this.userLike = res.data.is_liked
                 this.userDislike = res.data.is_disliked
                 this.userFav = res.data.is_favorite
-                console.log(this.userLike)
-                console.log(this.userDislike)
-                console.log(this.userFav)
             })
             .catch((err) => {
                 this.$message.error("网络出错QAQ")
