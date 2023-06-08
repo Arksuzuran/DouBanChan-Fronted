@@ -8,16 +8,17 @@
 import GroupHomePostListVue from '../Group/GroupHomePostList.vue';
 export default {
     name: 'SearchPost',
+    props:['list'],
     components: {
         GroupHomePostListVue,
     },
     data() {
         return {
-            list: [],
+            // list: [],
         }
     },
     mounted() {
-        this.list = this.$route.params.list ? this.$route.params.list : []
+        // this.list = this.$route.params.list ? this.$route.params.list : []
     },
 }
 </script>

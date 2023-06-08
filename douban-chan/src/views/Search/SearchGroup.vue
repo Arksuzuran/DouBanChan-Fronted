@@ -8,16 +8,17 @@
 import GroupList from '@/components/group/GroupList.vue';
 export default {
   name: 'SearchTopic',
+  props:['list'],
   components: {
     GroupList,
   },
   data() {
     return {
-      list: [],
+      // list: [],
     }
   },
   mounted() {
-    this.list = this.$route.params.list ? this.$route.params.list : []
+    // this.list = this.$route.params.list ? this.$route.params.list : []
   },
 }
 </script>

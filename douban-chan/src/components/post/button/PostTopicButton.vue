@@ -3,7 +3,7 @@
     <div class="button-container">
         <button class="postcard-button-topic" @mouseenter="mouseenterTopicButton" @mouseleave="mouseleaveTopicButton"
             @click="jumpToTopic">
-            <span ref="topicButtonText">{{ cutStrByLength('#' + info.topic, 9) }}</span>
+            <span ref="topicButtonText">{{ cutStrByLength('#' + info.topic, 8) }}</span>
         </button>
     </div>
 </template>
@@ -28,7 +28,7 @@ export default {
             this.$refs.topicButtonText.classList.add('slide-in')
         },
         mouseleaveTopicButton() {
-            this.$refs.topicButtonText.textContent = this.cutStrByLength('#' + this.info.topic, 9)
+            this.$refs.topicButtonText.textContent = this.cutStrByLength('#' + this.info.topic, 8)
             this.$refs.topicButtonText.classList.remove('slide-in')
         },
         // 限制字符串长度为length

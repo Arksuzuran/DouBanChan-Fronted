@@ -104,6 +104,7 @@ export default {
       try {
         if (this.tag == '我的小组') {
           await this.getPostListMineOnline({
+            tag: this.tag,
             userId: this.userId,
           })
           await this.getGroupListMineOnline({
@@ -135,9 +136,9 @@ export default {
     //获取话题列表
     ...mapActions('topicAbout', ['getTopicListSearchOnline', 'getTopicListOnline', 'getTopicListByHotOnline', 'getTopicListMineOnline', 'getTopicInfoOnline', 'getTopicListByGroupIdOnline', 'getTopicListSearchOnline']),
     //获取帖子列表 或者一个完整的帖子
-    ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostOnline', 'getPostListSearchOnline']),
+    ...mapActions('postAbout', ['getPostListSearchOnline', 'getPostListMineOnline', 'getPostListOnline', 'getPostListByGroupIdOnline', 'getPostListByTopicIdOnline', 'getPostListByHotOnline', 'getPostOnline', 'getPostListSearchOnline']),
     //获取小组列表    
-    ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
+    ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListMineOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
   },
   computed: {
     // 根据用户是否选中了'我的小组' 来决定groupList组件的标题

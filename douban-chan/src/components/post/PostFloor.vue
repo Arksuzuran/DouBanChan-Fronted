@@ -5,7 +5,7 @@
         <PostCardUserInfo :info="userInfo"></PostCardUserInfo>
         <!-- 赞 踩 和 举报按钮 -->
         <div class="postfloor-buttongroup">
-            <PostReportButton :info="post"></PostReportButton>
+            <PostReportButton :info="info"></PostReportButton>
         </div>
         <!-- 点赞数 与 帖子正文 -->
         <div class="postfloor-text-container">
@@ -18,7 +18,7 @@
                 <div class="postfloor-LZBox-LZ">楼主</div>
             </div>
             <!-- 帖子正文 -->
-            <PostCardText class="postfloor-maintext" :info="textInfo" :normal="true"/>
+            <PostCardText class="postfloor-maintext" :info="textInfo" :normal="true" />
 
             <!-- 赞与踩 回复按钮-->
             <div class="postfloor-like-container">
@@ -29,13 +29,13 @@
                 </div>
             </div>
         </div>
-
         <div class="postfloor-comment-container">
             <!-- 撰写评论的区域 -->
             <CommentReplyInputBox v-if="isReplying" :textId="info.textId" :targetUserName="info.userName">
             </CommentReplyInputBox>
             <!-- 展示未被折叠的评论 -->
-            <CommentUnderFloor v-for="comment in showedchildFloorList" :key="comment.textId" :info="comment" :floorTextId="info.textId"></CommentUnderFloor>
+            <CommentUnderFloor v-for="comment in showedchildFloorList" :key="comment.textId" :info="comment"
+                :floorTextId="info.textId"></CommentUnderFloor>
         </div>
 
         <!-- 底部被折叠的评论 -->
@@ -50,7 +50,8 @@
                 <!-- 在这里放置余下的评论 -->
                 <!-- 被折叠的评论 -->
                 <div class="postfloor-comment-container">
-                    <CommentUnderFloor v-for="comment in restchildFloorList" :key="comment.textId" :info="comment" :floorTextId="info.textId">
+                    <CommentUnderFloor v-for="comment in restchildFloorList" :key="comment.textId" :info="comment"
+                        :floorTextId="info.textId">
                     </CommentUnderFloor>
                 </div>
             </el-collapse-item>
@@ -133,11 +134,12 @@ export default {
         // 改变用户对当层楼的回复状态
         changeReplying() {
             this.isReplying = !this.isReplying
+            console.log('点击回复按钮', this.isReplying)
         },
     },
     mounted() {
         this.$bus.$on('commentReplyCreated', (textId) => {
-            if(textId == this.info.textId){
+            if (textId == this.info.textId) {
                 this.isReplying = !this.isReplying
             }
         })
@@ -201,11 +203,13 @@ export default {
     font-size: 16px;
     color: #2c3e50;
 }
-.postfloor-reply-button:hover{
+
+.postfloor-reply-button:hover {
     background-color: rgb(247, 93, 93);
     color: white;
     transition: 0.5s ease-out;
 }
+
 .postcard-icon {
     font-size: 18px;
     color: rgb(97, 97, 97);
@@ -267,5 +271,4 @@ export default {
 
 .folded-comments-title {
     margin-left: 20px;
-}
-</style>
+}</style>

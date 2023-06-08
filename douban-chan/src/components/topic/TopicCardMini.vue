@@ -61,6 +61,7 @@ export default {
 <style scoped>
 
 .card {
+    min-width: 440px;
     margin: 20px;
     /* max-width: 600px; */
     height: 125px;
