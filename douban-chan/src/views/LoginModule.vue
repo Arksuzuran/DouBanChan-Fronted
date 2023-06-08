@@ -263,14 +263,14 @@ export default ({
         loginFail() {
             this.$Notify.error({
                 title: '密码错误',
-                message: '请尝试重新输入密码',
+                message: '请重新输入密码',
                 showClose: false,
             })
         },
         errorAccount() {
             this.$Notify.error({
                 title: '账号错误',
-                message: '请尝试重新输入账号',
+                message: '请重新输入账号',
                 showClose: false,
             })
         },

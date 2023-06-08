@@ -7,7 +7,7 @@
             <div class="post-top-option-container">
                 <!-- 左侧 -->
                 <!-- 排序部分 -->
-                <PostSortLabel></PostSortLabel>
+                <!-- <PostSortLabel></PostSortLabel> -->
                 <!-- 只看楼主 -->
                 <OnlySelectButton class="post-OnlyLz-button" labelName="楼主" eventName="setOnlyLz"></OnlySelectButton>
                 <!-- 右侧 -->
@@ -70,7 +70,7 @@ export default {
     },
     data(){
         return{
-            id: 1,
+            
         }
     },
     methods: {
@@ -129,7 +129,7 @@ export default {
             //时间排序 时间小的在前面
             else if (this.activeLabel === 2) {
                 list.sort((a, b) => {
-                    return a.date - b.date
+                    return a.date < b.date
                 })
             }
             console.log(list)
@@ -144,8 +144,8 @@ export default {
             activeLabel: 1,
         }
     },
-    created() {
-        this.id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
+    mounted() {
+        let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
         this.getData(id)
         console.log('获取了帖子的全部信息',this.postInfo)
@@ -161,18 +161,18 @@ export default {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
         })
-
-        // 监听PostSortLabel的改变排序方式事件，重新加载postList
-        this.$bus.$on('update', () => {
-            this.getData(this.id)
-            console.log('操作后自动刷新页面')
-        })
+        
+        // // 监听PostSortLabel的改变排序方式事件，重新加载postList
+        // this.$bus.$on('update', () => {
+        //     this.getData(this.id)
+        //     console.log('操作后自动刷新页面')
+        // })
     },
     beforeDestroy() {
         //卸载监听
         this.$bus.$off('setOnlyLz')
         this.$bus.$off('sortChanged')
-        this.$bus.$off('update')
+        // this.$bus.$off('update')
     },
 }
 </script>

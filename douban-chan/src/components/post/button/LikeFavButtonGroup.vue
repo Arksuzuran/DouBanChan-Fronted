@@ -105,7 +105,7 @@ export default {
             try {
                 await this.getPostOnline({
                     userId: this.userId,
-                    postId: id,
+                    postId: this.info.postId,
                 })
             } catch (err) {
                 this.$message.error('网络错误, 无法加载帖子信息')
@@ -279,7 +279,7 @@ export default {
         },
     },
     mounted() {
-        this.update()
+        // this.update()
         console.log('点赞模块初始化',this.postInfo)
         // console.log('初始布尔值', this.userFav, this.userLike, this.userDislike)
         // console.log('初始收藏赞踩', this.favNumber, this.likeNumber, this.dislikeNumber)

@@ -2,9 +2,9 @@
 <template>
     <div class="postlist-main-container">
         <!-- 顶部排序部分 -->
-        <div class="postlist-sort-label-container">
+        <!-- <div class="postlist-sort-label-container">
             <PostSortLabel></PostSortLabel>
-        </div>
+        </div> -->
 
         <!-- 帖子列表 -->
         <div class="postlist-container">

@@ -171,7 +171,7 @@ export default {
                 console.log(this.userFav)
             })
             .catch((err) => {
-                this.$message.error("网络出错QAQ")
+                // this.$message.error("网络出错QAQ")
             });
         }
     },
