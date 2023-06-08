@@ -8,7 +8,7 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"/>
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true" :notShowIcongroup="true"/>
         </div>
     </div>
 </template>

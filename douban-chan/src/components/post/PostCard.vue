@@ -203,7 +203,7 @@ export default {
             if (this.userDislike) {
                 this.userDislike = false
                 this.dislikeNumber--
-                this.uploadDislike(false)
+                // this.uploadDislike(false)
             }
             this.updateDislike()
             this.updateLike()
@@ -234,7 +234,7 @@ export default {
             if (this.userLike) {
                 this.userLike = false
                 this.likeNumber--;
-                this.uploadLike(false)
+                // this.uploadLike(false)
             }
             this.updateDislike()
             this.updateLike()

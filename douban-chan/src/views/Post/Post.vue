@@ -68,6 +68,11 @@ export default {
         ScrollToTopButton,
         PostOperateButton,
     },
+    data(){
+        return{
+            id: 1,
+        }
+    },
     methods: {
         // 向楼层列表里加入楼中楼回复
         insertCommentIntoFloor(newReply, textId) {
@@ -140,7 +145,7 @@ export default {
         }
     },
     created() {
-        let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
+        this.id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
         this.getData(id)
         console.log('获取了帖子的全部信息',this.postInfo)
@@ -156,13 +161,18 @@ export default {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
         })
+
+        // 监听PostSortLabel的改变排序方式事件，重新加载postList
+        this.$bus.$on('update', () => {
+            this.getData(this.id)
+            console.log('操作后自动刷新页面')
+        })
     },
     beforeDestroy() {
         //卸载监听
         this.$bus.$off('setOnlyLz')
         this.$bus.$off('sortChanged')
-        this.$bus.$off('commentReplyCreated')
-        this.$bus.$off('postReplyCreated')
+        this.$bus.$off('update')
     },
 }
 </script>
