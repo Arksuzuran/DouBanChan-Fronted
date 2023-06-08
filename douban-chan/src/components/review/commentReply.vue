@@ -2,7 +2,7 @@
 <template>
     <!-- 只有登录了才能显示该组件 -->
     <!-- 底部的回复框 -->
-    <div class="reply-input-container" v-if="isLogin">
+    <div class="reply-input-container">
         <img :src="userImgUrl" class="reply-user-img">
         <textarea v-model="text" :placeholder="replyHeaderStr" rows="6"></textarea>
         <div class="reply-button" @click="submit">
@@ -49,6 +49,7 @@ export default {
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             .then((res) => {
+                console.log(res.data)
                 if (res.data.msg === 0)
                 {
                     this.$message.success("评论成功！")

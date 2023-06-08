@@ -145,8 +145,8 @@ export default Vue.extend({
             {
                 this.$message.error('要有标题哟QAQ');
             }
-            else if (this.editor.getText().length < 15){
-                this.$message.error('字数至少要15字哟QAQ');
+            else if (this.editor.getText().length < 25){
+                this.$message.error('字数至少要25字哟QAQ');
             }
             else{
                 this.$axios({

@@ -2,7 +2,7 @@
     <div class="score-container">
       <el-row>
         <el-col :span="5"><div class="left-section">
-          <div class="score-num">{{ score }}</div>
+          <div class="score-num">{{ item.m_rate }}</div>
         </div></el-col>
         <el-col :span="19"><div class="grid-content bg-purple-light">
           <el-rate
@@ -12,7 +12,7 @@
             score-template="{value}"
           ></el-rate>
 
-          <span class="number-rate">1111人参与评分</span>
+          <span class="number-rate">{{item.m_rate_num}}人参与评分</span>
         </div></el-col>
       </el-row>
     </div>
@@ -21,11 +21,11 @@
 <script>
 export default {  
   name: 'Rate',
-    props:['score'],
+    props:['item'],
     computed: {
         scoreInFive:{
           get(){
-              return this.score * 1.0/2
+              return this.item.m_rate * 1.0/2
           },
           set(val){}
         }

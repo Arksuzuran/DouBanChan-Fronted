@@ -160,7 +160,7 @@ export default {
 
         toReviewPage(id){
             this.$router.push({
-                name: 'review',
+                name: 'videoReview',
                 params: {
                     m_id: this.$route.params.id,
                     t_id: id
