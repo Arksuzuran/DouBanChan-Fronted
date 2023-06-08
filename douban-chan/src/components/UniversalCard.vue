@@ -301,7 +301,7 @@ export default {
     -webkit-line-clamp: 4;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: right;
+    text-align: left;
 }
 
 .card {
@@ -317,9 +317,14 @@ export default {
 
 .card-name {
     font-family: "Montserrat", sans-serif;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     color: #f2f2f2;
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .flag {
@@ -531,6 +536,11 @@ export default {
     font-family: "Helvetica", sans-serif;
     font-size: 32px;
     font-weight: bold;
+    display: inline-block;
+    width: 60%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .el-rate .el-rate__icon {
@@ -651,15 +661,19 @@ export default {
     position: absolute;
     top: 4%;
     left: 25%;
-    width: 40%;
-    height: 7%;
+    height: 10%;
     background-color: transparent;
     border: none;
     color: #000000;
-    font-size: 30px;
+    font-size: 25px;
     cursor: pointer;
     display: flex;
     text-align: left;
+    display: inline-block;
+    max-width: 65%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     /* 关闭按钮样式，可以根据需要进行调整 */
 }
 

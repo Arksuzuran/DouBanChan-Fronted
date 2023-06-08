@@ -29,7 +29,7 @@ export default {
             this.$router.push({ name: 'bookDetail', params: { id: bookId } })
         }
     },
-    mounted(){
+    mounted() {
         console.log(this.collectionCard)
     }
 }
@@ -98,6 +98,11 @@ export default {
     margin-left: 10px;
     font-size: 27px;
     color: #ffffff;
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .collection-card-star {

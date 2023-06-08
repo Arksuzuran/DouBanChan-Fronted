@@ -1,15 +1,13 @@
 <template>
     <div style="width: 530px;">
         <div class="header">
-            
+
         </div>
 
         <div class="body">
             <div>
                 <div class="review-row">
-                <img
-                    style="width: 26px; height: 26px; display: inline-block"
-                    :src="reviewerImageUrl">
+                    <img style="width: 26px; height: 26px; display: inline-block" :src="reviewerImageUrl">
                     <div class="reviewer">
                         <span>{{ reviewerName }}</span>
                         <span style="margin: 0 10px;">评论了</span>
@@ -22,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div style="display: flex">
                 <div class="video-image" @click="toVideoDetail(videoId)">
                     <img :src="videoImageUrl" style="height: 150px; cursor: pointer" @click="toVideoDetail(videoId)">
@@ -39,7 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="postcard-dataicon-group">
                         <div class="postcard-dataicon-wrapper" @click="handleLike">
                             <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
@@ -60,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
     </div>
@@ -105,7 +103,7 @@ export default {
         }
     },
     methods: {
-        toBookReviewPage(id){
+        toBookReviewPage(id) {
             this.$router.push({
                 name: 'bookReview',
                 params: {
@@ -114,7 +112,7 @@ export default {
                 }
             })
         },
-        toVideoReviewPage(id){
+        toVideoReviewPage(id) {
             this.$router.push({
                 name: 'videoReview',
                 params: {
@@ -123,92 +121,92 @@ export default {
                 }
             })
         },
-        clickLike(){
+        clickLike() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/like/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/like/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        clickCancelLike(){
+        clickCancelLike() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/cancel_like/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/cancel_like/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        clickDislike(){
+        clickDislike() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/dislike/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/dislike/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        clickCancelDislike(){
+        clickCancelDislike() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/cancel_dislike/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/cancel_dislike/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        clickFavorite(){
+        clickFavorite() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/text_set_favorite/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/text_set_favorite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        clickCancelFavorite(){
+        clickCancelFavorite() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId,
-            }),
-            url: "/text/text_cancel_favorite/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId,
+                }),
+                url: "/text/text_cancel_favorite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
 
-        toReviewPage(id){
+        toReviewPage(id) {
             if (this.type === '1')
                 this.$router.push({
                     name: 'videoReview',
@@ -217,7 +215,7 @@ export default {
                         t_id: this.item.textId
                     }
                 })
-            else{
+            else {
                 this.$router.push({
                     name: 'bookReview',
                     params: {
@@ -252,7 +250,7 @@ export default {
             //点赞与点踩只能有一个
             if (this.userDislike) {
                 this.userDislike = false
-                this.dislike -- 
+                this.dislike--
                 // this.clickCancelDislike()
             }
             this.updateDislike()
@@ -305,47 +303,55 @@ export default {
         //根据id得到对应的影视
         getVideo(id) {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                m_id: id
-            }),
-            url: "/media/query_single/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    m_id: id
+                }),
+                url: "/media/query_single/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-            .then((res) => {
-                this.videoName = res.data.media.m_name
-                this.videoImageUrl = res.data.media.m_profile_photo
-                this.type = res.data.media.m_type
-            })
+                .then((res) => {
+                    this.videoName = res.data.media.m_name
+                    this.videoImageUrl = res.data.media.m_profile_photo
+                    this.type = res.data.media.m_type
+                })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        
-        getStatus(){
+
+        getStatus() {
             this.$axios({
-            method: "post",
-            data: qs.stringify({
-                u_id: this.userId,
-                t_id: this.item.textId
-            }),
-            url: "/media/get_status/",
-            headers: { "content-type": "application/x-www-form-urlencoded" },
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.item.textId
+                }),
+                url: "/media/get_status/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-            .then((res) => {
-                this.userLike = res.data.is_liked
-                this.userDislike = res.data.is_disliked
-                this.userFav = res.data.is_favorite
-                this.updateLike()
-                this.updateDislike()
-                this.updateFav()
-            })
+                .then((res) => {
+                    this.userLike = res.data.is_liked
+                    this.userDislike = res.data.is_disliked
+                    this.userFav = res.data.is_favorite
+                    this.updateLike()
+                    this.updateDislike()
+                    this.updateFav()
+                })
+                .then((res) => {
+                    this.userLike = res.data.is_liked
+                    this.userDislike = res.data.is_disliked
+                    this.userFav = res.data.is_favorite
+                    this.updateLike()
+                    this.updateDislike()
+                    this.updateFav()
+                })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
             // });
         },
-        handleComment(){
+        handleComment() {
             if (this.type !== '1')
                 this.toReviewPage(this.videoId)
             else
@@ -356,11 +362,11 @@ export default {
             this.$router.push({ name: 'videoDetail', params: { id: videoId } })
         },
         //跳转到图书详情
-        toBookDetail(bookId){
+        toBookDetail(bookId) {
             this.$router.push({ name: 'bookDetail', params: { id: bookId } })
         }
     },
-    mounted(){
+    mounted() {
         this.getStatus()
         this.videoId = this.item.textId
         this.getVideo(this.videoId)
@@ -378,49 +384,58 @@ export default {
 
 <style scoped>
 @import '~@fortawesome/fontawesome-free/css/all.css';
-    .reviewer{
-        margin-left: 10px;
-        font-size: 14px;
-    }
-    .time{
-        color: gray;
-        margin-left: 10px;
-    }
-    .review-row {
-        line-height: 30px; /* 将行高设置为元素的高度，实现元素垂直居中 */
-        height: 30px;
-        text-align: center; /* 将文本水平居中对齐 */
-        display: flex
-    }
-    .body{
-        margin: 10px 0px;
-        border-radius: 8px;
-        background-color: white;
-        padding: 10px;
-        height: 230px;
-        text-align: left;
-        box-shadow: 10px 10px 30px #bebebe;
-    }
-    .title{
-        font-size: 22px;
-        font-weight: bold;
-        cursor: pointer;
-    }
 
-    .content {
-    overflow : hidden;
+.reviewer {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.time {
+    color: gray;
+    margin-left: 10px;
+}
+
+.review-row {
+    line-height: 30px;
+    /* 将行高设置为元素的高度，实现元素垂直居中 */
+    height: 30px;
+    text-align: center;
+    /* 将文本水平居中对齐 */
+    display: flex
+}
+
+.body {
+    margin: 10px 0px;
+    border-radius: 8px;
+    background-color: white;
+    padding: 10px;
+    height: 230px;
+    text-align: left;
+    box-shadow: 10px 10px 30px #bebebe;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.content {
+    overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     position: relative;
     text-overflow: "";
-    }
-    .postcard-icon {
+}
+
+.postcard-icon {
     font-size: 22px;
     color: rgb(97, 97, 97);
     margin: 5px 15px;
     cursor: pointer;
 }
+
 .postcard-dataicon-group {
     margin: 0 auto;
     display: flex;
@@ -428,61 +443,70 @@ export default {
     align-items: center;
     justify-content: space-around;
 }
-    .postcard-icon-like {
-        color: rgb(252, 53, 53);
-    }
 
-    .postcard-icon-dislike {
-        color: rgb(0, 0, 0);
-    }
-    .postcard-data-font {
+.postcard-icon-like {
+    color: rgb(252, 53, 53);
+}
+
+.postcard-icon-dislike {
+    color: rgb(0, 0, 0);
+}
+
+.postcard-data-font {
     margin-bottom: 3px;
     font-size: 16px;
     font-weight: 500;
     color: rgb(35, 35, 35);
 }
 
-.comment-body{
-    display:flex;
+.comment-body {
+    display: flex;
 }
-.video-image{
+
+.video-image {
     margin-right: 10px;
     margin-top: 10px;
 }
+
 .wrapper {
-  display: block;
-  overflow: hidden;
-  margin-top: 10px;
-  height: 100px;
-  width: 350px;
+    display: block;
+    overflow: hidden;
+    margin-top: 10px;
+    height: 100px;
+    width: 350px;
     background-color: white;
 }
+
 /* .hover-style:hover .title,
 .hover-style:hover .wrapper{
     color:gray;
 } */
 .wrapper:hover .text,
 .wrapper:hover .add {
-  color: gray;
+    color: gray;
 }
+
 .text {
-  font-size: 16px;
-  overflow: hidden;
-  /* display: flex; */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  position: relative;
-  cursor: pointer;
-}
-.add{
+    font-size: 16px;
+    overflow: hidden;
+    /* display: flex; */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    position: relative;
     cursor: pointer;
 }
-.text::before {
-  content: '';
-  height: calc(100% - 18px);
-  float: right;
+
+.add {
+    cursor: pointer;
 }
+
+.text::before {
+    content: '';
+    height: calc(100% - 18px);
+    float: right;
+}
+
 /* .exp:checked+.text{
   -webkit-line-clamp: 999;
 }
@@ -508,10 +532,11 @@ export default {
     color: rgb(255, 128, 128);
 }
 
-.video-name{
+.video-name {
     cursor: pointer;
 }
-.video-name:hover{
+
+.video-name:hover {
     color: gray;
 }
 </style>

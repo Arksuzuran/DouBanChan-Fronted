@@ -29,14 +29,14 @@
                     <span class="login-module-radio-forget" @click="forgetPassword">忘记密码?</span>
                 </div>
                 <div v-if="notHideButtons" class="login-module-text">
-                    <span>这一枪，叫温柔</span>
+                    <span>欢迎使用豆瓣酱</span>
                 </div>
             </div>
             <div class="login-module-right-content">
                 <div class="login-module-right-container">
                     <swiper :options="swiperOption" ref="mySwiper" id="mySwiper">
                         <swiper-slide class="swiper_slide_item">
-                            <LoginBackImage :imageUrl="imageUrl_1"></LoginBackImage>
+                            <LoginBackImage :imageUrl="imageUrl_4"></LoginBackImage>
                         </swiper-slide>
                         <swiper-slide class="swiper_slide_item">
                             <LoginBackImage :imageUrl="imageUrl_2"></LoginBackImage>
@@ -82,7 +82,7 @@
                     </el-checkbox>
                 </div>
                 <div class="login-module-right-enroll-text">
-                    <span>爱没有技巧,真情才是必杀技</span>
+                    <span>欢迎加入豆瓣酱</span>
                 </div>
             </div>
         </div>
@@ -103,9 +103,10 @@ export default ({
             inputEnrollPassword_1: '',
             inputEnrollPassword_2: '',
             inputEnrollEmail: '',
-            imageUrl_1: 'login-back.jpg',
-            imageUrl_2: 'OM.jpg',
-            imageUrl_3: 'shadowdie2.jpg',
+            imageUrl_1: 'login3.jpg',
+            imageUrl_2: 'login2.jpg',
+            imageUrl_3: 'login1.jpg',
+            imageUrl_4: 'login-back.jpg',
             inputAccount: '',
             inputPassword: '',
             moveLeft: false,
@@ -248,28 +249,28 @@ export default ({
         loginSuccess() {
             this.$Notify.success({
                 title: '登录成功',
-                message: '软件工程真是一坨shit捏~',
+                message: '祝您畅游豆瓣酱~',
                 showClose: false,
             })
         },
         signUpSuccess() {
             this.$Notify.success({
-                title: '注册成功,请查看邮件',
-                message: '恭喜你注册成功捏',
+                title: '注册成功',
+                message: '恭喜你注册成功,请查看邮件',
                 showClose: false,
             })
         },
         loginFail() {
             this.$Notify.error({
                 title: '密码错误',
-                message: '软件工程嘿嘿嘿嘿',
+                message: '请尝试重新输入密码',
                 showClose: false,
             })
         },
         errorAccount() {
             this.$Notify.error({
                 title: '账号错误',
-                message: '请重新输入账号捏bb',
+                message: '请尝试重新输入账号',
                 showClose: false,
             })
         },
@@ -283,7 +284,7 @@ export default ({
         errorPassword() {
             this.$Notify.error({
                 title: '密码错误',
-                message: '请重新输入密码捏bb',
+                message: '请重新输入密码',
                 showClose: false,
             })
         },
