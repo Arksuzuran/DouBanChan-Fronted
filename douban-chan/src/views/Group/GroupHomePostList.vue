@@ -12,7 +12,7 @@
             <div class="postlist-title">
                 {{ componentTitle }}
             </div>
-            <PostSortLabel></PostSortLabel>
+            <!-- <PostSortLabel></PostSortLabel> -->
             <!-- 只看精品帖子 -->
             <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true"
                 v-if="!notShowSelectButton">
@@ -66,6 +66,7 @@ export default {
         },
         // 按照指定顺序筛选列表
         activePostList() {
+            
             if(!this.postList){
                 return []
             }
@@ -73,7 +74,7 @@ export default {
             //只看精品帖子
             if (this.onlyGoodpost) {
                 list = this.postList.filter(item => {
-                    return item.isGoodPost === true
+                    return item.isGoodPost == true
                 })
             }
             //热度排序 点赞数大的在前面。特别地，置顶帖子优先
@@ -86,6 +87,7 @@ export default {
                         return a.isTopped ? -1 : 1
                     }
                 })
+                console.log('排序完成1',list)
             }
             //时间排序 时间小的在前面。特别地，置顶帖子优先
             else if (this.activeLabel === 2) {
@@ -97,7 +99,9 @@ export default {
                         return a.isTopped ? -1 : 1
                     }
                 })
+                console.log('排序完成2',list)
             }
+            
             return list
         },
         // 动态设置到顶部的距离

@@ -33,9 +33,9 @@
 
                 <!-- 小组右侧关注按钮和申请管理员按钮 -->
                 <div class="group-header-button-group">
-                    <button :class="joinButtonClass" @click="joinGroup">{{ groupInfo.userInGroup ? '退出小组' : '加入小组'
+                    <button :class="joinButtonClass" @click="joinGroup" v-if="isLogin">{{ groupInfo.userInGroup ? '退出小组' : '加入小组'
                     }}</button>
-                    <button :class="applyButtonClass" @click="applyForAdmin"><i class="fa-solid fa-user-group"
+                    <button :class="applyButtonClass" @click="applyForAdmin" v-if="isLogin && groupInfo.userInGroup"><i class="fa-solid fa-user-group"
                             v-if="groupInfo.userIsAdmin"></i>{{ groupInfo.userIsAdmin ? '管理员' : '申请管理员'
                             }}</button>
                 </div>
@@ -60,7 +60,7 @@
         </div>
         <!-- 发帖上拉框 -->
         <div v-if="isLogin && showPostCreateBar">
-            <PostCreateBar :groupInfo="groupInfo"></PostCreateBar>
+            <PostCreateBar :groupInfo="groupInfo" v-if="isLogin && groupInfo.userInGroup"></PostCreateBar>
         </div>
 
         <!-- 滚动至顶部 -->

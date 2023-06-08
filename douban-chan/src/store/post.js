@@ -171,14 +171,14 @@ export default {
                 axios({
                     method: "post",
                     data: qs.stringify({
-                        u_id: this.userId,
+                        u_id: info.userId,
                     }),
                     url: "/user/get_self_post/",
                     headers: { "content-type": "application/x-www-form-urlencoded" },
                 })
                     .then((res) => {
                         console.log("成功获取我的帖子列表", res);
-                        context.commit("SET_TOPICLIST", res.data.topics);
+                        context.commit("SET_POSTLIST", res.data.topics);
                         resolve(res);
                     })
                     .catch((err) => {

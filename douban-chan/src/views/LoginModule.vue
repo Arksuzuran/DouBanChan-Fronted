@@ -220,7 +220,7 @@ export default ({
         loginSuccess() {
             this.$Notify.success({
                 title: '登录成功',
-                message: '软件工程真是一坨shit捏~',
+                message: '登陆成功！',
                 showClose: false,
             })
         },
@@ -234,14 +234,14 @@ export default ({
         loginFail() {
             this.$Notify.error({
                 title: '密码错误',
-                message: '软件工程嘿嘿嘿嘿',
+                message: '请重新输入密码',
                 showClose: false,
             })
         },
         errorAccount() {
             this.$Notify.error({
                 title: '账号错误',
-                message: '请重新输入账号捏bb',
+                message: '请重新输入账号',
                 showClose: false,
             })
         },
@@ -255,7 +255,7 @@ export default ({
         errorPassword() {
             this.$Notify.error({
                 title: '密码错误',
-                message: '请重新输入密码捏bb',
+                message: '请重新输入密码',
                 showClose: false,
             })
         },

@@ -42,7 +42,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.info.textId,
             }),
             url: "/text/like/",
@@ -56,7 +56,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.info.textId,
             }),
             url: "/text/cancel_like/",
@@ -70,7 +70,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.info.textId,
             }),
             url: "/text/dislike/",
@@ -84,7 +84,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.info.textId,
             }),
             url: "/text/cancel_dislike/",
@@ -153,7 +153,7 @@ export default {
             this.$axios({
             method: "post",
             data: qs.stringify({
-                u_id: 2,
+                u_id: this.userId,
                 t_id: this.info.textId
             }),
             url: "/media/get_status/",
@@ -171,7 +171,7 @@ export default {
                 console.log(this.userFav)
             })
             .catch((err) => {
-                this.$message.error("网络出错QAQ")
+                // this.$message.error("网络出错QAQ")
             });
         }
     },
