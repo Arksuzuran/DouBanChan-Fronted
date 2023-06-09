@@ -10,14 +10,6 @@
                 </div>
                 <el-divider></el-divider>
             </div>
-            <div class="user-home-collect">
-                <span class="user-home-text">我的收藏</span>
-                <div class="user-home-collect-list">
-                    <PostCard v-for="post in favList" :key="post.postId" :info="post" :from="'g'" :notShowTopped="true"
-                        :notShowIcongroup="true" />
-                </div>
-                <el-divider></el-divider>
-            </div>
             <div class="user-home-group">
                 <span class="user-home-text">我的小组</span>
                 <div class="user-home-group-list">

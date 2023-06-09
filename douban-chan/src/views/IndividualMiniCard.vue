@@ -24,7 +24,7 @@
             <span class="circle" aria-hidden="true">
                 <span class="icon arrow"></span>
             </span>
-            <span class="button-text" @click="gotoMyFav">我的收藏</span>
+            <span class="button-text" @click="gotoMyFav">我的订阅</span>
         </button>
         <button class="quit" @click="quit">退出登录</button>
     </div>
@@ -58,7 +58,7 @@ export default ({
             this.$router.push('/userHome/home');//去到个人主页
         },
         gotoMyFav() {
-            this.$router.push('/userHome/favlist');//去到我的收藏
+            this.$router.push('/userHome/subscribe');//去到我的收藏
         },
         gotoReply() {
             this.$router.push('/userHome/message');//去到回复

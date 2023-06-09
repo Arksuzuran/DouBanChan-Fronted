@@ -31,7 +31,7 @@
             </div>
             <el-button type="info" plain
                 style="border: none;margin-left: 10px;margin-top: 0px;color:#003899; float: left;width: 180px; font-weight: bold;">
-                <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i>
+                <i class="fa-solid fa-magnifying-glass" style="color: #003899;" @click="toDetailPage(movie.m_id)"></i>
                 &nbsp 查看详情
             </el-button>
             <div style="float: left;width: 200px;margin-top: 5px;">
@@ -90,7 +90,7 @@
                     </span>
                 </div>
                 <el-button type="info" plain
-                    style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;">
+                    style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;" @click="toDetailPage(movie.m_id)">
                     <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> &nbsp 查看详情
                 </el-button>
                 <el-button type="info" plain

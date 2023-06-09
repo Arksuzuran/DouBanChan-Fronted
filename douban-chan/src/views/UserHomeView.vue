@@ -23,8 +23,6 @@
         <!-- 二级导航菜单 -->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-menu-item index="userpageHome"><i class="fa-solid fa-house" style="color: #ffab66;"></i> 主页</el-menu-item>
-          <el-menu-item index="userpageFavlist"><i class="fa-solid fa-heart" style="color: #ff3e29;"></i>
-            收藏</el-menu-item>
           <el-menu-item index="userpageSubscribe"><i class="fa-solid fa-bookmark" style="color: #ff9e9e;"></i>
             订阅</el-menu-item>
           <el-menu-item index="userpageGroup"><i class="fa-solid fa-user-group" style="color: #8ac2ff;"></i>

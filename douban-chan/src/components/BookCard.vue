@@ -31,8 +31,8 @@
             </div>
             <div style="float: left;width: 200px;margin-top: 5px;">
                 <el-button type="info" plain
-                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 120px;font-weight: bold;float: left;">
-                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> 查看详情
+                    style="border: none;margin-left: 10px;margin-top: 5px;color:#003899; width: 120px;font-weight: bold;float: left;" @click="toDetailPage(book.m_id)">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;" ></i> 查看详情
                 </el-button>
                 <el-button circle style="border: none;margin-left: -5px;margin-top: 2px;background-color:#002333;"
                     @click="showModal"><i class="fa-solid fa-circle-info custom-icon"></i></el-button>
@@ -83,8 +83,8 @@
                     </span>
                 </div>
                 <el-button type="info" plain
-                    style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;">
-                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;"></i> &nbsp 查看详情
+                    style="border: none;margin-top: 70%;float: left;color:#003899; width: 320px;font-weight: bold;" @click="toDetailPage(book.m_id)">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #003899;" ></i> &nbsp 查看详情
                 </el-button>
                 <el-button type="info" plain
                     style="border: none;margin-top: 70%;float: right;color:#003899; width: 120px;font-weight: bold;">

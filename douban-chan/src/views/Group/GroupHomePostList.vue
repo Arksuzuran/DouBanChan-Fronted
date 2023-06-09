@@ -12,7 +12,7 @@
             <div class="postlist-title">
                 {{ componentTitle }}
             </div>
-            <!-- <PostSortLabel></PostSortLabel> -->
+            <PostSortLabel></PostSortLabel>
             <!-- 只看精品帖子 -->
             <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true"
                 v-if="!notShowSelectButton">
