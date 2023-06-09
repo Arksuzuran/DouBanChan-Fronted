@@ -4,7 +4,7 @@
         <div class="color-block"></div>
         <div :class="getLabelClass(1)" @click="handleSortLabelChange(1)">按热度</div>
         <div :class="getLabelClass(0)">{{ ' | ' }}</div>
-        <div :class="getLabelClass(2)" @click="handleSortLabelChange(2)">按时间</div>
+        <div :class="getLabelClass(2)" @click="handleSortLabelChange(2)">{{ timeLabel }}</div>
     </div>
 </template>
 
@@ -14,19 +14,28 @@ export default {
     data() {
         return {
             activeLabel: 1,
+            timeLate: true,
         }
     },
     methods: {
         // 处理排序标签变化的事件
         handleSortLabelChange(index) {
+            if(index > 1 && this.activeLabel > 1){
+                this.timeLate = !this.timeLate
+            }
             this.activeLabel = index
             //透过全局事件总线向父组件传递排序方式改变的事件
-            this.$bus.$emit('sortChanged', index)
+            this.$bus.$emit('sortChanged', this.timeLate && this.activeLabel > 1 ? 3 : this.activeLabel)
         },
         getLabelClass(index) {
-            return index === this.activeLabel ? 'active-sort-label' : 'sort-label'
+            return index == this.activeLabel ? 'active-sort-label' : 'sort-label'
         },
     },
+    computed:{
+        timeLabel(){
+            return this.timeLate ? '按时间倒序' : '按时间顺序' 
+        }
+    }
 }
 </script>
 

@@ -8,7 +8,8 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true" :notShowIcongroup="true"/>
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"
+                :notShowIcongroup="true" />
         </div>
     </div>
 </template>
@@ -44,22 +45,33 @@ export default {
         // 按照指定顺序筛选列表
         activePostList() {
             let list = this.postList.slice()
-            //热度排序 点赞数大的在前面。特别地，置顶帖子优先
+            //热度排序 点赞数大的在前面，精品贴权重翻倍。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
-                        return b.like - a.like
+                        return ((a.isGoodPost + 1) * a.like > (a.isGoodPost + 1) * b.like) ? -1 : 1
                     }
                     else {
                         return a.isTopped ? -1 : 1
                     }
                 })
             }
-            //时间排序 时间小的在前面。特别地，置顶帖子优先
+            // 时间排序 早的在先。特别地，置顶帖子优先
             else if (this.activeLabel === 2) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
                         return (a.date < b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
+            //时间排序 晚的在前面。特别地，置顶帖子优先
+            else if (this.activeLabel === 3) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date > b.date) ? -1 : 1
                     }
                     else {
                         return a.isTopped ? -1 : 1
@@ -75,7 +87,6 @@ export default {
         this.$bus.$on('sortChanged', (index) => {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
-            console.log('2023-5-02 22:47' > '2023-5-19 23:11')
         })
         console.log('PostCardList已挂载事件sortChanged监听');
     },
@@ -110,7 +121,7 @@ export default {
     right: 20px;
 }
 
-.postlist-container{
+.postlist-container {
     margin: 0 30px;
 }
 </style>

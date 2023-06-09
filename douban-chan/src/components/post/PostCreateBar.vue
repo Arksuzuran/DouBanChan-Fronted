@@ -214,7 +214,7 @@ export default {
         },
     },
     mounted() {
-        console.log(this.topicInfo)
+        console.log('发帖框已打开，传入话题相关信息：',this.topicInfo)
         if (this.topicInfo) {
             this.form.topicId = this.topicInfo.topicId
         }

@@ -77,7 +77,7 @@ export default {
                     return item.isGoodPost == true
                 })
             }
-            //热度排序 点赞数大的在前面。特别地，置顶帖子优先
+            //热度排序 点赞数大的在前面，精品贴权重翻倍。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
@@ -87,9 +87,8 @@ export default {
                         return a.isTopped ? -1 : 1
                     }
                 })
-                console.log('排序完成1',list)
             }
-            //时间排序 时间小的在前面。特别地，置顶帖子优先
+            // 时间排序 早的在先。特别地，置顶帖子优先
             else if (this.activeLabel === 2) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
@@ -99,7 +98,17 @@ export default {
                         return a.isTopped ? -1 : 1
                     }
                 })
-                console.log('排序完成2',list)
+            }
+            //时间排序 晚的在前面。特别地，置顶帖子优先
+            else if (this.activeLabel === 3) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date > b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
             }
             
             return list
