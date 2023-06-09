@@ -7,7 +7,7 @@
             <div class="post-top-option-container">
                 <!-- 左侧 -->
                 <!-- 排序部分 -->
-                <!-- <PostSortLabel></PostSortLabel> -->
+                <PostSortLabel></PostSortLabel>
                 <!-- 只看楼主 -->
                 <OnlySelectButton class="post-OnlyLz-button" labelName="楼主" eventName="setOnlyLz"></OnlySelectButton>
                 <!-- 右侧 -->
@@ -119,20 +119,39 @@ export default {
                     return item.userId == this.postInfo.lzId
                 })
             }
-            //热度排序 除1楼外，点赞数大的在前面
+            //热度排序 点赞数大的在前面，精品贴权重翻倍。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
-                list = list.slice(1)
                 list.sort((a, b) => {
-                    return b.like - a.like
-                }).unshift(this.postInfo.floorList[0])
-            }
-            //时间排序 时间小的在前面
-            else if (this.activeLabel === 2) {
-                list.sort((a, b) => {
-                    return a.date < b.date
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return ((a.isGoodPost + 1) * a.like > (a.isGoodPost + 1) * b.like) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
                 })
             }
-            console.log(list)
+            // 时间排序 早的在先。特别地，置顶帖子优先
+            else if (this.activeLabel === 2) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date < b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
+            //时间排序 晚的在前面。特别地，置顶帖子优先
+            else if (this.activeLabel === 3) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date > b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
             return list
         },
     },

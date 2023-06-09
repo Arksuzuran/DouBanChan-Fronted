@@ -103,7 +103,7 @@ export default {
                 headImgIdList: [],
                 intro: '',
             },
-            formLabelWidth: '120px',
+            formLabelWidth: '140px',
             timer: null,
 
             // 话题选择框的数据

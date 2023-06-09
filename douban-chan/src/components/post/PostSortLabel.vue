@@ -20,27 +20,30 @@ export default {
     methods: {
         // 处理排序标签变化的事件
         handleSortLabelChange(index) {
-            if(index > 1 && this.activeLabel > 1){
+            if (index > 1 && this.activeLabel > 1) {
                 this.timeLate = !this.timeLate
             }
             this.activeLabel = index
             //透过全局事件总线向父组件传递排序方式改变的事件
             this.$bus.$emit('sortChanged', this.timeLate && this.activeLabel > 1 ? 3 : this.activeLabel)
+            window.scrollTo({
+                top: 100,
+                behavior: 'smooth' // 平滑滚动
+            });
         },
         getLabelClass(index) {
             return index == this.activeLabel ? 'active-sort-label' : 'sort-label'
         },
     },
-    computed:{
-        timeLabel(){
-            return this.timeLate ? '按时间倒序' : '按时间顺序' 
+    computed: {
+        timeLabel() {
+            return this.timeLate ? '按时间倒序' : '按时间顺序'
         }
     }
 }
 </script>
 
 <style scoped>
-
 .sort-label-container {
     display: flex;
     flex-flow: row wrap;
@@ -48,6 +51,7 @@ export default {
     justify-items: flex-start;
     margin: 10px;
 }
+
 .color-block {
     background-color: #fe7998;
     width: 15px;

@@ -71,7 +71,7 @@ export default {
     },
     mounted() {
         this.$bus.$on('commentReplyCreated', (textId) => {
-            if(textId == this.info.textId){
+            if(textId == this.info.textId && this.isReplying){
                 this.isReplying = !this.isReplying
             }
         })
