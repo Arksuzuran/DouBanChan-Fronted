@@ -47,13 +47,13 @@
                         <!-- 这里需要根据后端修改! -->
                         <!-- 上传图片 -->
                         <!-- 上传话题封面 -->
-                        <el-form-item label="上传话题封面" :label-width="formLabelWidth">
+                        <el-form-item label="上传话题封面头像" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.avatarImgIdList" :fileList="avatarFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
 
                         <!-- 上传话题头图 -->
-                        <el-form-item label="上传话题头图" :label-width="formLabelWidth">
+                        <el-form-item label="上传话题背景头图" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.headImgIdList" :fileList="headFileList" :maxImgNumber="1">
                             </PictureChooser>
                         </el-form-item>
@@ -103,7 +103,7 @@ export default {
                 headImgIdList: [],
                 intro: '',
             },
-            formLabelWidth: '120px',
+            formLabelWidth: '140px',
             timer: null,
 
             // 话题选择框的数据

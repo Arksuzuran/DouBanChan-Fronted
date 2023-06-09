@@ -68,6 +68,11 @@ export default {
         ScrollToTopButton,
         PostOperateButton,
     },
+    data(){
+        return{
+            
+        }
+    },
     methods: {
         // 向楼层列表里加入楼中楼回复
         insertCommentIntoFloor(newReply, textId) {
@@ -114,20 +119,39 @@ export default {
                     return item.userId == this.postInfo.lzId
                 })
             }
-            //热度排序 除1楼外，点赞数大的在前面
+            //热度排序 点赞数大的在前面，精品贴权重翻倍。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
-                list = list.slice(1)
                 list.sort((a, b) => {
-                    return b.like - a.like
-                }).unshift(this.postInfo.floorList[0])
-            }
-            //时间排序 时间小的在前面
-            else if (this.activeLabel === 2) {
-                list.sort((a, b) => {
-                    return a.date - b.date
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return ((a.isGoodPost + 1) * a.like > (a.isGoodPost + 1) * b.like) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
                 })
             }
-            console.log(list)
+            // 时间排序 早的在先。特别地，置顶帖子优先
+            else if (this.activeLabel === 2) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date < b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
+            //时间排序 晚的在前面。特别地，置顶帖子优先
+            else if (this.activeLabel === 3) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date > b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
             return list
         },
     },
@@ -139,7 +163,7 @@ export default {
             activeLabel: 1,
         }
     },
-    created() {
+    mounted() {
         let id = this.$route.query.postId ? this.$route.query.postId : this.$route.params.postId
         console.log('已收到路由传递的帖子id', id)
         this.getData(id)
@@ -156,13 +180,18 @@ export default {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
         })
+        
+        // // 监听PostSortLabel的改变排序方式事件，重新加载postList
+        // this.$bus.$on('update', () => {
+        //     this.getData(this.id)
+        //     console.log('操作后自动刷新页面')
+        // })
     },
     beforeDestroy() {
         //卸载监听
         this.$bus.$off('setOnlyLz')
         this.$bus.$off('sortChanged')
-        this.$bus.$off('commentReplyCreated')
-        this.$bus.$off('postReplyCreated')
+        // this.$bus.$off('update')
     },
 }
 </script>

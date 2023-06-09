@@ -8,8 +8,10 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"/>
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"
+                :notShowIcongroup="true" />
         </div>
+        <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有帖子哦</div>
     </div>
 </template>
 
@@ -44,18 +46,18 @@ export default {
         // 按照指定顺序筛选列表
         activePostList() {
             let list = this.postList.slice()
-            //热度排序 点赞数大的在前面。特别地，置顶帖子优先
+            //热度排序 点赞数大的在前面，精品贴权重翻倍。特别地，置顶帖子优先
             if (this.activeLabel === 1) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
-                        return b.like - a.like
+                        return ((a.isGoodPost + 1) * a.like > (a.isGoodPost + 1) * b.like) ? -1 : 1
                     }
                     else {
                         return a.isTopped ? -1 : 1
                     }
                 })
             }
-            //时间排序 时间小的在前面。特别地，置顶帖子优先
+            // 时间排序 早的在先。特别地，置顶帖子优先
             else if (this.activeLabel === 2) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
@@ -66,8 +68,22 @@ export default {
                     }
                 })
             }
+            //时间排序 晚的在前面。特别地，置顶帖子优先
+            else if (this.activeLabel === 3) {
+                list.sort((a, b) => {
+                    if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
+                        return (a.date > b.date) ? -1 : 1
+                    }
+                    else {
+                        return a.isTopped ? -1 : 1
+                    }
+                })
+            }
             console.log(list)
             return list
+        },
+        showNonePlaceHolder(){
+            return !this.postList || this.postList.length == 0
         },
     },
     mounted() {
@@ -75,7 +91,6 @@ export default {
         this.$bus.$on('sortChanged', (index) => {
             this.activeLabel = index;
             console.log('排序方式已经改变：', index)
-            console.log('2023-5-02 22:47' > '2023-5-19 23:11')
         })
         console.log('PostCardList已挂载事件sortChanged监听');
     },
@@ -88,6 +103,12 @@ export default {
 </script>
 
 <style scoped>
+.none-placeholder {
+    margin: 300px 200px;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 133, 133, 0.9);
+}
 /* 顶部选择按时间或者热度排序 */
 .postlist-sort-label-container {
     position: sticky;
@@ -110,7 +131,7 @@ export default {
     right: 20px;
 }
 
-.postlist-container{
+.postlist-container {
     margin: 0 30px;
 }
 </style>

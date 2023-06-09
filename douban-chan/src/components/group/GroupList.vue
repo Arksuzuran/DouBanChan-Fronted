@@ -16,6 +16,7 @@
     <div :class="colClass">
       <component v-for="group in inGroupList" :key="group.groupId" :group="group" :is="getComponentType()"></component>
     </div>
+    <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有小组哦</div>
   </div>
 </template>
 
@@ -54,7 +55,10 @@ export default {
         }
       }
       return list
-    }
+    },
+    showNonePlaceHolder() {
+      return !this.groupList || this.groupList.length == 0
+    },
   },
   methods: {
     // 选择需要调用的组件
@@ -72,6 +76,12 @@ export default {
 </script>
 
 <style scoped>
+.none-placeholder {
+    margin: 300px 200px;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 133, 133, 0.9);
+}
 .grouplist-container {
   margin: 0 20px;
 }

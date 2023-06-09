@@ -48,10 +48,7 @@ export default {
     methods:{
         enterTopic(){
             this.$router.push({
-                name:'topic',
-                query:{
-                    topicId: this.topic.topicId
-                },
+                name:'todaysHot',
             })
         },
     },

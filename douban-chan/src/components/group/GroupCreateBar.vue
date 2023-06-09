@@ -33,10 +33,10 @@
                                 @select="handleSelect" style="width: 100%;"></el-autocomplete> -->
                         </el-form-item>
 
-                        <!-- 正文输入框 -->
+                        <!-- 小组简介输入框 -->
                         <el-form-item label="小组简介" :label-width="formLabelWidth">
                             <el-input type="textarea" v-model="form.intro" :autosize="{ minRows: 8, maxRows: 8 }"
-                                :rows="20">
+                                :rows="20" placeholder="请输入小组简介">
                             </el-input>
                         </el-form-item>
 
@@ -47,13 +47,13 @@
                         <!-- 这里需要根据后端修改! -->
                         <!-- 上传图片 -->
                         <!-- 上传小组封面 -->
-                        <el-form-item label="上传小组封面" :label-width="formLabelWidth">
+                        <el-form-item label="上传小组封面头像" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.avatarImgIdList" :maxImgNumber="1" :fileList="avatarFileList">
                             </PictureChooser>
                         </el-form-item>
 
                         <!-- 上传小组头图 -->
-                        <el-form-item label="上传小组头图" :label-width="formLabelWidth">
+                        <el-form-item label="上传小组背景头图" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.headImgIdList" :maxImgNumber="1" :fileList="headFileList">
                             </PictureChooser>
                         </el-form-item>
@@ -105,7 +105,7 @@ export default {
             },
             avatarFileList: [],
             headFileList: [],
-            formLabelWidth: '120px',
+            formLabelWidth: '140px',
             timer: null,
 
             // 话题选择框的数据

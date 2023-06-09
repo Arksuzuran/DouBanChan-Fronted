@@ -100,7 +100,7 @@ export default Vue.extend({
                 placeholder: '请输入内容', 
                 MENU_CONF: {
                     'uploadImage': {
-                        server: 'http://10.193.206.15:8000/picture/upload/',
+                        server: 'http://10.193.202.49:8000/picture/upload/',
                         // server: 'http://127.0.0.1:8000/picture/upload/',
                         fieldName: 'p_content',
                         // 单个文件的最大体积限制，默认为 2M

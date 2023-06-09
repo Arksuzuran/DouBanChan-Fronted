@@ -14,7 +14,7 @@
                 <RefreshButton></RefreshButton>
             </div>
             <div class="home-module-collection-book-show">
-                <div v-for="card in  3 " class="home-module-collection-book-card">
+                <div v-for="card in 3" class="home-module-collection-book-card">
                     <CollectionCard :collectionCard="getCollectionCard(card)"></CollectionCard>
                 </div>
             </div>

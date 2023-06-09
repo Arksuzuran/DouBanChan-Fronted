@@ -32,20 +32,27 @@ export default {
         data: qs.stringify({
           u_id: this.userId,
         }),
-        url: "/user/register/",
+        url: "/user/get_self_post/",
         headers: { "content-type": "application/x-www-form-urlencoded" },
       })
         .then((res) => {
-          console.log(res.data)
-          //给favList赋值
+          console.log('成功获取我的帖子', res.data)
+          //给postList赋值
+          this.postList = res.data.posts
         })
         .catch((err) => {
           this.$message.error("网络出错QAQ");
         });
     },
   },
+  computed: {
+    //头像路径与用户名
+    //引入vuex的userAbout模块里的 state变量
+    ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
+  },
   mounted() {
     // this.postList = this.getFavListOnline();
+    this.getFavListOnline()
   },
 }
 </script>

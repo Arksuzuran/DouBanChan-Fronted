@@ -105,13 +105,14 @@ export default {
             try {
                 await this.getPostOnline({
                     userId: this.userId,
-                    postId: id,
+                    postId: this.info.postId,
                 })
             } catch (err) {
                 this.$message.error('网络错误, 无法加载帖子信息')
             }
         },
         async update() {
+            console.log(this.userId)
             try {
                 await this.getPostOnline({
                     userId: this.userId,
@@ -126,7 +127,7 @@ export default {
             // 点赞与点踩只能有一个
             if (!this.postInfo.userLike && this.postInfo.userDislike) {
                 this.postInfo.userDislike = false
-                this.uploadDislike(false)
+                // this.uploadDislike(false)
             }
             // 更新点赞
             this.postInfo.userLike = !this.postInfo.userLike
@@ -142,7 +143,7 @@ export default {
             // 点赞与点踩只能有一个
             if (this.postInfo.userLike && !this.postInfo.userDislike) {
                 this.postInfo.userLike = false
-                this.uploadLike(false)
+                // this.uploadLike(false)
             }
             // 更新点踩
             this.postInfo.userDislike = !this.postInfo.userDislike
@@ -162,12 +163,12 @@ export default {
         },
         // 改变点赞数
         async uploadLike(is) {
-            if (is) {
-                this.postInfo.like++;
-            }
-            else {
-                this.postInfo.like--;
-            }
+            // if (is) {
+            //     this.postInfo.like++;
+            // }
+            // else {
+            //     this.postInfo.like--;
+            // }
             //在此向后端发送请求
             // console.log('向后端发送请求：点赞数',num)
             try {
@@ -184,12 +185,12 @@ export default {
         },
         //改变点踩数
         async uploadDislike(is) {
-            if (is) {
-                this.postInfo.dislike++;
-            }
-            else {
-                this.postInfo.dislike--;
-            }
+            // if (is) {
+            //     this.postInfo.dislike++;
+            // }
+            // else {
+            //     this.postInfo.dislike--;
+            // }
             //在此向后端发送请求
             // console.log('向后端发送请求：点踩数',num)
             try {
@@ -207,12 +208,12 @@ export default {
         },
         //改变收藏数
         async uploadFav(is) {
-            if (is) {
-                this.postInfo.fav++;
-            }
-            else {
-                this.postInfo.fav--;
-            }
+            // if (is) {
+            //     this.postInfo.fav++;
+            // }
+            // else {
+            //     this.postInfo.fav--;
+            // }
             //在此向后端发送请求
             // console.log('向后端发送请求：收藏数',num)
             try {
@@ -278,7 +279,7 @@ export default {
         },
     },
     mounted() {
-        this.update()
+        // this.update()
         console.log('点赞模块初始化',this.postInfo)
         // console.log('初始布尔值', this.userFav, this.userLike, this.userDislike)
         // console.log('初始收藏赞踩', this.favNumber, this.likeNumber, this.dislikeNumber)
