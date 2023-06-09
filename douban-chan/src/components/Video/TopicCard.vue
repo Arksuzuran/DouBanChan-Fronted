@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="cards">
-            <div class="card" v-for="(topicItem,index) in topicItems" :key="index">
-                <p class="tip"><span class="jing-hao">#</span>{{topicItem.topicContent}}</p>
+            <div class="card" v-for="(topicItem,index) in topicItems" :key="index" @click="toDetailTopic(topicItem.topicId)">
+                <p class="tip"><span class="jing-hao">#</span>{{topicItem.c_name}}</p>
             </div>
         </div>
     </div>
@@ -12,6 +12,17 @@
 export default {
     name: 'TopicCard',
     props: ['topicItems'],
+    methods:{
+      toDetailTopic(id){
+        this.$router.push({
+                name:'topic',
+                query:{
+                    topicId: id
+                },
+            })
+      }
+    }
+
 }
 </script>
 

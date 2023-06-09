@@ -26,6 +26,7 @@ export default {
 		LOGOUT(state, value) {
 			console.log('user mutations中的LOGOUT被调用了')
 			state.isLogin = false;
+			state.userId="1";
 		},
 		//清除新回复数量
 		ClearUserReplyNum(state) {

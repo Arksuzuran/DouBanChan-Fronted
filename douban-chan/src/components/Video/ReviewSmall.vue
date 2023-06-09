@@ -74,6 +74,7 @@ export default {
     },
     methods: {
         clickLike(){
+            this.$emit('like');
             this.$axios({
             method: "post",
             data: qs.stringify({
@@ -158,7 +159,7 @@ export default {
             });
         },
 
-        toReviewPage(id){
+        toReviewPage(id){ 
             this.$router.push({
                 name: 'videoReview',
                 params: {
@@ -168,6 +169,14 @@ export default {
             })
         },
         handleFav() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.userFav = !this.userFav
             this.updateFav()
             if (this.userFav) {
@@ -188,6 +197,14 @@ export default {
             }
         },
         handleLike() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.userLike = !this.userLike
             //点赞与点踩只能有一个
             if (this.userDislike) {
@@ -216,6 +233,14 @@ export default {
         },
         // 处理点踩
         handleDislike() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.userDislike = !this.userDislike
             //点赞与点踩只能有一个
             if (this.userLike) {

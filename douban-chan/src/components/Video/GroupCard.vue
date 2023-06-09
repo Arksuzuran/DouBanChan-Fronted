@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" @click="toDetailGroup">
     <div class="card-border-top">
     </div>
     <el-image class="img" :src="groupItem.groupAvatarImgUrl" style="width: 60px; height: 60px; margin: auto; margin-top: 5px; border-radius: 30px"></el-image>
@@ -13,6 +13,16 @@
 export default {
     name: 'GroupCard',
     props: ['groupItem'],
+    methods:{
+        toDetailGroup(){
+            this.$router.push({
+                name: 'group',
+                query:{
+                    groupId: this.groupItem.groupId
+                },
+            })
+        }
+    }
 }
 </script>
 
@@ -23,7 +33,7 @@ export default {
 }
 .card {
  width: 110px;
- height: 170px;
+ height: 180px;
  background: white;
  border-radius: 8px;
  box-shadow: 1px 5px 10px 0px gray;

@@ -29,7 +29,7 @@
                     <div class="hover-style">
                         <div class="title" @click="toReviewPage(reviewId)">{{ topic }}</div>
                         <div class="comment-body">
-                            <div class="wrapper" @click="toReviewPage(reviewId)">
+                            <div class="wrapper" @click="toReviewPage(videoId)">
                                 <div class="text">
                                     {{ content }}
                                 </div>
@@ -52,8 +52,8 @@
                             <span class="postcard-data-font">{{ commentNum }}</span>
                         </div>
                         <div class="postcard-dataicon-wrapper" @click="handleFav">
-                            <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
-                            <span class="postcard-data-font">{{ favNum }}</span>
+                            <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon" ></i>
+                            <span class="postcard-data-font">{{ this.item.t_favorite }}</span>
                         </div>
                     </div>
                 </div>
@@ -315,6 +315,7 @@ export default {
                     this.videoName = res.data.media.m_name
                     this.videoImageUrl = res.data.media.m_profile_photo
                     this.type = res.data.media.m_type
+                    console.log(this.videoName)
                 })
             // .catch((err) => {
             //     this.$message.error("网络出错QAQ")
@@ -331,14 +332,6 @@ export default {
                 url: "/media/get_status/",
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             })
-                .then((res) => {
-                    this.userLike = res.data.is_liked
-                    this.userDislike = res.data.is_disliked
-                    this.userFav = res.data.is_favorite
-                    this.updateLike()
-                    this.updateDislike()
-                    this.updateFav()
-                })
                 .then((res) => {
                     this.userLike = res.data.is_liked
                     this.userDislike = res.data.is_disliked
@@ -366,9 +359,11 @@ export default {
             this.$router.push({ name: 'bookDetail', params: { id: bookId } })
         }
     },
+
     mounted() {
         this.getStatus()
-        this.videoId = this.item.textId
+        this.videoId = this.item.t_media.m_id
+        console.log(this.videoId)
         this.getVideo(this.videoId)
         // 假设htmlContent包含HTML代码
         var htmlContent = this.item.t_description;

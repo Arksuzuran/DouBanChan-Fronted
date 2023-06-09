@@ -1,8 +1,9 @@
 <template>
   <div>
     <RankBoardSingle title="最高评分图书"></RankBoardSingle>
-    <RankBoardSingle title="最高评分小说"></RankBoardSingle>
-    <RankBoardSingle title="最高评分散文"></RankBoardSingle>
+    <RankBoardSingle title="2020年后最高评分图书"></RankBoardSingle>
+    <RankBoardSingle title="最高评分流行书"></RankBoardSingle>
+    <RankBoardSingle title="最高评分文学书"></RankBoardSingle>
   </div>
 </template>
 

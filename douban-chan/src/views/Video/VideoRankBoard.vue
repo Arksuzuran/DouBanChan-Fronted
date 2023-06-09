@@ -1,7 +1,7 @@
 <template>
   <div>
     <RankBoardSingle title="最高评分电影"></RankBoardSingle>
-    <RankBoardSingle title="最高华语评分电影"></RankBoardSingle>
+    <RankBoardSingle title="最高评分电视剧"></RankBoardSingle>
   </div>
 </template>
 

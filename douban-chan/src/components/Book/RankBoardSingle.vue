@@ -102,6 +102,22 @@ export default {
     },
     methods:{
         getVideos(){
+            if (this.title === '最高评分图书')
+            {
+                this.selected = this.selected
+            }
+            else if (this.title === '2020年后最高评分图书')
+            {
+                this.selected['年份'] = '2020年代' 
+            }
+            else if (this.title === '最高评分流行书')
+            {
+                this.selected['类型'] = '流行' 
+            }
+            else if (this.title === '最高评分文学书')
+            {
+                this.selected['类型'] = '文学'
+            }
             //根据title向后端发送分类的请求。
             //if (this.title==='最高评分电影')
             this.$axios({
@@ -145,23 +161,11 @@ export default {
                 this.$message.error("网络出错了QAQ")
             });
         },
-        
-        getSelected(){
-            if (this.title === '最高评分图书')
-            {
-                this.selected = this.selected
-            }
-            else if (this.title === '最高评分流行书')
-            {
-                this.selected['类型'] === '流行' 
-            }
-            else if (this.title === '最高评分文学书')
-            {
-                this.selected['类型'] === '文学'
-            }
-        },
         toVideoDetail(videoId) {
             this.$router.push({ name: 'videoDetail', params: { id: videoId } })
+        },
+        toBookDetail(bookId){
+            this.$router.push({ name: 'bookDetail', params: {id: bookId}})    
         },
         toReviewPage(id){
             this.$router.push({
@@ -174,7 +178,6 @@ export default {
         },
     },
     mounted(){
-        this.getSelected()
         this.getVideos()
     },
 }

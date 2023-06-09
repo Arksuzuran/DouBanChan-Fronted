@@ -107,7 +107,7 @@
           </div>
 
           <VueSlickCarousel v-bind="settings" v-if="photos.length > 0 && item.m_type !== 3">
-            <div v-for="(imageUrl, index) in photos" :key="index"><img :src="imageUrl" :style="{ 'width': '90%' }"></div>
+            <div v-for="(imageUrl, index) in photos" :key="index"><img :src="imageUrl" :style="{ 'width': '90%', 'height': '200px', 'object-fit': 'cover'}"></div>
           </VueSlickCarousel>
 
           <br />
@@ -138,8 +138,8 @@
                 我要写书评</button>
             </div>
 
-            <div v-for="(reviewItem, index) in reviewItems" :key="index">
-              <ReviewSmall :item="reviewItem.text"></ReviewSmall>
+            <div v-for="(reviewItem, index) in reviewItems" :key="index" >
+              <ReviewSmall :item="reviewItem.text" @like="handleMessage"></ReviewSmall>
             </div>
 
           </div>
@@ -181,7 +181,6 @@
 </template>
 
 <script>
-import echarts from 'echarts'
 import qs from "qs"
 import ReviewSection from '@/components/Video/ReviewSection.vue'
 import ItemInfo from '@/components/Video/ItemInfo.vue'
@@ -237,33 +236,12 @@ export default {
       isCollected: false, //是否收藏
       myRate: 0,  //我对这个影视的评分
       isRated: false, //是否评分
-
-      chart: null, // 存储 ECharts 实例的变量
-      chartData: { // 图表数据
-        xAxis: ['9~10星', '7~8星', '5~6星', '3~4星', '1~2星'],
-        series: [15, 25, 30, 20, 10]
-      }
     }
   },
-  created() {
-    // 创建 ECharts 实例
-    this.chart = echarts.init(this.$refs.chart)
-    // 设置图表选项
-    this.chart.setOption({
-      xAxis: {
-        type: 'category',
-        data: this.chartData.xAxis
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        data: this.chartData.series,
-        type: 'bar'
-      }]
-    })
-  },
   methods: {
+    handleMessage(){
+      this.getVideo(this.$route.params.id)
+    },
     changeSkeleton() {
       setTimeout(() => {
         this.Skeleton = true;
@@ -292,6 +270,14 @@ export default {
         });
     },
     showRate() {
+      if (!this.isLogin) {
+        this.$Notify.error({
+                title: 'Error',
+                message: '请您先登录',
+                showClose: false,
+            })
+            return;
+      }
       this.isRateVisible = true;
       if (!this.isModalVisible)
         document.body.style.overflow = 'hidden'; // 隐藏滚动条
@@ -309,11 +295,13 @@ export default {
       if (this.activeTab != tab) {
         this.activeTab = tab;
         if (tab === 'latest') {
+          this.getVideo(this.$route.params.id)
           console.log('最新');
           this.reviewItems = this.reviewsOrderedByTime
         }
         else if (tab === 'hottest') {
           console.log('最热');
+          this.getVideo(this.$route.params.id)
           this.reviewItems = this.reviewsOrderedByLike
         }
       }
@@ -353,6 +341,7 @@ export default {
           this.reviewsOrderedByLike = res.data.text_by_like
           this.reviewsOrderedByTime = res.data.text_by_time
           this.reviewItems = this.reviewsOrderedByLike
+          
         })
         .catch((err) => {
           this.$message.error("网络出错QAQ")
@@ -423,7 +412,7 @@ export default {
           console.log(res.data.msg)
           if (res.data.msg === 0) {
             this.closeRate()
-            console.log(this.value)
+            this.item.m_rate_num ++ 
             this.$message.success("评分成功！")
           }
         })
@@ -464,6 +453,24 @@ export default {
         .catch((err) => {
           this.$message.error("网络出错QAQ")
         });
+    },
+    getValue() {
+      this.$axios({
+        method: "post",
+        data: qs.stringify({
+          m_id: this.$route.params.id,
+          u_id: this.userId
+        }),
+        url: "/base/get_um_rate/",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      })
+        .then((res) => {
+          // console.log(res.data)
+          this.value = res.data
+        })
+        .catch((err) => {
+          this.$message.error("网络出错QAQ")
+        });
     }
   },
   mounted() {
@@ -472,6 +479,7 @@ export default {
     this.getRecommendChats();
     this.getRatio();
     this.changeSkeleton();
+    this.getValue()
   },
   computed: {
     ...mapState('userAbout', ['userName', 'userImgUrl', 'isLogin', 'userId']),
