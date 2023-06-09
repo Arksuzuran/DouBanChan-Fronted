@@ -36,12 +36,12 @@
                     <div class="postcard-likeNumberBox-likenumber">{{ info.groupName + '小组' }}</div>
                 </div>
                 <!-- 帖子正文 -->
-                <PostCardText class="postcard-maintext" :info="info" />
+                <PostCardText class="postcard-maintext" :info="info" :textWidthLimit="textWidthLimit"/>
             </div>
 
             <!-- 收藏 评论 点赞 点踩 -->
             <div class="postcard-dataicon-group" v-if="!notShowIcongroup">
-                <div class="postcard-dataicon-wrapper" @click="handleFav">
+                <div class="postcard-dataicon-wrapper">
                     <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i>
                     <span class="postcard-data-font">{{ favNumber }}</span>
                 </div>
@@ -49,11 +49,11 @@
                     <i class="fa-solid fa-comment postcard-icon" ref="commentIcon"></i>
                     <span class="postcard-data-font">{{ commentNumber }}</span>
                 </div>
-                <div class="postcard-dataicon-wrapper" @click="handleDislike">
+                <div class="postcard-dataicon-wrapper">
                     <i class="fa-solid fa-thumbs-down postcard-icon" ref="dislikeIcon"></i>
                     <span class="postcard-data-font">{{ dislikeNumber }}</span>
                 </div>
-                <div class="postcard-dataicon-wrapper" @click="handleLike">
+                <div class="postcard-dataicon-wrapper">
                     <i class="fa-solid fa-thumbs-up postcard-icon" ref="likeIcon"></i>
                     <span class="postcard-data-font">{{ likeNumber }}</span>
                 </div>
@@ -71,7 +71,7 @@ import PostTopicButton from './button/PostTopicButton.vue';
 import PostOperateButton from './button/PostOperateButton.vue';
 
 export default {
-    props: ['info', 'notShowTopped', 'notShowGood', 'notShowIcongroup', 'notShowFromGroup'],
+    props: ['info', 'notShowTopped', 'notShowGood', 'notShowIcongroup', 'notShowFromGroup', 'textWidthLimit'],
     data() {
         return {
             // 要传递给PostCardUserInfo组件的信息
@@ -396,7 +396,6 @@ export default {
     font-size: 22px;
     color: rgb(97, 97, 97, 0.8);
     margin: 15px;
-    cursor: pointer;
 }
 
 .postcard-icon-like {
