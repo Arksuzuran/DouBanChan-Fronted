@@ -45,7 +45,7 @@ Vue.use(AtComponents)
 
 Vue.config.productionTip = false
 Vue.prototype.$qs = qs
-axios.defaults.baseURL = 'http://10.193.202.49:8000'
+axios.defaults.baseURL = 'http://101.43.180.166'
 // axios.defaults.baseURL = 'http://127.0.0.1:8000'
 // axios.defaults.baseURL = 'http://10.193.18.167:8000'
 // axios.defaults.baseURL = 'http://127.0.0.1:8000'

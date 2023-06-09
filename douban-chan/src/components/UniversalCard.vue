@@ -815,6 +815,9 @@ export default {
     text-align: left;
     padding-left: 1.5%;
     display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .modal-people-s-text {
