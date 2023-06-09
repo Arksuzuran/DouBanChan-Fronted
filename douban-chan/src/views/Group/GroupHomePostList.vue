@@ -15,14 +15,13 @@
             <PostSortLabel></PostSortLabel>
             <!-- 只看精品帖子 -->
             <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true"
-                v-if="!notShowSelectButton" >
+                v-if="!notShowSelectButton">
             </OnlySelectButton>
         </div>
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowTopped="true"
-                :notShowIcongroup="true && !showIcongroup" />
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowTopped="true" :textWidthLimit="true"/>
             <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有帖子哦</div>
         </div>
     </div>
@@ -127,7 +126,7 @@ export default {
                 top: '148px',
             }
         },
-        showNonePlaceHolder(){
+        showNonePlaceHolder() {
             return !this.postList || this.postList.length == 0
         },
     },
@@ -204,4 +203,5 @@ export default {
     position: fixed;
     bottom: 150px;
     right: 20px;
-}</style>
+}
+</style>

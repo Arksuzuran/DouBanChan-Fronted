@@ -27,7 +27,7 @@ export default {
             //透过全局事件总线向父组件传递排序方式改变的事件
             this.$bus.$emit('sortChanged', this.timeLate && this.activeLabel > 1 ? 3 : this.activeLabel)
             window.scrollTo({
-                top: 100,
+                top: 0,
                 behavior: 'smooth' // 平滑滚动
             });
         },

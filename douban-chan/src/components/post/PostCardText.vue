@@ -3,9 +3,9 @@
     <div class="postcard-text-container" :class="{ 'flex-layout': imglistLengthEqual1() }">
         <div :class="{ 'div-wrapper': imglistLengthEqual1() }">
             <!-- 标题 无标题时则不显示 -->
-            <div class="postcard-text-title" :class="curClass()" @click="jumpToPostPage" v-if="info.title">{{ info.title }}</div>
+            <p class="postcard-text-title" :class="curClass()" @click="jumpToPostPage" v-if="info.title">{{ info.title }}</p>
             <!-- 正文 -->
-            <div class="postcard-text-text" :class="curClass()" @click="jumpToPostPage">{{ info.text }}</div>
+            <p class="postcard-text-text" :class="curClass()" @click="jumpToPostPage">{{ info.text }}</p>
         </div>
         <!-- 图片墙 -->
         <div class="postcard-text-imgbox" :class="{ 'flex-box': imglistLengthEqual1() }">
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-    props: ['info', 'normal'],
+    props: ['info', 'normal', 'textWidthLimit'],
     methods: {
         imglistLengthEqual1() {
             return this.info.postImageUrlList && this.info.postImageUrlList.length === 1
@@ -28,7 +28,7 @@ export default {
             return this.imglistLengthEqual1() ? 'postcard-text-imgbox-1' : 'postcard-text-imgbox-2'
         },
         curClass(){
-            return this.normal ? '' : 'postcard-cursor'
+            return this.normal ? '' : (this.textWidthLimit ? 'postcard-cursor text-len-limit' : 'postcard-cursor')
         },
         imgClass() {
             if(!this.info.postImageUrlList){
@@ -77,6 +77,7 @@ export default {
 <style scoped>
 .flex-layout {
     flex-direction: row;
+    word-wrap: break-word;
 }
 
 .postcard-text-container {
@@ -101,6 +102,9 @@ export default {
 }
 
 /* 正文 */
+.text-len-limit{
+    max-width: 600px;
+}
 .postcard-text-text {
     text-align: start;
     font-size: 18px;
@@ -108,6 +112,7 @@ export default {
     color: rgb(50, 50, 50);
     line-height: 30px;
     margin: 10px;
+    
 }
 .postcard-cursor{
     cursor: pointer;
@@ -118,6 +123,7 @@ export default {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
+    
 }
 
 .flex-box {

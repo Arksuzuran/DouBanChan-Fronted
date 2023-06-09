@@ -54,10 +54,17 @@ export default {
           return b.post - a.post
         })
       }
+      
       //时间排序 时间小的在前面。特别地，置顶帖子优先
       else if (this.activeLabel === 2) {
         list.sort((a, b) => {
           return (a.date < b.date) ? -1 : 1
+        })
+      }
+      //时间排序 时间大的在前面。特别地，置顶帖子优先
+      else if (this.activeLabel === 3) {
+        list.sort((a, b) => {
+          return (a.date > b.date) ? -1 : 1
         })
       }
       console.log(list)

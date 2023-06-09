@@ -31,6 +31,12 @@
                         <div class="postcard-dataicon-wrapper" @click="handleDislike">
                             <el-button type="info" :plain="!userDislike">反对 <span>{{ dislike }}</span></el-button>
                         </div>
+                        <div class="postcard-dataicon-wrapper" @click="handleFav">
+                            <!-- <i class="fa-solid fa-bookmark postcard-icon" ref="favIcon"></i> -->
+                            <i :class="{ 'fa-solid fa-bookmark':true,'postcard-icon': !userFav, 'postcard-icon-fav': userFav }"
+                            ></i>
+                            <span class="postcard-data-font">{{ reviewItem.t_favorite }}</span>
+                        </div>
                     </div>
                 </div>
                 <!-- 赞同和反对按钮 -->
@@ -72,8 +78,8 @@
                 <div class="movie-card">
                     <div class="movie-name">{{ movieItem.m_name }}</div>
                     <el-image
-                        style="width: 170px; height: 250px; border-radius: 10px; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);"
-                        :src="movieItem.m_profile_photo">
+                        style="width: 170px; height: 250px; border-radius: 10px; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); cursor: pointer"
+                        :src="movieItem.m_profile_photo" @click="toVideoDetail(movieItem.m_id)">
                     </el-image>
                     
                     <div v-if="movieItem.m_type !== 3" style="width: 200px">
@@ -119,6 +125,7 @@ export default {
         return {
             userLike: false,
             userDislike: false,
+            userFav: false,
             like: 0,
             dislike: 0,
             
@@ -143,6 +150,74 @@ export default {
         collect(id){
             this.userCollect = !this.userCollect
             this.updateCollectIcon()
+        },
+        clickFavorite() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.reviewItem.textId,
+                }),
+                url: "/text/text_set_favorite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+        clickCancelFavorite() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                    t_id: this.reviewItem.textId,
+                }),
+                url: "/text/text_cancel_favorite/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+            // .catch((err) => {
+            //     this.$message.error("网络出错QAQ")
+            // });
+        },
+        // updateFav() {
+        //     if (this.userFav) {
+        //         this.$refs.favIcon.classList.add('postcard-icon-fav')
+        //         console.log(this.$refs.favIcon.classList)
+        //     }
+        //     else {
+        //         this.$refs.favIcon.classList.remove('postcard-icon-fav')
+        //     }
+        // },
+        handleFav() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
+            this.userFav = !this.userFav
+            // this.updateFav()
+            if (this.userFav) {
+                this.reviewItem.t_favorite++;
+                this.clickFavorite()
+            }
+            else {
+                this.reviewItem.t_favorite--
+                this.clickCancelFavorite()
+            }
+        },
+        toVideoDetail(videoId) {
+            this.$router.push({ name: 'videoDetail', params: { id: videoId } })
         },
         async getReviewItem() {
             this.$axios({
@@ -220,6 +295,14 @@ export default {
             }
         },
         changeReplying() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.isReplying = !this.isReplying;
         },
         clickLike(){
@@ -279,6 +362,14 @@ export default {
             });
         },
         handleLike() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.userLike = !this.userLike
             //点赞与点踩只能有一个
             if (this.userDislike) {
@@ -297,6 +388,14 @@ export default {
         },
         // 处理点踩
         handleDislike() {
+            if (!this.isLogin) {
+                this.$Notify.error({
+                        title: 'Error',
+                        message: '请您先登录',
+                        showClose: false,
+                    })
+                    return;
+            }
             this.userDislike = !this.userDislike
             //点赞与点踩只能有一个
             if (this.userLike) {
@@ -324,9 +423,11 @@ export default {
             headers: { "content-type": "application/x-www-form-urlencoded" },
             })
             .then((res) => {
+                console.log(res.data)
                 this.userLike = res.data.is_liked
                 this.userDislike = res.data.is_disliked
                 this.userFav = res.data.is_favorite
+                // this.updateFav()
             })
             .catch((err) => {
                 this.$message.error("网络出错QAQ")
@@ -360,6 +461,7 @@ export default {
 .rate{
     float: left;
 }
+
 .movie-name{
     font-size: 20px;
     font-weight: bold;
@@ -370,6 +472,18 @@ export default {
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+.postcard-icon {
+    font-size: 25px;
+    color: rgb(97, 97, 97);
+    margin: 5px 15px;
+    cursor: pointer;
+}
+.postcard-data-font {
+    margin-bottom: 3px;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(35, 35, 35);
 }
 .movie-card{
     top: 150px;
@@ -385,6 +499,16 @@ export default {
     font-size: 16px;
     font-weight: bold;
     color: #4A4A44;
+}
+.postcard-icon-fav {
+    /* font-size: 22px;
+    margin: 5px 15px;
+    cursor: pointer;
+    color: rgb(255, 184, 53); */
+    font-size: 25px;
+    color: rgb(255, 184, 53);;
+    margin: 5px 15px;
+    cursor: pointer;
 }
 .movie-name-left-row{
     margin: 0px 10px;
@@ -456,8 +580,8 @@ ul li span{
 
 .content{
     margin-top: 10px;
+    width: 1000px;
 }
-
 
 .sectionTitle {
     font-size: 20px;
@@ -511,12 +635,6 @@ ul li span{
 }
 
 /* 图标的颜色 */
-.postcard-icon {
-    font-size: 20px;
-    color: rgb(97, 97, 97);
-    margin: 0 5px 3px 20px;
-    cursor: pointer;
-}
 .postcard-icon-small{
     font-size: 18px;
     color: rgb(97, 97, 97);
@@ -532,6 +650,7 @@ ul li span{
 .postcard-dataicon-wrapper {
     margin: 0 30px;
     font-size: 20px;
+    width: 80px;
 }
 .postcard-data-font {
     margin-right: 8px;

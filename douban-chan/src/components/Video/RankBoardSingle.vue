@@ -99,9 +99,17 @@ export default {
         }
     },
     methods:{
+        getFirstTwoActors(actorString) {
+            const actors = actorString.split('/')
+            const firstTwoActors = actors.slice(0, 2)
+            return firstTwoActors.join('/')
+        },
         getVideos(){
             //根据title向后端发送分类的请求。
-            //if (this.title==='最高评分电影')
+            if (this.title==='最高评分电视剧')
+            {
+                this.selected['影or视'] = '电视剧'
+            }
             this.$axios({
             method: "post",
             data: qs.stringify({
@@ -117,6 +125,9 @@ export default {
             .then((res) => {
                 this.items = res.data.media
                 this.backgroundImage = this.items[0].m_first_preview
+                for (let i = 0; i < this.items.length; i++) {
+                    this.items[i].m_actor = this.getFirstTwoActors(this.items[i].m_actor)
+                }
                 this.getVideoFirstReview()
             })
             .catch((err) => {

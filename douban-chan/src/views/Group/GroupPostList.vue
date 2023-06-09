@@ -8,8 +8,7 @@
 
         <!-- 帖子列表 -->
         <div class="postlist-container">
-            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"
-                :notShowIcongroup="true" />
+            <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true" />
         </div>
         <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有帖子哦</div>
     </div>
@@ -82,7 +81,7 @@ export default {
             console.log(list)
             return list
         },
-        showNonePlaceHolder(){
+        showNonePlaceHolder() {
             return !this.postList || this.postList.length == 0
         },
     },
@@ -109,6 +108,7 @@ export default {
     font-weight: 700;
     color: rgba(255, 133, 133, 0.9);
 }
+
 /* 顶部选择按时间或者热度排序 */
 .postlist-sort-label-container {
     position: sticky;

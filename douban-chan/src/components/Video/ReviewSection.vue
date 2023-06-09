@@ -13,7 +13,7 @@
         </div>
 
         <div v-for="reviewItem in reviewItems" :key="reviewItem.textId">
-            <ReviewSmall :item="reviewItem" :key="reviewItem.textID"></ReviewSmall>
+            <ReviewSmall :item="reviewItem" :key="reviewItem.textID" @like="updateMessage"></ReviewSmall>
         </div>
 
     </div>    
@@ -50,6 +50,9 @@ export default {
             else if (tab === 'hottest')
                 console.log('最热');
         },
+        handleMessage(message){
+            this.$emit('updateMessage', true);
+        }
     }
 }
 </script>
