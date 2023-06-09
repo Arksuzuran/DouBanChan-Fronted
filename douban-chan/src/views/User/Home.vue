@@ -15,11 +15,18 @@
                 <div class="user-home-group-list">
                     <GroupCard v-for="group in groupList" :key="group.groupId" :group="group">
                     </GroupCard>
-                    <GroupCard v-for="group in groupList" :key="group.groupId" :group="group">
-                    </GroupCard>
                 </div>
                 <el-divider></el-divider>
             </div>
+            <div class="user-home-like">
+                <span class="user-home-text">我的帖子</span>
+                <div class="user-home-collect-list">
+                    <PostCard v-for="post in postList" :key="post.postId" :info="post" :from="'g'" :notShowTopped="true"
+                        :notShowIcongroup="true" />
+                </div>
+                <el-divider></el-divider>
+            </div>
+
         </div>
         <div class="user-home-right-block">
             <div class="user-home-info" @click="skipSetting">
@@ -51,7 +58,7 @@ export default {
     },
     data() {
         return {
-            favList: [],
+            postList: [],
             groupList: [],
             subscribes: [
                 {
@@ -98,6 +105,25 @@ export default {
         }
     },
     methods: {
+        ...mapActions('groupAbout', ['getGroupListSearchOnline', 'getGroupListOnline', 'getGroupListByHotOnline', 'getGroupListMineOnline', 'getGroupInfoOnline', 'getGroupListSearchOnline']),
+        getGroupListOnline() {
+            this.$axios({
+                method: "post",
+                data: qs.stringify({
+                    u_id: this.userId,
+                }),
+                url: "/user/get_self_group/",
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            })
+                .then((res) => {
+                    console.log('成功获取我的小组', res.data)
+                    //给groupList赋值
+                    this.groupList = res.data.groups
+                })
+                .catch((err) => {
+                    this.$message.error("网络出错QAQ");
+                });
+        },
         getSubscribesOnline() {
             this.$axios({
                 method: "post",
@@ -115,35 +141,19 @@ export default {
                     this.$message.error("网络出错QAQ");
                 });
         },
-        getFavListOnline() {
+        getPostListOnline() {
             this.$axios({
                 method: "post",
                 data: qs.stringify({
                     u_id: this.userId,
                 }),
-                url: "/user/register/",
+                url: "/user/get_self_post/",
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             })
                 .then((res) => {
-                    console.log(res.data)
-                    //给favList赋值
-                })
-                .catch((err) => {
-                    this.$message.error("网络出错QAQ");
-                });
-        },
-        getGroupListOnline() {
-            this.$axios({
-                method: "post",
-                data: qs.stringify({
-                    u_id: this.userId,
-                }),
-                url: "/user/register/",
-                headers: { "content-type": "application/x-www-form-urlencoded" },
-            })
-                .then((res) => {
-                    console.log(res.data)
-                    //给groupList赋值
+                    console.log('成功获取我的帖子', res.data)
+                    //给postList赋值
+                    this.postList = res.data.posts
                 })
                 .catch((err) => {
                     this.$message.error("网络出错QAQ");
@@ -156,8 +166,9 @@ export default {
         }
     },
     mounted() {
-        this.subscribes = this.getSubscribesOnline();
-        // this.favList = this.getFavListOnline();
+        this.getSubscribesOnline();
+        this.getGroupListOnline();
+        this.getPostListOnline();
         // this.groupList = this.getGroupListOnline();
     },
     computed: {

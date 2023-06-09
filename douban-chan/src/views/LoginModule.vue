@@ -222,6 +222,14 @@ export default ({
                 this.error();
                 return;
             }
+            //检测密码是否合法
+            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+            if (!passwordPattern.test(this.inputEnrollPassword_1)) {
+                // 密码不合法，执行相应的逻辑
+                this.invalidPassword();
+                this.error();
+                return;
+            }
             this.requestSignUp();
         },
         backToLogin() {
@@ -306,6 +314,13 @@ export default ({
             this.$Notify.error({
                 title: 'Error!',
                 message: '邮箱格式不正确',
+                showClose: false,
+            })
+        },
+        invalidPassword() {
+            this.$Notify.error({
+                title: '密码不合法',
+                message: '合法密码格式为8到16位(至少一个大写字母,小写字母,数字,其他任意)',
                 showClose: false,
             })
         },
