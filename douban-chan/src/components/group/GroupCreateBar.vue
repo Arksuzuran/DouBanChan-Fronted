@@ -47,13 +47,13 @@
                         <!-- 这里需要根据后端修改! -->
                         <!-- 上传图片 -->
                         <!-- 上传小组封面 -->
-                        <el-form-item label="上传小组封面" :label-width="formLabelWidth">
+                        <el-form-item label="上传小组封面头像" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.avatarImgIdList" :maxImgNumber="1" :fileList="avatarFileList">
                             </PictureChooser>
                         </el-form-item>
 
                         <!-- 上传小组头图 -->
-                        <el-form-item label="上传小组头图" :label-width="formLabelWidth">
+                        <el-form-item label="上传小组背景头图" :label-width="formLabelWidth">
                             <PictureChooser :imgIdList="form.headImgIdList" :maxImgNumber="1" :fileList="headFileList">
                             </PictureChooser>
                         </el-form-item>

@@ -11,6 +11,7 @@
             <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowFromGroup="true"
                 :notShowIcongroup="true" />
         </div>
+        <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有帖子哦</div>
     </div>
 </template>
 
@@ -81,6 +82,9 @@ export default {
             console.log(list)
             return list
         },
+        showNonePlaceHolder(){
+            return !this.postList || this.postList.length == 0
+        },
     },
     mounted() {
         // 监听PostSortLabel的改变排序方式事件，在事件回调中重新向服务器请求帖子列表，并重新加载postList
@@ -99,6 +103,12 @@ export default {
 </script>
 
 <style scoped>
+.none-placeholder {
+    margin: 300px 200px;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 133, 133, 0.9);
+}
 /* 顶部选择按时间或者热度排序 */
 .postlist-sort-label-container {
     position: sticky;

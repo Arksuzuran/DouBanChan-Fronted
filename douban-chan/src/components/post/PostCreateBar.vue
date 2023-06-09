@@ -24,10 +24,12 @@
 
                         <!-- 话题选择框 -->
                         <el-form-item label="选择话题" :label-width="formLabelWidth">
-                            <el-select v-model="form.topicId" filterable :placeholder="topicPlaceHolder" style="width: 100%;"
-                                :disabled="topicLocked">
+                            <el-select v-model="form.topicId" filterable clearable :placeholder="topicPlaceHolder"
+                                style="width: 100%;" :disabled="topicLocked">
                                 <el-option v-for="item in topicList" :key="item.topicId" :label="item.topicName"
                                     :value="item.topicId">
+                                </el-option>
+                                <el-option v-if="topicLocked" :label="topicInfo.topicName" :value="topicInfo.topicId">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -204,7 +206,7 @@ export default {
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             })
                 .then((res) => {
-                    console.log('加载当前小组可参与的话题成功',res)
+                    console.log('加载当前小组可参与的话题成功', res)
                     this.topicList = res.data.chatList
                 })
                 .catch((err) => {
@@ -214,7 +216,7 @@ export default {
         },
     },
     mounted() {
-        console.log('发帖框已打开，传入话题相关信息：',this.topicInfo)
+        console.log('发帖框已打开，传入话题相关信息：', this.topicInfo)
         if (this.topicInfo) {
             this.form.topicId = this.topicInfo.topicId
         }

@@ -387,7 +387,7 @@ export default {
     align-items: center;
     justify-content: center;
     z-index: 4;
-    background-color: rgba(250, 250, 250, 0.6);
+    background-color: rgba(252, 248, 248, 0.6);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
 }
@@ -424,11 +424,11 @@ export default {
     align-items: center;
     justify-content: flex-start;
     position: absolute;
-    width: 88%;
+    width: 85%;
     left: 190px;
     bottom: 12px;
     border-radius: 5px;
-    height: 55px;
+    height: 60px;
     background-color: rgba(240, 240, 240, 0.5);
 }
 
@@ -440,6 +440,11 @@ export default {
     /* 字体 */
     font-size: 14px;
     color: rgba(5, 5, 5, 0.9);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
+    max-height: 63px;
 }
 
 /* 小组关注数 */

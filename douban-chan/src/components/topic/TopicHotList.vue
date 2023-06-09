@@ -5,7 +5,9 @@
       热门话题排行榜
     </div>
     <!-- 根据传入参数来确定使用何种组件 -->
-    <component v-for="(topic, index) in topicList" :key="topic.topicId" :topic="topic" :hotNo="index + 1" :is="getComponentType()"></component>
+    <component v-for="(topic, index) in topicList" :key="topic.topicId" :topic="topic" :hotNo="index + 1"
+      :is="getComponentType()"></component>
+    <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有话题哦</div>
   </div>
 </template>
 
@@ -29,9 +31,12 @@ export default {
         }
       }
       return {}
-    }
+    },
+    showNonePlaceHolder() {
+      return !this.topicList || this.topicList.length == 0
+    },
   },
-  methods:{
+  methods: {
     // 选择需要调用的组件
     getComponentType() {
       if (this.mini) {
@@ -42,7 +47,7 @@ export default {
         return 'TopicCard'
       }
     },
-    jumpToHotList(){
+    jumpToHotList() {
       this.$router.push({
         name: 'todaysHot'
       })
@@ -52,6 +57,12 @@ export default {
 </script>
 
 <style scoped>
+.none-placeholder {
+    margin: 300px 200px;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 133, 133, 0.9);
+}
 .postlist-title {
   position: sticky;
   top: 154px;

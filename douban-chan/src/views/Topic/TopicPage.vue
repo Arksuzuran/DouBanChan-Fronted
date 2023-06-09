@@ -119,15 +119,15 @@ export default {
         async getData(id) {
             try {
                 await this.getPostListByTopicIdOnline({
-                    userId:  this.userId,
+                    userId: this.userId,
                     topicId: id,
                 });
                 await this.getTopicListByHotOnline({
-                    userId:  this.userId,
+                    userId: this.userId,
                     tag: '',
                 });
                 await this.getTopicInfoOnline({
-                    userId:  this.userId,
+                    userId: this.userId,
                     topicId: id,
                 });
             } catch (err) {
@@ -279,6 +279,11 @@ export default {
     /* 字体 */
     font-size: 14px;
     color: rgba(5, 5, 5, 0.9);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
+    max-height: 63px;
 }
 
 /* 话题关注数 */

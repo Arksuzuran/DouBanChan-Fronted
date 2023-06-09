@@ -8,14 +8,14 @@
     <div class="postlist-main-container">
 
         <!-- 顶部排序部分 -->
-        <div class="postlist-sort-label-container" :style="distanceToTop">
+        <div class="postlist-sort-label-container" :style="showNonePlaceHolder ? '' : distanceToTop">
             <div class="postlist-title">
                 {{ componentTitle }}
             </div>
             <PostSortLabel></PostSortLabel>
             <!-- 只看精品帖子 -->
             <OnlySelectButton class="post-OnlyGoodpost-button" labelName="精华" eventName="setOnlyGoodpost" :backToTop="true"
-                v-if="!notShowSelectButton">
+                v-if="!notShowSelectButton" >
             </OnlySelectButton>
         </div>
 
@@ -23,6 +23,7 @@
         <div class="postlist-container">
             <PostCard v-for="post in activePostList" :key="post.postId" :info="post" :notShowTopped="true"
                 :notShowIcongroup="true && !showIcongroup" />
+            <div class="none-placeholder" v-if="showNonePlaceHolder">这里暂时还没有帖子哦</div>
         </div>
     </div>
 </template>
@@ -55,7 +56,7 @@ export default {
         }
     },
     methods: {
-        
+
     },
     computed: {
         //头像路径与用户名
@@ -66,8 +67,8 @@ export default {
         },
         // 按照指定顺序筛选列表
         activePostList() {
-            
-            if(!this.postList){
+
+            if (!this.postList) {
                 return []
             }
             let list = this.postList.slice()
@@ -81,7 +82,7 @@ export default {
             if (this.activeLabel === 1) {
                 list.sort((a, b) => {
                     if ((a.isTopped && b.isTopped) || (!a.isTopped && !b.isTopped)) {
-                        return ((a.isGoodPost+1)*a.like > (a.isGoodPost+1)*b.like) ? -1 : 1
+                        return ((a.isGoodPost + 1) * a.like > (a.isGoodPost + 1) * b.like) ? -1 : 1
                     }
                     else {
                         return a.isTopped ? -1 : 1
@@ -110,18 +111,25 @@ export default {
                     }
                 })
             }
-            
+
             return list
         },
         // 动态设置到顶部的距离
-        distanceToTop(){
-            if(this.top){
-                return{
+        distanceToTop() {
+            if (this.top) {
+                return {
                     top: this.top + 'px',
+                    position: 'sticky',
                 }
             }
-            return {}
-        }
+            return {
+                position: 'sticky',
+                top: '148px',
+            }
+        },
+        showNonePlaceHolder(){
+            return !this.postList || this.postList.length == 0
+        },
     },
     mounted() {
         // 监听PostSortLabel的改变排序方式事件，在事件回调中重新向服务器请求帖子列表，并重新加载postList
@@ -147,10 +155,18 @@ export default {
 </script>
 
 <style scoped>
-.postlist-main-container{
+.none-placeholder {
+    margin: 300px 200px;
+    font-size: 36px;
+    font-weight: 700;
+    color: rgba(255, 133, 133, 0.9);
+}
+
+.postlist-main-container {
     max-width: 850px;
     margin: 0 auto;
 }
+
 .postlist-title {
     display: flex;
     flex-flow: row wrap;
@@ -165,8 +181,8 @@ export default {
 
 /* 顶部选择按时间或者热度排序 */
 .postlist-sort-label-container {
-    position: sticky;
-    top: 148px;
+    /* position: sticky;
+    top: 148px; */
     /* top: 120px; */
     background-color: rgb(255, 254, 254);
     z-index: 10;
